@@ -19,19 +19,17 @@ PORT = 9559
 class PepperController(object):
     
     def __init__(self, ip, port):
-        self.reinit = False
-
+        # Get the IP and port from the arguments 
         self._robotIP = ip
         self._PORT = port
-
+        # Start a session on the robot
         self.session = qi.Session()
         self.setup()
 
-
     def ping(self):
-
+        # Ping the robot
         response = os.system("ping -c 1 " + self._robotIP)
-        # and then check the response...
+        # Check the response
         if response == 0:
             pingStatus = True
         else:
@@ -43,26 +41,17 @@ class PepperController(object):
     def setup(self):
 
         try:
+            ## Try to connect to the robot at the given IP address
             self.session.connect("tcp://" + self._robotIP + ":" + str(self._PORT))
-
-            #self.tabletService = self.session.service("ALTabletService")
-            self.tabletTimeoutLength = 60 #seconds
-            self.tabletTimeout = time.time()
-            self.tabletFlag = False
-
-            #changed to ALproxy for consistency
-            #self.asrService = self.session.service("ALAnimatedSpeech")
-            #self.asrConfiguration = {"bodyLanguageMode":"contextual"}
 
         except RuntimeError:
             print ("Can't connect to Naoqi at ip \"" + self._robotIP + "\" on port " + str(self._PORT) +".\n"
                "Please check your script arguments. Run with -h option for help.")
-            #sys.exit(1)
 
         try:
-            
+            ## ALL THE PROXIES            
             self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
-            self.speechProxy = ALProxy("ALAnimatedSpeech", self._robotIP, self._PORT)
+            self.anSpeechProxy = ALProxy("ALAnimatedSpeech", self._robotIP, self._PORT)
             self.ttsProxy = ALProxy("ALTextToSpeech", self._robotIP, self._PORT)
 
             self.motionProxy  = ALProxy("ALMotion", self._robotIP, self._PORT)
@@ -76,12 +65,17 @@ class PepperController(object):
             self.lifeProxy = ALProxy("ALAutonomousLife", self._robotIP, self._PORT)
             self.dialogProxy = ALProxy("ALDialog", self._robotIP, self._PORT)
             self.system = ALProxy("ALSystem", self._robotIP, self._PORT)
-            self.speech = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
+            self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
 
             self.faceDetectionProxy = ALProxy("ALFaceDetection", self._robotIP, self._PORT)
             self.memoryProxy = ALProxy("ALMemory", self._robotIP, self._PORT)
             self.trackerProxy = ALProxy("ALTracker", self._robotIP, self._PORT)
             self.motionProxy = ALProxy("ALMotion", self._robotIP, self._PORT)
+
+            self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
+            self.tabletTimeoutLength = 60 #seconds
+            self.tabletTimeout = time.time()
+            self.tabletFlag = False
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
@@ -97,7 +91,7 @@ class PepperController(object):
 
         try:
             #Contextual animated say
-            #self.speechProxy.say(words)
+            #self.anSpeechProxy.say(words)
             # Normal say
             self.ttsProxy.say(words)
         except Exception,e:
