@@ -1,3 +1,16 @@
+#!/usr/bin/env python
+
+# This script is able to read the MK Smart datahub to query data.
+    # working:
+    #     - post and get for all episode4 api's
+    #     -
+    # todo:
+    #     - ROSify
+    #         - expose to some useful ROS server/topic?
+    #     - put (what even are you?)
+    #     - authentication & testing with real data
+
+
 import json
 import urllib2, urllib, httplib
 import sys
@@ -25,6 +38,8 @@ class api_querier():
     # GET request from the API server:
     # q = query of the server, i.e RobotStatus, RobotLocation, Shop.
     #   these are converted to the asociate url and will return the results
+        # example use (returns the status of "RobotStatus"):
+        #     qb.get("RobotStatus")
     def get(self, q):
 
         try:
@@ -53,6 +68,10 @@ class api_querier():
     # q = query of the server, i.e RobotStatus, RobotLocation, Shop.
     # data = JSON schama of data to pass to the server,
     #           these are checked against the server schema before sending
+        # example use (loads default schema and posts for RobotLocation):
+        #     d = qb.load_schema("RobotLocation")
+        #     qb.post("RobotLocation", d)
+
     def post(self, q, data):
 
         try:
