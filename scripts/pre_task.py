@@ -11,12 +11,17 @@ PORT = 9559
 class PreTask(PepperController):
 
     def startingVariables(self):
+        ## Verbal confirmation it's starting
         self.say("boop")
-        self.lifeProxy.setState("safeguard")
+        ## Turn of auto-interaction features
+        self.lifeProxy.setState("interactive")
+        ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.03)
         self.motionProxy.setOrthogonalSecurityDistance(0.1)
 
     def explore(self,r):
+        ## SLAM in a radius of r metres
+        self.say("I'm going to have a look around.")
         ret = self.navigationProxy.explore(r)
         if ret != 0:
             print "Exploration failed :("
@@ -26,13 +31,17 @@ class PreTask(PepperController):
             print "Exploration success!"
             self.say("I'm done exploring!")
         
+        ## Save the map ##
+        # TODO write the path to a file for later use?
         path = self.navigationProxy.saveExploration()
         print "saved at: " + path
 
+        ## start the localization routine so the Pepper can navigate
         self.navigationProxy.stopLocalization()
         self.navigationProxy.startLocalization()
         print "Started localization"
 
+        ## Gets the generated map from the robot and displays it on the screen ##
         arrMap = self.navigationProxy.getMetricalMap()
         map_width = arrMap[1]
         map_height = arrMap[2]
@@ -41,8 +50,9 @@ class PreTask(PepperController):
         img = numpy.array(img, numpy.uint8)
         Image.frombuffer('L',  (map_width, map_height), img, 'raw', 'L', 0, 1).show()
 
-        print "Returning to origin"        
-        ret = self.navigationProxy.navigateToInMap((0,0,0))
+        print "Returning to origin"
+        self.say("I'm heading back to the origin.")        
+        ret = self.goHere(0,0,0)
         print ret
 
     def goHere(self,x,y,t):
@@ -55,6 +65,7 @@ class PreTask(PepperController):
             
 
 if __name__ == '__main__':
-    dummy = DummyTask(robotIP, PORT)
-    dummy.startingVariables()
-    dummy.explore(3)
+    task = PreTask(robotIP, PORT)
+    task.startingVariables()
+    task.explore(3)
+    #task.goHere(1,-1,0)

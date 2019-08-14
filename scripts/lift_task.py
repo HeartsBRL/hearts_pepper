@@ -11,14 +11,16 @@ PORT = 9559
 class LiftTask(PepperController):
 
     def toStart(self):
-
+        self.navigationProxy.navigateToInMap((0,-1,0))
 
     def toLift(self):
-          
+        self.navigationProxy.navigateToInMap((0,0,0))  
          
     def toEnd(self):
-        
+        self.navigationProxy.navigateToInMap((0,1,0))
 
 if __name__ == '__main__':
     liftTask = LiftTask(robotIP, PORT)
-    
+    liftTask.toStart()
+    liftTask.toLift()
+    liftTask.toEnd()
