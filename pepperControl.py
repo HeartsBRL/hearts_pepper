@@ -1,11 +1,12 @@
-from naoqi import ALProxy
+from naoqi import ALProxy, ALModule
 import time
 import thread
 
 #Set IP, Port, and global variables
-robotIP = "10.2.0.110"
+robotIP = "10.2.0.114"
 PORT = 9559	
-listening = True
+#listening = True
+vocabulary = ["pepper", "yes"]
 	
 class PepperController(object):
 
@@ -19,6 +20,7 @@ class PepperController(object):
 		self.setup()
 
 	def setup(self):
+		self.lifeProxy = ALProxy("ALAutonomousLife", self._robotIP, self._PORT)
 		self.engageProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
 		self.peoplePerceptionProxy = ALProxy("ALPeoplePerception", self._robotIP, self._PORT)
 		#self.waveDetectProxy = ALProxy("ALWavingDetection", self._robotIP, self._PORT)
@@ -32,9 +34,12 @@ class PepperController(object):
 
 	def setVocabulary(self):
 		self.speechProxy.pause(True)
-		self.speechProxy.setLanguage("English")
-		vocabulary = ["pepper", "yes"]
-		self.speechProxy.setVocabulary(vocabulary, False)
+		self.speechProxy.removeAllContext()
+		try:
+			self.speechProxy.setLanguage("English")
+			self.speechProxy.setVocabulary(vocabulary,False)
+		except:
+			print("Vocabulary already set")
 		self.speechProxy.pause(False)
 	
 	def speechRecogntion(self):
@@ -42,7 +47,7 @@ class PepperController(object):
 		#while listening == True:
 		thread.start_new_thread(self.onWordRecognized,("words", 2))
 		self.memoryProxy.insertData("WordRecognized", " ")
-		#self.memoryProxy.insertData("SoundLocated", " ")
+		self.memoryProxy.insertData("SoundLocated", " ")
 		self.speechProxy.subscribe("attention")
 		self.soundLocalProxy.subscribe("soundLocal")
 		#self.soundDetectProxy.subscribe("attention")
@@ -57,27 +62,36 @@ class PepperController(object):
 			wordRecognized = self.memoryProxy.getData("WordRecognized")
 			print (wordRecognized)
 			if wordRecognized[0] == "pepper":
+			#if "pepper" in wordRecognized:
 				heard = True
 				#listening = False
 				#soundDetected = self.memoryProxy.getData("SoundDetected")
 				#print(soundDetected)
-				soundLocated = self.memoryProxy.getData("SoundLocated")
-				print("soundLocated", soundLocated)
+				
+				soundLocated = self.memoryProxy.subscribeToMicroEvent("SoundLocated", "ALSoundLocalization", "Sound located", "self.unSubscribe")
+				location = self.memoryProxy.getData("SoundLocated")
+				
+				self.unSubscribe()
+				print("soundLocated", location)
 				
 				#action
 				#self.ttsProxy.say("I heard you")
 				
-				#unsubscribe
-				self.speechProxy.unsubscribe("attention")
-				print "Speech recognition engine stopped"
-
-				self.soundLocalProxy.unsubscribe("soundLocal")
-				print "Sound localisation engine stopped"
 
 				#self.soundDetectProxy.unsubscribe("attention")
 				
 		
+	def unSubscribe(self):
+		#unsubscribe
+		self.speechProxy.unsubscribe("attention")
+		print "Speech recognition engine stopped"
 		
+		self.memoryProxy.unsubscribeToMicroEvent("SoundLocated", "ALSoundLocalization")
+		print "MicroEvent unSubscribed"
+
+		self.soundLocalProxy.unsubscribe("soundLocal")
+		print "Sound localisation engine stopped"
+
 		
 		
 		
