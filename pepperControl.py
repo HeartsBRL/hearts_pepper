@@ -2,9 +2,10 @@ from naoqi import ALProxy
 import time
 import thread
 
-#Set IP, Port, Colour, and Font
+#Set IP, Port, and global variables
 robotIP = "10.2.0.110"
 PORT = 9559	
+listening = True
 	
 class PepperController(object):
 
@@ -28,7 +29,6 @@ class PepperController(object):
 		self.soundDetectProxy = ALProxy("ALSoundDetection", self._robotIP, self._PORT)
 		self.memoryProxy = ALProxy("ALMemory", self._robotIP, self._PORT)
 		self.ttsProxy = ALProxy("ALTextToSpeech", self._robotIP, self._PORT)
-		
 
 	def setVocabulary(self):
 		self.speechProxy.pause(True)
@@ -38,21 +38,55 @@ class PepperController(object):
 		self.speechProxy.pause(False)
 	
 	def speechRecogntion(self):
+		#global listening
+		#while listening == True:
 		thread.start_new_thread(self.onWordRecognized,("words", 2))
 		self.memoryProxy.insertData("WordRecognized", " ")
+		#self.memoryProxy.insertData("SoundLocated", " ")
 		self.speechProxy.subscribe("attention")
+		self.soundLocalProxy.subscribe("soundLocal")
+		#self.soundDetectProxy.subscribe("attention")
 		print "Speech recognition engine started"
-		time.sleep(20)
-        
+		time.sleep(15)
+		
+
 	def onWordRecognized(self, string, threadName):
+		#global listening
 		heard = False
 		while heard == False:
 			wordRecognized = self.memoryProxy.getData("WordRecognized")
 			print (wordRecognized)
 			if wordRecognized[0] == "pepper":
 				heard = True
-				self.ttsProxy.say("I heard you")
+				#listening = False
+				#soundDetected = self.memoryProxy.getData("SoundDetected")
+				#print(soundDetected)
+				soundLocated = self.memoryProxy.getData("SoundLocated")
+				print("soundLocated", soundLocated)
+				
+				#action
+				#self.ttsProxy.say("I heard you")
+				
+				#unsubscribe
 				self.speechProxy.unsubscribe("attention")
 				print "Speech recognition engine stopped"
+
+				self.soundLocalProxy.unsubscribe("soundLocal")
+				print "Sound localisation engine stopped"
+
+				#self.soundDetectProxy.unsubscribe("attention")
 				
-			
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
