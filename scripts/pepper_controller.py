@@ -13,13 +13,13 @@ import numpy
 from naoqi import ALProxy
 
 #robotIP = "pepper.local"
-robotIP = "10.2.0.112" #Stevey
+robotIP = "10.2.0.114" #Stevey
 PORT = 9559
 
 class PepperController(object):
-    
+
     def __init__(self, ip, port):
-        # Get the IP and port from the arguments 
+        # Get the IP and port from the arguments
         self._robotIP = ip
         self._PORT = port
         # Start a session on the robot
@@ -49,7 +49,7 @@ class PepperController(object):
                "Please check your script arguments. Run with -h option for help.")
 
         try:
-            ## ALL THE PROXIES            
+            ## ALL THE PROXIES
             self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
             self.anSpeechProxy = ALProxy("ALAnimatedSpeech", self._robotIP, self._PORT)
             self.ttsProxy = ALProxy("ALTextToSpeech", self._robotIP, self._PORT)
@@ -123,7 +123,7 @@ class PepperController(object):
             print("Pepper TableService failed due to:")
             print(e)
 
-    def stopDisplay(self, filename):   
+    def stopDisplay(self, filename):
         if(self.tabletFlag == "webview"):
             self.tabletProxy.hideWebview()
             self.tabletFlag = False
@@ -137,6 +137,3 @@ class PepperController(object):
 
 if __name__ == '__main__':
     pepper = Pepper_controller(robotIP, PORT)
-    
-    
-
