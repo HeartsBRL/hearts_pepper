@@ -13,7 +13,7 @@ import numpy
 from naoqi import ALProxy
 
 #robotIP = "pepper.local"
-robotIP = "10.2.0.112" #Stevey
+robotIP = "10.2.0.114" #Stevey
 PORT = 9559
 
 class PepperController(object):

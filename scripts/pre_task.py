@@ -5,7 +5,7 @@ from pepper_controller import PepperController
 import numpy
 import Image
 
-robotIP = "10.2.0.110" #Stevey
+robotIP = "10.2.0.114" #Stevey
 PORT = 9559
 
 class PreTask(PepperController):
@@ -14,7 +14,7 @@ class PreTask(PepperController):
         ## Verbal confirmation it's starting
         self.say("boop")
         ## Turn of auto-interaction features
-        self.lifeProxy.setState("interactive")
+        self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.03)
         self.motionProxy.setOrthogonalSecurityDistance(0.1)
