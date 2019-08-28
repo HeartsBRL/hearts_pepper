@@ -137,9 +137,9 @@ class PepperController(object):
 
 if __name__ == '__main__':
     pepper = PepperController(robotIP, PORT)
-    while True:
-        words = input("Enter a phrase! ")
-        pepper.say(str(words))
+    # while True:
+    #     words = input("Enter a phrase! ")
+    #     pepper.say(str(words))
 
     # while True:
     #     web = input("Enter a website ")

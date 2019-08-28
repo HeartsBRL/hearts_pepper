@@ -91,6 +91,24 @@ class LiftTask(Pretask, api_querier): #PepperController will be a candidate inst
         #TODO c Acknowledge that the destination has been reached
 
 
+    def load_dict(self):
+        
+        json_name = 'locations.json'
+
+        with open(json_name) as json_data:
+            self.dict = json.load(json_data)
+
+        print("using locations file: " + json_name)
+        print(self.dict)
+
+    '''
+    def write_dict(self, updatedLocations):
+        # todo: path as ros param
+        json_name = rospy.get_param('locations_json')
+        with open(json_file, "w") as JSonDictFile:
+            json.dump(updatedLocations, json_file)
+    '''
+
 if __name__ == '__main__':
     liftTask = LiftTask(robotIP, PORT)
     liftTask.toStart()
