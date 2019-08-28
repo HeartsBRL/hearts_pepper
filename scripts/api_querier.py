@@ -4,7 +4,7 @@
     # working:
     #     - post and get for all episode4 api's
     #     -
-    # todo:
+    # todo (Not needed anymore):
     #     - ROSify
     #         - expose to some useful ROS server/topic?
     #     - put (what even are you?)
