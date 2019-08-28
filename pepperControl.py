@@ -5,8 +5,7 @@ import thread
 #Set IP, Port, and global variables
 robotIP = "10.2.0.114"
 PORT = 9559	
-#listening = True
-vocabulary = ["pepper", "yes"]
+#vocabulary = ["pepper", "yes"]
 	
 class PepperController(object):
 
@@ -23,7 +22,6 @@ class PepperController(object):
 		self.lifeProxy = ALProxy("ALAutonomousLife", self._robotIP, self._PORT)
 		self.engageProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
 		self.peoplePerceptionProxy = ALProxy("ALPeoplePerception", self._robotIP, self._PORT)
-		#self.waveDetectProxy = ALProxy("ALWavingDetection", self._robotIP, self._PORT)
 		self.gazeProxy = ALProxy("ALGazeAnalysis", self._robotIP, self._PORT)
 		self.faceDetectionProxy = ALProxy("ALFaceDetection", self._robotIP, self._PORT)
 		self.speechProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
@@ -31,67 +29,69 @@ class PepperController(object):
 		self.soundDetectProxy = ALProxy("ALSoundDetection", self._robotIP, self._PORT)
 		self.memoryProxy = ALProxy("ALMemory", self._robotIP, self._PORT)
 		self.ttsProxy = ALProxy("ALTextToSpeech", self._robotIP, self._PORT)
+		self.trackerProxy = ALProxy("ALTracker", self._robotIP, self._PORT)
+		#self.lifeProxy.setState("safeguard")
 
 	def setVocabulary(self):
 		self.speechProxy.pause(True)
 		self.speechProxy.removeAllContext()
 		try:
 			self.speechProxy.setLanguage("English")
-			self.speechProxy.setVocabulary(vocabulary,False)
+			self.speechProxy.setVocabulary(["pepper", "yes"],False)
 		except:
 			print("Vocabulary already set")
 		self.speechProxy.pause(False)
+		
+	def startThread(self):
+		thread.start_new_thread(self.onWordRecognized,("words", 2))
+		time.sleep(15)
 	
 	def speechRecogntion(self):
-		#global listening
-		#while listening == True:
-		thread.start_new_thread(self.onWordRecognized,("words", 2))
 		self.memoryProxy.insertData("WordRecognized", " ")
-		self.memoryProxy.insertData("SoundLocated", " ")
 		self.speechProxy.subscribe("attention")
-		self.soundLocalProxy.subscribe("soundLocal")
-		#self.soundDetectProxy.subscribe("attention")
+		#self.startThread()
 		print "Speech recognition engine started"
-		time.sleep(15)
+		self.onWordRecognized()
 		
 
-	def onWordRecognized(self, string, threadName):
-		#global listening
+	def onWordRecognized(self):#, string, threadName):
 		heard = False
 		while heard == False:
 			wordRecognized = self.memoryProxy.getData("WordRecognized")
 			print (wordRecognized)
 			if wordRecognized[0] == "pepper":
-			#if "pepper" in wordRecognized:
+			
 				heard = True
-				#listening = False
-				#soundDetected = self.memoryProxy.getData("SoundDetected")
-				#print(soundDetected)
-				
-				soundLocated = self.memoryProxy.subscribeToMicroEvent("SoundLocated", "ALSoundLocalization", "Sound located", "self.unSubscribe")
-				location = self.memoryProxy.getData("SoundLocated")
-				
-				self.unSubscribe()
-				print("soundLocated", location)
-				
-				#action
-				#self.ttsProxy.say("I heard you")
-				
+				#self.trackSound()
+			
+			#if "pepper" in wordRecognized:
 
-				#self.soundDetectProxy.unsubscribe("attention")
-				
+				self.ttsProxy.say("I heard you")
+				self.unSubscribe()
+
+	
+	def	trackSound(self):
+		targetName = "Sound"
+		param = [0.1, 0.5]
+		mode = "Move"
 		
+		self.trackerProxy.registerTarget(targetName, param)
+		time.sleep(2)
+		activeTarget = self.trackerProxy.getActiveTarget()
+		print("target is: ", activeTarget)
+		self.trackerProxy.setMode(mode)
+		time.sleep(2)
+		activeMode = self.trackerProxy.getMode()
+		print("Mode is: ", activeMode)
+		self.trackerProxy.track(targetName)
+		time.sleep(0.5)
+		self.trackerProxy.stopTracker()
+		
+	
 	def unSubscribe(self):
-		#unsubscribe
 		self.speechProxy.unsubscribe("attention")
 		print "Speech recognition engine stopped"
 		
-		self.memoryProxy.unsubscribeToMicroEvent("SoundLocated", "ALSoundLocalization")
-		print "MicroEvent unSubscribed"
-
-		self.soundLocalProxy.unsubscribe("soundLocal")
-		print "Sound localisation engine stopped"
-
 		
 		
 		
