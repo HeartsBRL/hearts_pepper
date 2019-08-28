@@ -5,7 +5,7 @@ from pepper_controller import PepperController
 import numpy
 import Image
 
-robotIP = "10.2.0.114" #Stevey
+robotIP = "10.2.0.112" #Stevey
 PORT = 9559
 
 class PreTask(PepperController):
@@ -14,10 +14,11 @@ class PreTask(PepperController):
         ## Verbal confirmation it's starting
         self.say("boop")
         ## Turn of auto-interaction features
+        self.lifeProxy.setState("solitary")
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
-        self.motionProxy.setTangentialSecurityDistance(0.03)
-        self.motionProxy.setOrthogonalSecurityDistance(0.1)
+        self.motionProxy.setTangentialSecurityDistance(0.01)
+        self.motionProxy.setOrthogonalSecurityDistance(0.05)
 
     def explore(self,r):
         ## SLAM in a radius of r metres
@@ -37,7 +38,6 @@ class PreTask(PepperController):
         print "saved at: " + path
 
         ## start the localization routine so the Pepper can navigate
-        self.navigationProxy.stopLocalization()
         self.navigationProxy.startLocalization()
         print "Started localization"
 
@@ -52,8 +52,7 @@ class PreTask(PepperController):
 
         print "Returning to origin"
         self.say("I'm heading back to the origin.")        
-        ret = self.goHere(0,0,0)
-        print ret
+        self.goHere(0,0,0)
 
     def goHere(self,x,y,t):
         ret = self.navigationProxy.navigateToInMap((x,y,t))
@@ -67,5 +66,5 @@ class PreTask(PepperController):
 if __name__ == '__main__':
     task = PreTask(robotIP, PORT)
     task.startingVariables()
-    task.explore(3)
-    #task.goHere(1,-1,0)
+    #task.explore(2)
+    task.goHere(0,0,0)
