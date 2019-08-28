@@ -40,9 +40,10 @@ class NavTest(PepperController):
 
     def test(self):
         #Start the thread to send pepper to the end location  
-        thread.start_new_thread(self.toEnd,(self,1))
+        thread.start_new_thread(self.toEnd,(self,))
         #Start thread to interrupt pepper's movement
-        thread.start_new_thread(self.stopMove,(self,1))
+        #thread.start_new_thread(self.stopMove,(self,))
+        self.stopMove()
 
     
 
