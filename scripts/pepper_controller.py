@@ -13,7 +13,7 @@ import numpy
 from naoqi import ALProxy
 
 #robotIP = "pepper.local"
-robotIP = "10.2.0.114" #Stevey
+robotIP = "10.2.0.112" #Stevey
 PORT = 9559
 
 class PepperController(object):
@@ -136,4 +136,13 @@ class PepperController(object):
 
 
 if __name__ == '__main__':
-    pepper = Pepper_controller(robotIP, PORT)
+    pepper = PepperController(robotIP, PORT)
+    while True:
+        words = input("Enter a phrase! ")
+        pepper.say(str(words))
+
+    # while True:
+    #     web = input("Enter a website ")
+    #     pepper.display(web)
+    #     input("Enter anything to hide website")
+    #     pepper.stopDisplay()
