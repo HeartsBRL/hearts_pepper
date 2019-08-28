@@ -62,7 +62,7 @@ class PepperController(object):
 			if wordRecognized[0] == "pepper":
 			
 				heard = True
-				#self.trackSound()
+				self.trackSound()
 			
 			#if "pepper" in wordRecognized:
 
@@ -72,7 +72,7 @@ class PepperController(object):
 	
 	def	trackSound(self):
 		targetName = "Sound"
-		param = [0.1, 0.5]
+		param = [0.1, 0.1]
 		mode = "Move"
 		
 		self.trackerProxy.registerTarget(targetName, param)
