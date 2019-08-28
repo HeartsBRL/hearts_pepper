@@ -136,4 +136,4 @@ class PepperController(object):
 
 
 if __name__ == '__main__':
-    pepper = Pepper_controller(robotIP, PORT)
+    pepper = PepperController(robotIP, PORT)
