@@ -14,11 +14,10 @@ class LiftTask(Pretask, api_querier): #PepperController will be a candidate inst
 
 
     def toStart(self):
-    	#TODO A Request floor destination to DataHub
+    	#TODO A Request floor destination to DataHub (Alex Sleat)
             # qb = api_querier("master")
-            # #qb.get("RobotStatus")
-            # d = qb.load_schema("RobotLocation")
-            # qb.post("RobotLocation", d)
+            # #qb.get("Shop")
+
 
     	#TODO B Decide if where to go according to floor (Same floor or different floor)
 
