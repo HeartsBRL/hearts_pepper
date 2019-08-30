@@ -4,7 +4,7 @@
     # working:
     #     - post and get for all episode4 api's
     #     -
-    # todo (Not needed anymore):
+    # todo:
     #     - ROSify
     #         - expose to some useful ROS server/topic?
     #     - put (what even are you?)
@@ -12,27 +12,33 @@
 
 
 import json
-import urllib2, urllib, httplib
+import urllib2, urllib, httplib, base64
 import sys
+import datetime
 
 class api_querier():
 
     # URL Format: https://api.pp.mksmart.org/sciroc-competition/TeamName/Request
-    base_url = "https://api.pp.mksmart.org/"
+    base_url = "https://api.mksmart.org/"
     url_dataset = "sciroc-competition/"
     url = ""
+    teamid = "hearts"
+    teamkey = ""
 
+    # SCHEMA URL NEEDS TO BE EXPANDED AS NEEDED:
+    ## Completed for episode4
     schema_url = {
         "RobotStatus" : "sciroc-robot-status/",
         "RobotLocation" : "sciroc-robot-location/",
-        "Shop" : "sciroc-episode4-shop/"
+        "Shop" : "master/sciroc-episode4-shop/",
+        "Table": "sciroc-episode3-table/"
     }
 
     # INIT
-    def __init__(self, teamName):
+    def __init__(self):
 
         # Generate the base_url
-        self.url = self.base_url + self.url_dataset + teamName + "/"
+        self.url = self.base_url + self.url_dataset
         print "Base URL: " + self.url
 
     # GET request from the API server:
@@ -43,11 +49,29 @@ class api_querier():
     def get(self, q):
 
         try:
-            url = self.url + self.schema_url[q]
+            # Check if the URL already has an ID (i.e some start with master)
+            if( self.schema_url[q][:6] == "master" ):
+                url = self.url + self.schema_url[q]
+            else:
+                url = self.url + self.teamid + "/" + self.schema_url[q]
+
+            # Print URL:
             print "GET URL: " + url
-            j = json.load(urllib2.urlopen(url))
+
+            # Fetch URL json data from server:
+
+            request = urllib2.Request(url)
+            base64string = base64.b64encode('%s:%s' % (self.teamkey, ''))
+            request.add_header("Authorization", "Basic %s" % base64string)
+            result = urllib2.urlopen(request)
+            j = json.load(result)
+
+            # Print it out:
             print "dataset found, format as follows:"
-            print j["@id"]
+            #print j
+            return j
+
+        # Check for URL failures:
         except urllib2.HTTPError as err:
             if err.code == 404:
                 print "404 - page not found"
@@ -75,20 +99,40 @@ class api_querier():
     def post(self, q, data):
 
         try:
-            url = self.url + self.schema_url[q] + data["@id"]
+            # Check if the URL already has an ID (i.e some start with master)
+            if( self.schema_url[q][:6] == "master" ):
+                url = self.url + self.schema_url[q]
+            else:
+                url = self.url + self.teamid + "/" + self.schema_url[q]
+
+            #url = self.url + self.schema_url[q] + data["@id"]
+            url = url + data["@id"] + "?"
             print "POST URL: " + url
 
-            # generate headers for the server:
-            headers = {"Content-type": "application/json",
-                       "Accept": "*/*"}
+            print data
+            # Encode payload:
+            encoded_data = urllib.urlencode(data)
+            print encoded_data
 
-            #
-            data = urllib.urlencode(data)
-            u = urllib2.urlopen(url, data)
-            h.request('POST', q, data, headers)
+            # Fetch URL json data from server:
+            request = urllib2.Request(url)
 
-            r = h.getresponse()
-            print r.read()
+            # Add Authorization and headers:
+            base64string = base64.b64encode('%s:%s' % (self.teamkey, ''))
+            request.add_header("Authorization", "Basic %s" % base64string)
+            request.add_header("Content-type", "application/json")
+            request.add_header("Accept", "*/*")
+
+            # Open URL
+            result = urllib2.urlopen(request, json.dumps(data))
+
+            # Get JSON:
+            #j = json.load(result)
+
+            print result
+
+            #r = h.getresponse()
+            #print r.read()
 
         except urllib2.HTTPError as err:
             if err.code == 404:
@@ -98,7 +142,7 @@ class api_querier():
             elif err.code == 401:
                 print "401 - auth error"
             else:
-                print err.code + " - unknown error"
+                print str(err.code) + " - unknown error"
         except:
             print("Unexpected error:", sys.exc_info()[0])
 
@@ -118,10 +162,33 @@ class api_querier():
 
         return d
 
-qb = api_querier("master")
 
-#qb.get("RobotStatus")
+if __name__ == '__main__':
+    ### EXAMPLE USE OF MODULE:
 
-d = qb.load_schema("RobotLocation")
+    ## Set up the object:
+    qb = api_querier()
 
-qb.post("RobotLocation", d)
+    ## Get an item from the server:
+    print "Getting Shop:"
+    ret = qb.get("Shop")
+    print ret
+
+    ## Send object to server:
+    print "Sending Robot Status rqst"
+    # load the data schema for the item:
+    d = qb.load_schema("RobotStatus")
+    # edit as needed:
+    d["@id"] = u"hearts"
+    d["message"] = u"enroute"
+    d["episode"] = u"4"
+    d["team"] = "hearts"
+    #shitty way of making the correct format for timestamp:
+    t = str(datetime.datetime.now()).replace(" ", "T")
+    t = t[:len(t)-3]+"Z"
+    d["timestamp"] = t
+    d["x"] = 4
+    d["y"] = 2
+    d["z"] = 0
+    # send:
+    qb.post("RobotStatus", d)

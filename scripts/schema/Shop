@@ -1,0 +1,7 @@
+{
+  "@id": "string",
+  "@type": "Shop",
+  "floor": 0,
+  "description": "string",
+  "goal": true
+}

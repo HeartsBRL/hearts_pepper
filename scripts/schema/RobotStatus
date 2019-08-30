@@ -1,0 +1,11 @@
+{
+  "@id": "string",
+  "@type": "RobotStatus",
+  "message": "string",
+  "episode": "string",
+  "team": "string",
+  "timestamp": "2019-08-29T12:57:52.742Z",
+  "x": 0,
+  "y": 0,
+  "z": 0
+}
