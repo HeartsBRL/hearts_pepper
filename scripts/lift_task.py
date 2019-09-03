@@ -2,53 +2,76 @@
 
 from pepper_controller import PepperController
 from pre_task import PreTask
-from api_querier import api_querier
+import api_querier
 import numpy
 import Image
 
 robotIP = "10.2.0.114" #Stevey
 PORT = 9559
 
-#class LiftTask(PepperController):
-class LiftTask(Pretask, api_querier): #PepperController will be a candidate instead of Pretask
+class LiftTask(PepperController):
+
+	def prepClasses(self)
+		#set up instances of classes from other files that we're going to need
+		self.apiQuery = api_querier.api_querier()
+		
+	def getGoal(self):
+		#Gets the goal floor from the data hub and returns it using alex's API
+		shopDict = self.apiQuery.get("Shop")
+		shopKeys = shopDict.keys()
+		for key in shopKeys:
+			if shopDict[key]['goal'] == True
+				goal = shopDict['key']['floor']
+				return goal
+		
+
+    def startTask(self):
+    	#TODO A Request floor destination from DataHub (Alex Sleat)
+		self.goalFloor = self.getGoal()
 
 
-    def toStart(self):
-    	#TODO A Request floor destination to DataHub (Alex Sleat)
-            # qb = api_querier("master")
-            # #qb.get("Shop")
-
-
-    	#TODO B Decide if where to go according to floor (Same floor or different floor)
-
-
-    		#TODO C If same floor go to goal and finish
-    		      self.goHere("Finish coordinates")
-    		#TODO D If different floor continue to next to TODOE
-    	#TODO E Approach to lift (Currently tested at the moment through threading**)
-    	   self.goHere("Lift coordinates")
-           #TODO** While robot is moving check if obstacles are met and dodge if posible or stop if goal reached or people blocking way.
-
-    	#TODO F Communicate that it has arrived at the waiting position
-            self.say("I am waiting for the elevator to arrive!")
-            # d = qb.load_schema("RobotLocation") #Wait for Alex Sleat to confirm
-            # qb.post("RobotLocation", d)
-    	#TODO G Engage with people if necessary
-            #TODO Check for people around
-                #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
-                #TODO Detects gestures like waving
-            #TODO Look at the closest person or origin of sounds and gestures
-            #TODO Talk to the closest person
-            #TODO Look at face
-    		#TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
-                # TODO self.say("Hello, my name is pepper and I am going to floor" + str(FloorNumber))
-                # OPTIONAL TODO person_comments = self.listen
-        #TODO H Wait for all people to enter the lift
-            #TODO Wait until (Closest person distance (Known from cameras) == Lift distance (Known from map))
-        #TODO I Enter lift
-        self.goHere("Lift Entrance coordinates")
-        self.goHere("Lift back wall coordinates") # We assume pepper adapts trajectory to reduce distance
-        # TODO Once pepper coordinates ensure it is inside the lift, Abort navigation.
+    	#TODO B Decide where to go according to floor (Same floor or different floor)
+		#TODO C If same floor go to goal and finish
+		if self.goalFloor == 0:
+			self.goHere(self.locations['finish'])
+		else:			
+			#TODO D If different floor continue to next to TODOE
+			#TODO E Approach to lift (Currently tested at the moment through threading**)
+			self.goHere(self.locations['lift'])
+		   
+			#TODO F Communicate that it has arrived at the waiting position
+			self.say("I am waiting for the elevator to arrive!")
+			
+			'''
+				#Not sure it's necessary to post our location at this point, or, indeed, ever. (see API diagram for task)
+				# d = qb.load_schema("RobotLocation") #Wait for Alex Sleat to confirm
+				# qb.post("RobotLocation", d)
+			'''
+				
+				
+			'''
+				Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up	
+				#TODO G Engage with people if necessary
+				#TODO Check for people around
+					#TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
+					#TODO Detects gestures like waving
+				#TODO Look at the closest person or origin of sounds and gestures
+				#TODO Talk to the closest person
+				#TODO Look at face
+				#TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
+					# TODO self.say("Hello, my name is pepper and I am going to floor" + str(FloorNumber))
+					# OPTIONAL TODO person_comments = self.listen
+			'''
+					
+			#Wait for all people to enter the lift
+			#TODO how are we going to figure out if everyone's in the lift?
+				#Wait until (Closest person distance (Known from cameras) == Lift distance (Known from map)) ?
+			
+			#Enter lift
+			self.goHere(self.locations['lift entrance'])
+			self.goHere(self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
+			# TODO Once pepper coordinates ensure it is inside the lift, Abort navigation.
+		
 
     def InsideLift(self):
     	#TODO 1 Locate itself in proper place
@@ -80,26 +103,34 @@ class LiftTask(Pretask, api_querier): #PepperController will be a candidate inst
 
 
     def toEnd(self):
+		self.say("This is my floor!")
         #TODO Wait for people to leave the lift
-        #TODO Say please keep te door open,I am going to exit
-    	#TODO a Go to destination location
-    	#self.goHere("Finish coordinates")
 
-        #### Already done on toStart method (Copy and parte here from there if needed)
-    	#TODO b Engage with people if necessary
-        	#TODO ba Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention)
+		self.say("I'm getting out now, thanks for your help!")
+    	#Go to destination location
+		self.goHere(self.locations['finish'])
+
+		#TODO G Engage with people if necessary
+		#TODO Check for people around
+			#TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
+			#TODO Detects gestures like waving
+		#TODO Look at the closest person or origin of sounds and gestures
+		#TODO Talk to the closest person
+		#TODO Look at face
+		#TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
+			# TODO self.say("Hello, my name is pepper and I am going to floor" + str(FloorNumber))
+			# OPTIONAL TODO person_comments = self.listen
         #TODO c Acknowledge that the destination has been reached
 
 
     def load_dict(self):
-        
+        #loads a dictionary from the locations json file
         json_name = 'locations.json'
 
         with open(json_name) as json_data:
-            self.dict = json.load(json_data)
+            self.locations = json.load(json_data)
 
         print("using locations file: " + json_name)
-        print(self.dict)
 
     '''
     def write_dict(self, updatedLocations):
@@ -111,6 +142,9 @@ class LiftTask(Pretask, api_querier): #PepperController will be a candidate inst
 
 if __name__ == '__main__':
     liftTask = LiftTask(robotIP, PORT)
-    liftTask.toStart()
+	liftTask.prepClasses()
+	liftTask.getGoal()
+	
+    liftTask.startTask()
     liftTask.InsideLift()
     liftTask.toEnd()

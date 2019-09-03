@@ -78,6 +78,12 @@ class PepperController(object):
             self.tabletFlag = False
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
+			
+			## Turn of auto-interaction features
+			self.lifeProxy.setState("solitary")
+			## Set how close Pepper is allowed to get to obstacles
+			self.motionProxy.setTangentialSecurityDistance(0.01)
+			self.motionProxy.setOrthogonalSecurityDistance(0.1)
 
         except Exception,e:
             print("Failed to connect to Pepper, is it on, and is the IP address correct?")
@@ -97,42 +103,16 @@ class PepperController(object):
         except Exception,e:
             print("Pepper TTS failed due to:")
             print(e)
+			
+			
+			
+	def goHere(self,x,y,t): #simple function to call navigation. Can run this as a thread.
+		#store intended coords as a tuple in case we need to resume this navigation command later
+		self.going = (x,y,t)
+        ret = self.navigationProxy.navigateToInMap((x,y,t))
+        return ret
 
-    def display(self, filename):
-
-        #@TODO add videos
-        print ("Displaying: " + filename)
-        self.tabletTimeout = time.time()
-        try:
-            video_ext = ["mp4"]
-            img_ext = ["jpg", "jpeg", "png", "gif"]
-            if(filename.endswith(tuple(img_ext))):
-                r = self.tabletProxy.showImage(filename)
-                self.tabletFlag = "image"
-            elif(filename.endswith(tuple(video_ext))):
-                r = self.tabletProxy.playVideo(filename)
-                self.tabletFlag = "video"
-            else:
-                r = self.tabletProxy.showWebview(filename)
-                self.tabletFlag = "webview"
-
-            print(self.tabletFlag)
-            print("Result: " + str(r))
-
-        except Exception,e:
-            print("Pepper TableService failed due to:")
-            print(e)
-
-    def stopDisplay(self, filename):
-        if(self.tabletFlag == "webview"):
-            self.tabletProxy.hideWebview()
-            self.tabletFlag = False
-        elif(self.tabletFlag == "image"):
-            self.tabletProxy.hideImage()
-            self.tabletFlag = False
-        elif(self.tabletFlag == "video"):
-            self.tabletProxy.stopVideo()
-            self.tabletFlag = False
+    
 
 
 if __name__ == '__main__':

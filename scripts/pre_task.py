@@ -10,15 +10,6 @@ PORT = 9559
 
 class PreTask(PepperController):
 
-    def startingVariables(self):
-        ## Verbal confirmation it's starting
-        self.say("boop")
-        ## Turn of auto-interaction features
-        self.lifeProxy.setState("solitary")
-        ## Set how close Pepper is allowed to get to obstacles
-        self.motionProxy.setTangentialSecurityDistance(0.03)
-        self.motionProxy.setOrthogonalSecurityDistance(0.1)
-
     def explore(self,r):
         ## SLAM in a radius of r metres
         self.say("I'm going to have a look around.")
@@ -55,17 +46,8 @@ class PreTask(PepperController):
         ret = self.goHere(0,0,0)
         print ret
 
-    def goHere(self,x,y,t):
-        ret = self.navigationProxy.navigateToInMap((x,y,t))
-        print ret
-        if ret == 0:
-            self.say("I made it!")
-        else:
-            self.say("Sorry, I couldn't get there.")
-
 
 if __name__ == '__main__':
     task = PreTask(robotIP, PORT)
-    task.startingVariables()
-    #task.explore(3)
+    task.explore(3)
     #task.goHere(1,-1,0)

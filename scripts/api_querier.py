@@ -23,7 +23,7 @@ class api_querier():
     url_dataset = "sciroc-competition/"
     url = ""
     teamid = "hearts"
-    teamkey = ""
+    teamkey = "65222466-231c-4efa-bbe3-5cb7e862cfc7"
 
     # SCHEMA URL NEEDS TO BE EXPANDED AS NEEDED:
     ## Completed for episode4
