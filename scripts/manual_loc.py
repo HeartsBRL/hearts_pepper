@@ -14,12 +14,9 @@ class ManualLoc(PepperController):
         print(self.navigationProxy.getRobotPositionInMap())
             
     
-
-
-
 if __name__ == '__main__':
     task = ManualLoc(robotIP, PORT)
-
+    task.navigationProxy.startLocalization()
     while True:
         time.sleep(5)
         task.printLoc()

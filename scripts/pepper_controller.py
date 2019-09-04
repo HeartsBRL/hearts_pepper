@@ -110,9 +110,10 @@ class PepperController(object):
 
         return
 
-	def goHere(self,x,y,t): #simple function to call navigation. Can run this as a thread.
-		#store intended coords as a tuple in case we need to resume this navigation command later
-		self.going = (x,y,t)
+    def goHere(self,x,y,t): 
+        #simple function to call navigation. Can run this as a thread.
+        #store intended coords as a tuple in case we need to resume this navigation command later
+        self.going = (x,y,t)
         ret = self.navigationProxy.navigateToInMap((x,y,t))
         return ret
 

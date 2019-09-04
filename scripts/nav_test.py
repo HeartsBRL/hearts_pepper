@@ -16,7 +16,6 @@ class NavTest(PepperController):
     def setup2(self):
         #enbles localisation and navigation
         self.navigationProxy.startLocalization()
-
     
 
         # *args allows any number of arguments
@@ -37,22 +36,29 @@ class NavTest(PepperController):
         print("using locations file: " + json_name)
 
     def run_through(self):
-        self.goHere(-1.34,-0.82,0)
-        self.goHere(0.1,0.55,0)
-        self.goHere(-0.1,0.11,0)
-        self.goHere(-0.25,1.17,0)
-        self.goHere(-0.1,0.11,0)
-        self.goHere(0.1,0.55,0)
-        self.goHere(1.17,-0.2,0)
+        ## Turn of auto-interaction features
+        self.lifeProxy.setState("solitary")
+        ## Set how close Pepper is allowed to get to obstacles
+        self.motionProxy.setTangentialSecurityDistance(0.01)
+        self.motionProxy.setOrthogonalSecurityDistance(0.1)
+
+        self.goHere(0.3,-1.9,0)
+        self.goHere(0.5,-0.3,0)
+        self.goHere(-0.28,0.19,0)
+        self.goHere(-1.24,0.9,0)
+        self.goHere(-0.28,0.19,0)
+        self.goHere(0.5,-0.3,0)
+        self.goHere(1.27,0.88,0)
     
 
 if __name__ == '__main__':
     navTest = NavTest(robotIP, PORT)
+    navTest.setup2()
     #navTest.load_dict()
     navTest.run_through()
     
     #while loop keeps script alive for the threads to run. Super bad but
     #can change for the real thing.
-    x = 1
-    while (True):
-        y= x + 1
+    #x = 1
+    #while (True):
+    #    y= x + 1

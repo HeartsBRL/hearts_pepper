@@ -10,7 +10,7 @@ try:
 except ImportError:
     import Image
 
-robotIP = "10.2.0.112" #Stevey
+robotIP = "10.2.0.118" #Westey
 PORT = 9559
 
 class PreTask(PepperController):
@@ -63,5 +63,5 @@ class PreTask(PepperController):
 
 if __name__ == '__main__':
     task = PreTask(robotIP, PORT)
-    task.explore(3)
+    task.explore(2)
     #task.goHere(1,-1,0)
