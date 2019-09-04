@@ -5,6 +5,7 @@ from pre_task import PreTask
 import api_querier
 import numpy
 
+
 # pip install pillow
 try:
     from PIL import Image
@@ -12,9 +13,12 @@ except ImportError:
     import Image
 
 robotIP = "10.2.0.112" #Stevey
+
+
 PORT = 9559
 
 class LiftTask(PepperController):
+
 
 	def prepClasses(self):
 		#set up instances of classes from other files that we're going to need
@@ -77,6 +81,7 @@ class LiftTask(PepperController):
 				# d = qb.load_schema("RobotLocation") #Wait for Alex Sleat to confirm
 				# qb.post("RobotLocation", d)
 			'''
+
 
 
 			'''
@@ -170,6 +175,7 @@ class LiftTask(PepperController):
     #         json.dump(updatedLocations, json_file)
     # '''
 if __name__ == '__main__':
+
 	liftTask = LiftTask(robotIP, PORT)
 	liftTask.prepClasses()
 	g = liftTask.getGoal()
@@ -186,3 +192,4 @@ if __name__ == '__main__':
 	# liftTask.startTask()
 	# liftTask.InsideLift()
 	# liftTask.toEnd()
+
