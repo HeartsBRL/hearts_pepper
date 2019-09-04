@@ -15,8 +15,9 @@ import json
 import urllib2, urllib, httplib, base64
 import sys
 import datetime
+import os, ssl
 
-class api_querier():
+class ApiQuerier():
 
     # URL Format: https://api.pp.mksmart.org/sciroc-competition/TeamName/Request
     base_url = "https://api.mksmart.org/"
@@ -59,16 +60,29 @@ class api_querier():
             print "GET URL: " + url
 
             # Fetch URL json data from server:
+            print "Fuck1"
+            
+            if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+                getattr(ssl, '_create_unverified_context', None)):
+                ssl._create_default_https_context = ssl._create_unverified_context
 
             request = urllib2.Request(url)
+            print "Fuck2"
             base64string = base64.b64encode('%s:%s' % (self.teamkey, ''))
+            print "Fuck3"
             request.add_header("Authorization", "Basic %s" % base64string)
-            result = urllib2.urlopen(request)
-            j = json.load(result)
+            print "Fuck4"
 
+            try:
+                result = urllib2.urlopen(request)
+            except urllib2.URLError as e:
+                    print e.reason
+            print "Fuck5"
+            j = json.load(result)
+            print "Fuck6"
             # Print it out:
             print "dataset found, format as follows:"
-            #print j
+            print j
             return j
 
         # Check for URL failures:
@@ -167,7 +181,7 @@ if __name__ == '__main__':
     ### EXAMPLE USE OF MODULE:
 
     ## Set up the object:
-    qb = api_querier()
+    qb = ApiQuerier()
 
     ## Get an item from the server:
     print "Getting Shop:"
