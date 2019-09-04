@@ -6,8 +6,9 @@ import numpy
 import Image
 import thread
 import time
+import json
 
-robotIP = "10.2.0.114" #Stevey
+robotIP = "10.2.0.112" #Stevey
 PORT = 9559
 
 class NavTest(PepperController):
@@ -16,17 +17,7 @@ class NavTest(PepperController):
         #enbles localisation and navigation
         self.navigationProxy.startLocalization()
 
-    def toStart(self): 
-        #Send pepper to a pre-defined start location
-        self.navigationProxy.navigateToInMap((0.4,0,0))
-        self.navigationProxy.navigateToInMap((0.5,0,0))        
-        
-        # *args allows any number of arguments 
-    def toEnd(self,*args):
-        #send peper to the end locaiton
-        self.say("Going to the end")
-        ret = self.navigationProxy.navigateToInMap((-1,0,0))
-        print "toEnd: " + str(ret)
+    
 
         # *args allows any number of arguments
     def stopMove(self,*args):
@@ -35,23 +26,31 @@ class NavTest(PepperController):
         time.sleep(8)
         self.say("Stopping!")        
         self.navigationProxy.stopExploration() #Stops pepper navigating
-        time.sleep(6)
-        self.toEnd()
 
-    def test(self):
-        #Start the thread to send pepper to the end location  
-        thread.start_new_thread(self.toEnd,(self,))
-        #Start thread to interrupt pepper's movement
-        #thread.start_new_thread(self.stopMove,(self,))
-        self.stopMove()
+    def load_dict(self):
+        #loads a dictionary from the locations json file
+        json_name = 'locations.json'
+	
+        with open(json_name) as json_data:
+            self.locations = json.load(json_data)
+	
+        print("using locations file: " + json_name)
 
+    def run_through(self):
+        self.goHere(-1.34,-0.82,0)
+        self.goHere(0.1,0.55,0)
+        self.goHere(-0.1,0.11,0)
+        self.goHere(-0.25,1.17,0)
+        self.goHere(-0.1,0.11,0)
+        self.goHere(0.1,0.55,0)
+        self.goHere(1.17,-0.2,0)
     
 
 if __name__ == '__main__':
     navTest = NavTest(robotIP, PORT)
-    navTest.setup2()
-    navTest.toStart()
-    navTest.test()
+    #navTest.load_dict()
+    navTest.run_through()
+    
     #while loop keeps script alive for the threads to run. Super bad but
     #can change for the real thing.
     x = 1

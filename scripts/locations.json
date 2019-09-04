@@ -1,7 +1,7 @@
 {
-    "start": (0,-1,0),
-	"finish": (0,-1,0),
-	"lift": (0,0,0),
-	"lift entrance": (0,0.25,0),
-	"lift riding": (0,1,0)
+    "outside door": {(0.1,0.55,0)},
+    "inside door": (-0.1,0.11,0),
+    "lift back": (-0.25,1.17,0),
+    "start": (-1.34,-0.82,0),
+    "finish": (1.17,-0.2,0)
 }
