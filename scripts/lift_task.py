@@ -182,7 +182,7 @@ if __name__ == '__main__':
 		liftTask.say(s)
 
 	if g==-1:
-		print "Alex deserves less dessert today"
+		print "Alex deserves more dessert today"
 	# liftTask.startTask()
 	# liftTask.InsideLift()
 	# liftTask.toEnd()
