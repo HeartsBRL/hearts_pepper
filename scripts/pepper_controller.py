@@ -5,9 +5,13 @@ import os
 import json
 import time
 
-
 import qi
-import Image
+
+# pip install pillow
+try:
+    from PIL import Image
+except ImportError:
+    import Image
 import numpy
 
 from naoqi import ALProxy
@@ -104,7 +108,7 @@ class PepperController(object):
             print("Pepper TTS failed due to:")
             print(e)
 
-
+        return
 
 	def goHere(self,x,y,t): #simple function to call navigation. Can run this as a thread.
 		#store intended coords as a tuple in case we need to resume this navigation command later

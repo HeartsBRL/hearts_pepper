@@ -3,7 +3,12 @@
 from pepper_controller import PepperController
 
 import numpy
-import Image
+
+# pip install pillow
+try:
+    from PIL import Image
+except ImportError:
+    import Image
 
 robotIP = "10.2.0.114" #Stevey
 PORT = 9559
