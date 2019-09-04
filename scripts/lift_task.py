@@ -62,9 +62,19 @@ class LiftTask(PepperController):
 	def startTask(self):
 		#TODO A Request floor destination from DataHub (Alex Sleat)
 		self.goalFloor = self.getGoal()
-
+    	print self.goalFloor
+    	# #print "Goal is " + g["description"] + " on floor " + str(g["floor"])
+    	# liftTask.say("I'm visiting: ")
+        #
+    	# for key in self.goalFloor:
+    	# 	s = str(key + " on floor "+ str(self.goalFloor[key]))
+    	# 	liftTask.say(s)
+        #
+    	# if self.goalFloor==-1:
+    	# 	print "Alex deserves more dessert today"
 
 		#TODO B Decide where to go according to floor (Same floor or different floor)
+
 		#TODO C If same floor go to goal and finish
 		if self.goalFloor == 0:
 			self.goHere(self.locations['finish'])
@@ -88,6 +98,8 @@ class LiftTask(PepperController):
 				Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up
 				#TODO G Engage with people if necessary
 				#TODO Check for people around
+                self.setVocabulary()
+                self.speechRecognition()
 					#TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
 					#TODO Detects gestures like waving
 				#TODO Look at the closest person or origin of sounds and gestures
@@ -109,33 +121,35 @@ class LiftTask(PepperController):
 
 
 
-	# def InsideLift(self):
-	# 	#TODO 1 Locate itself in proper place
-	# 	#TODO 2 Face someone in the lift
-	# 	    #TODO 21 Check people around
-	# 	#TODO 2 Declare which floor the robot needs to go to
-	# 	    # self.say("Hello human, Could you help me by letting me know when we have reached floor number" + str(FloorNumber) + "?")
-	# 	    # person_intention = self.listen("Yes") # If YES thank if !YES repeat from TODO 2
-	#
-	# 	#TODO 3 Ask confirmation of action
-	# 	    # self.say("Thank you, human. You can call me Pepper")
-	# 	#TODO 4 Detect door opening
-	# 	    # TODO listen2door TOPIC????? Not a topic, we have to detect it on our own.
-	# 	#TODO 5 Ask someone which is the current floor to STAY or EXIT
-	# 	    #self.say("Excuse me. May I ask you if we are on floor number" + str(FloorNumber) +"?")
-	# 	    #person_answer = self.listen ("FloorNumber", "Yes")
-	# 	    #If True go to TODO_7 if False go to TODO_6
-	# 		#TODO 6 If STAY check if blocking entrance
-	# 			#TODO 8 If YES Exit, wait and re-enter
-	# 	            #self.goHere("Lift entrance coordinates")
-	# 	            #self.say("Please, someone help me keep the doors open. I need to go back in")
-	# 	            #self.goHere("Lift wall back coordinates") # Stop when inside the lift and enough far from door to closest
-	# 	            #self.goHere("Thank you all")
-	# 			#TODO 9 If NO go back to TODO4
-	# 		#TODO 7 If EXIT go out go to TODO10
-	# 		         #self.goHere("Lift entrance coordinates")
-	#
-	# 	#TODO 10 Not needed yet
+	def InsideLift(self):
+		#TODO 1 Locate itself in proper place
+		#TODO 2 Face someone in the lift
+        self.setVocabulary()
+        self.speechRecognition()
+		    #TODO 21 Check people around
+		#TODO 2 Declare which floor the robot needs to go to
+		    # self.say("Hello human, Could you help me by letting me know when we have reached floor number" + str(FloorNumber) + "?")
+		    # person_intention = self.listen("Yes") # If YES thank if !YES repeat from TODO 2
+
+		#TODO 3 Ask confirmation of action
+		    # self.say("Thank you, human. You can call me Pepper")
+		#TODO 4 Detect door opening
+		    # TODO listen2door TOPIC????? Not a topic, we have to detect it on our own.
+		#TODO 5 Ask someone which is the current floor to STAY or EXIT
+		    #self.say("Excuse me. May I ask you if we are on floor number" + str(FloorNumber) +"?")
+		    #person_answer = self.listen ("FloorNumber", "Yes")
+		    #If True go to TODO_7 if False go to TODO_6
+			#TODO 6 If STAY check if blocking entrance
+				#TODO 8 If YES Exit, wait and re-enter
+		            #self.goHere("Lift entrance coordinates")
+		            #self.say("Please, someone help me keep the doors open. I need to go back in")
+		            #self.goHere("Lift wall back coordinates") # Stop when inside the lift and enough far from door to closest
+		            #self.goHere("Thank you all")
+				#TODO 9 If NO go back to TODO4
+			#TODO 7 If EXIT go out go to TODO10
+			         #self.goHere("Lift entrance coordinates")
+
+		#TODO 10 Not needed yet
 
 	# def toEnd(self):
 	# 	self.say("This is my floor!")
@@ -178,18 +192,18 @@ if __name__ == '__main__':
 
 	liftTask = LiftTask(robotIP, PORT)
 	liftTask.prepClasses()
-	g = liftTask.getGoal()
-	print g
-	#print "Goal is " + g["description"] + " on floor " + str(g["floor"])
-	liftTask.say("I'm visiting: ")
+	# g = liftTask.getGoal()
+	# print g
+	# #print "Goal is " + g["description"] + " on floor " + str(g["floor"])
+	# liftTask.say("I'm visiting: ")
+    #
+	# for key in g:
+	# 	s = str(key + " on floor "+ str(g[key]))
+	# 	liftTask.say(s)
+    #
+	# if g==-1:
+	# 	print "Alex deserves more dessert today"
 
-	for key in g:
-		s = str(key + " on floor "+ str(g[key]))
-		liftTask.say(s)
-
-	if g==-1:
-		print "Alex deserves more dessert today"
-	# liftTask.startTask()
+	liftTask.startTask()
 	# liftTask.InsideLift()
 	# liftTask.toEnd()
-
