@@ -78,12 +78,12 @@ class PepperController(object):
             self.tabletFlag = False
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
-			
-			## Turn of auto-interaction features
-			self.lifeProxy.setState("solitary")
-			## Set how close Pepper is allowed to get to obstacles
-			self.motionProxy.setTangentialSecurityDistance(0.01)
-			self.motionProxy.setOrthogonalSecurityDistance(0.1)
+
+            ## Turn of auto-interaction features
+            self.lifeProxy.setState("solitary")
+            ## Set how close Pepper is allowed to get to obstacles
+            self.motionProxy.setTangentialSecurityDistance(0.01)
+            self.motionProxy.setOrthogonalSecurityDistance(0.1)
 
         except Exception,e:
             print("Failed to connect to Pepper, is it on, and is the IP address correct?")
@@ -103,16 +103,16 @@ class PepperController(object):
         except Exception,e:
             print("Pepper TTS failed due to:")
             print(e)
-			
-			
-			
+
+
+
 	def goHere(self,x,y,t): #simple function to call navigation. Can run this as a thread.
 		#store intended coords as a tuple in case we need to resume this navigation command later
 		self.going = (x,y,t)
         ret = self.navigationProxy.navigateToInMap((x,y,t))
         return ret
 
-    
+
 
 
 if __name__ == '__main__':
