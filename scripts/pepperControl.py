@@ -2,7 +2,7 @@ from naoqi import ALProxy
 import time
 import thread
 
-#Set IP, Port, Colour, and Font
+#Set IP, Port
 robotIP = "10.2.0.110"
 PORT = 9559	
 	

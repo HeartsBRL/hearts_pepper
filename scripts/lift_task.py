@@ -39,25 +39,25 @@ class LiftTask(PepperController):
 		#
 		# # If there's only one goal, send the shop object:
 		# if numGoals == 1:
-		# 	for shop in shopList:
-		# 		if shop["goal"]==True:
-		# 			return shop
+	 	for shop in shopList:
+	 		if shop["goal"]==True:
+	 			return shop
 
 		### If there are likely to be multiple goals, this option works:
 			# It will return a dictionary of shop_descript(name) : shop_floor
-		try:
-			goalList = {}
-			#iterate through all shops in the returned msg
-			for shop in shopList:
-					# add any shops where goal is true to the dict
-					if shop["goal"]==True:
-						goalList[shop["description"]] = shop["floor"]
+		#try:
+		#	goalList = {}
+		#	#iterate through all shops in the returned msg
+		#	for shop in shopList:
+		#			# add any shops where goal is true to the dict
+		#			if shop["goal"]==True:
+		#				goalList[shop["description"]] = shop["floor"]
 
 			# return goals:
-			return goalList
-		except:
+		#	return goalList
+		#except:
 			# failed return -1
-			return -1
+		#	return -1
 
 	def startTask(self):
 		#TODO A Request floor destination from DataHub (Alex Sleat)
@@ -84,7 +84,7 @@ class LiftTask(PepperController):
 			self.goHere(self.locations['lift'])
 
 			#TODO F Communicate that it has arrived at the waiting position
-			self.say("I am waiting for the elevator to arrive!")
+			self.say("I am waiting for the lift to arrive!")
 
 			'''
 				#Not sure it's necessary to post our location at this point, or, indeed, ever. (see API diagram for task)
@@ -95,7 +95,7 @@ class LiftTask(PepperController):
 
 
 			'''
-				Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up
+				Not planning to have interaction before we get to the lift, though it may be easy points if the lift section messes up
 				#TODO G Engage with people if necessary
 				#TODO Check for people around
                 self.setVocabulary()
@@ -151,25 +151,27 @@ class LiftTask(PepperController):
 
 		#TODO 10 Not needed yet
 
-	# def toEnd(self):
-	# 	self.say("This is my floor!")
-    #     #TODO Wait for people to leave the lift
-	#
-	# 	self.say("I'm getting out now, thanks for your help!")
-    # 	#Go to destination location
-	# 	self.goHere(self.locations['finish'])
-	#
-	# 	#TODO G Engage with people if necessary
-	# 	#TODO Check for people around
-	# 		#TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
-	# 		#TODO Detects gestures like waving
-	# 	#TODO Look at the closest person or origin of sounds and gestures
-	# 	#TODO Talk to the closest person
-	# 	#TODO Look at face
-	# 	#TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
-	# 		# TODO self.say("Hello, my name is pepper and I am going to floor" + str(FloorNumber))
-	# 		# OPTIONAL TODO person_comments = self.listen
-    #     #TODO c Acknowledge that the destination has been reached
+	 def toEnd(self):
+	 	self.say("This is my floor!")
+         #TODO Wait for people to leave the lift
+	
+	 	self.say("I'm getting out now, thanks for your help!")
+     	#Go to destination location
+        
+        #TODO need to fix the json stuff before this will work
+	 	tread.start_new_thread(self.goHere,(self.locations['finish'],)  
+	
+	 	#TODO G Engage with people if necessary
+	 	#TODO Check for people around
+	 		#TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
+	 		#TODO Detects gestures like waving
+	 	#TODO Look at the closest person or origin of sounds and gestures
+	 	#TODO Talk to the closest person
+	 	#TODO Look at face
+	 	#TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
+	 		# TODO self.say("Hello, my name is pepper and I am going to floor" + str(FloorNumber))
+	 		# OPTIONAL TODO person_comments = self.listen
+         #TODO c Acknowledge that the destination has been reached
 
 
     # def load_dict(self):

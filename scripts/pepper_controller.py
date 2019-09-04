@@ -17,7 +17,7 @@ import numpy
 from naoqi import ALProxy
 
 #robotIP = "pepper.local"
-robotIP = "10.2.0.112" #Stevey
+robotIP = "10.2.0.118" #Stevey
 PORT = 9559
 
 class PepperController(object):
@@ -60,7 +60,7 @@ class PepperController(object):
 
             self.motionProxy  = ALProxy("ALMotion", self._robotIP, self._PORT)
             self.localizationProxy = ALProxy("ALLocalization", self._robotIP, self._PORT)
-
+            self.memoryProxy = ALProxy("ALMemory", self._robotIP, self._PORT)
             self.navigationProxy = ALProxy("ALNavigation", self._robotIP, self._PORT)
 
             self.baProxy = ALProxy("ALBasicAwareness", self._robotIP, self._PORT)
@@ -69,12 +69,16 @@ class PepperController(object):
             self.lifeProxy = ALProxy("ALAutonomousLife", self._robotIP, self._PORT)
             self.dialogProxy = ALProxy("ALDialog", self._robotIP, self._PORT)
             self.system = ALProxy("ALSystem", self._robotIP, self._PORT)
-            self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
 
+            self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
+            self.engageProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
+		    self.peoplePerceptionProxy = ALProxy("ALPeoplePerception", self._robotIP, self._PORT)
+		    #self.waveDetectProxy = ALProxy("ALWavingDetection", self._robotIP, self._PORT)
+		    self.gazeProxy = ALProxy("ALGazeAnalysis", self._robotIP, self._PORT)
             self.faceDetectionProxy = ALProxy("ALFaceDetection", self._robotIP, self._PORT)
-            self.memoryProxy = ALProxy("ALMemory", self._robotIP, self._PORT)
+            self.soundLocalProxy = ALProxy("ALSoundLocalization", self._robotIP, self._PORT)
+		    self.soundDetectProxy = ALProxy("ALSoundDetection", self._robotIP, self._PORT)
             self.trackerProxy = ALProxy("ALTracker", self._robotIP, self._PORT)
-            self.motionProxy = ALProxy("ALMotion", self._robotIP, self._PORT)
 
             self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
             self.tabletTimeoutLength = 60 #seconds
@@ -117,7 +121,24 @@ class PepperController(object):
         ret = self.navigationProxy.navigateToInMap((x,y,t))
         return ret
 
-
+    def setVocabulary(self):
+		self.speechRecogProxy.pause(True)
+		self.speechRecogProxy.setLanguage("English")
+		vocabulary = ["pepper", "yes"]
+		self.speechRecogProxy.setVocabulary(vocabulary, False)
+		self.speechRecogProxy.pause(False)
+	
+	def speechRecogntion(self):
+		thread.start_new_thread(self.onWordRecognized,("WordRecognized", 2))
+		thread.start_new_thread(self.boop,("boop", 2))
+		self.speechRecogProxy.subscribe("Test_ASR")
+		print "Speech recognition engine started"
+		time.sleep(20)
+		self.speechRecogProxy.unsubscribe("Test_ASR")
+        
+	def onWordRecognized(self, string, threadName):
+		self.memoryProxy.getData("WordRecognized")
+		self.ttsProxy.say("I heard you")
 
 
 if __name__ == '__main__':
