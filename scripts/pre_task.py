@@ -10,10 +10,20 @@ try:
 except ImportError:
     import Image
 
-robotIP = "10.2.0.114" #Stevey
+robotIP = "10.2.0.112" #Stevey
 PORT = 9559
 
 class PreTask(PepperController):
+
+    def startingVariables(self):
+        ## Verbal confirmation it's starting
+        self.say("boop")
+        ## Turn of auto-interaction features
+        self.lifeProxy.setState("solitary")
+        self.lifeProxy.setState("safeguard")
+        ## Set how close Pepper is allowed to get to obstacles
+        self.motionProxy.setTangentialSecurityDistance(0.01)
+        self.motionProxy.setOrthogonalSecurityDistance(0.05)
 
     def explore(self,r):
         ## SLAM in a radius of r metres
@@ -33,7 +43,6 @@ class PreTask(PepperController):
         print "saved at: " + path
 
         ## start the localization routine so the Pepper can navigate
-        self.navigationProxy.stopLocalization()
         self.navigationProxy.startLocalization()
         print "Started localization"
 
