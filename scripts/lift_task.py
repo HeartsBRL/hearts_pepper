@@ -19,7 +19,6 @@ PORT = 9559
 
 class LiftTask(PepperController):
 
-
 	def prepClasses(self):
 		#set up instances of classes from other files that we're going to need
 		self.apiQuery = api_querier.api_querier()
@@ -59,11 +58,20 @@ class LiftTask(PepperController):
 			# failed return -1
 		#	return -1
 
+    def load_dict(self):
+        #loads a dictionary from the locations json file
+        json_name = 'locations.json'
+
+        with open(json_name) as json_data:
+            self.locations = json.load(json_data)
+
+        print("using locations file: " + json_name)
+
 	def startTask(self):
 		#TODO A Request floor destination from DataHub (Alex Sleat)
-		self.goalFloor = self.getGoal()
-    	print self.goalFloor
-    	# #print "Goal is " + g["description"] + " on floor " + str(g["floor"])
+		self.goal = self.getGoal()
+    	print self.goal
+    	print "Goal is " + self.goal["description"] + " on floor " + str(self.goal["floor"])
     	# liftTask.say("I'm visiting: ")
         #
     	# for key in self.goalFloor:
@@ -76,12 +84,12 @@ class LiftTask(PepperController):
 		#TODO B Decide where to go according to floor (Same floor or different floor)
 
 		#TODO C If same floor go to goal and finish
-		if self.goalFloor == 0:
-			self.goHere(self.locations['finish'])
+		if self.goal["floor"] == 0:
+			self.goHere(*self.locations['finish'])
 		else:
 			#TODO D If different floor continue to next to TODOE
 			#TODO E Approach to lift (Currently tested at the moment through threading**)
-			self.goHere(self.locations['lift'])
+			self.goHere(*self.locations['lift'])
 
 			#TODO F Communicate that it has arrived at the waiting position
 			self.say("I am waiting for the lift to arrive!")
@@ -115,8 +123,9 @@ class LiftTask(PepperController):
 				#Wait until (Closest person distance (Known from cameras) == Lift distance (Known from map)) ?
 
 			#Enter lift
-			self.goHere(self.locations['lift entrance'])
-			self.goHere(self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
+			self.goHere(*self.locations['lift entrance'])
+            self.goHere(*self.locations['lift inside'])
+			self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
 			# TODO Once pepper coordinates ensure it is inside the lift, Abort navigation.
 
 
@@ -154,13 +163,13 @@ class LiftTask(PepperController):
 	 def toEnd(self):
 	 	self.say("This is my floor!")
          #TODO Wait for people to leave the lift
-	
+
 	 	self.say("I'm getting out now, thanks for your help!")
      	#Go to destination location
-        
+
         #TODO need to fix the json stuff before this will work
-	 	tread.start_new_thread(self.goHere,(self.locations['finish'],)  
-	
+	 	tread.start_new_thread(self.goHere,(*self.locations['finish'],)
+
 	 	#TODO G Engage with people if necessary
 	 	#TODO Check for people around
 	 		#TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
@@ -174,15 +183,8 @@ class LiftTask(PepperController):
          #TODO c Acknowledge that the destination has been reached
 
 
-    # def load_dict(self):
-    #     #loads a dictionary from the locations json file
-    #     json_name = 'locations.json'
-	#
-    #     with open(json_name) as json_data:
-    #         self.locations = json.load(json_data)
-	#
-    #     print("using locations file: " + json_name)
-	#
+
+
     # '''
     # def write_dict(self, updatedLocations):
     #     # todo: path as ros param

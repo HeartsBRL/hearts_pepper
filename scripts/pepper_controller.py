@@ -121,6 +121,7 @@ class PepperController(object):
         ret = self.navigationProxy.navigateToInMap((x,y,t))
         return ret
 
+    #### Methods for recognising words and locating sounds ###
     def setVocabulary(self):
 		self.speechProxy.pause(True)
 		self.speechProxy.removeAllContext()
