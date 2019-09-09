@@ -122,23 +122,66 @@ class PepperController(object):
         return ret
 
     def setVocabulary(self):
-		self.speechRecogProxy.pause(True)
-		self.speechRecogProxy.setLanguage("English")
-		vocabulary = ["pepper", "yes"]
-		self.speechRecogProxy.setVocabulary(vocabulary, False)
-		self.speechRecogProxy.pause(False)
+		self.speechProxy.pause(True)
+		self.speechProxy.removeAllContext()
+		try:
+			self.speechProxy.setLanguage("English")
+			self.speechProxy.setVocabulary(["pepper", "yes"],False)
+		except:
+			print("Vocabulary already set")
+		self.speechProxy.pause(False)
+
+    def speechRecogThread(self):
+		thread.start_new_thread(self.onWordRecognized,("words", 2))
+		time.sleep(15)
 	
-	def speechRecogntion(self):
-		thread.start_new_thread(self.onWordRecognized,("WordRecognized", 2))
-		thread.start_new_thread(self.boop,("boop", 2))
-		self.speechRecogProxy.subscribe("Test_ASR")
+	def speechRecognition(self):
+		self.memoryProxy.insertData("WordRecognized", " ")
+		self.speechProxy.subscribe("attention")
+		self.soundLocalProxy.subscribe("soundLocal")
+		#self.speechRecogThread()
 		print "Speech recognition engine started"
-		time.sleep(20)
-		self.speechRecogProxy.unsubscribe("Test_ASR")
-        
-	def onWordRecognized(self, string, threadName):
-		self.memoryProxy.getData("WordRecognized")
-		self.ttsProxy.say("I heard you")
+		self.onWordRecognized()
+		
+	def onWordRecognized(self):#, string, threadName):
+		heard = False
+		while heard == False:
+			wordRecognized = self.memoryProxy.getData("WordRecognized")
+			print (wordRecognized)
+			if wordRecognized[0] == "pepper":
+			
+				heard = True
+				self.trackSound()
+			
+			#if "pepper" in wordRecognized:
+
+				#self.ttsProxy.say("I heard you")
+				self.unsubscribe()
+	
+	def	trackSound(self):
+		targetName = "Sound"
+		param = [1, 0.1]
+		mode = "Move"
+		
+		self.trackerProxy.registerTarget(targetName, param)
+		time.sleep(2)
+		activeTarget = self.trackerProxy.getActiveTarget()
+		print("target is: ", activeTarget)
+		self.trackerProxy.setMode(mode)
+		time.sleep(2)
+		activeMode = self.trackerProxy.getMode()
+		print("Mode is: ", activeMode)
+		self.trackerProxy.track(targetName)
+		time.sleep(30)
+		self.trackerProxy.stopTracker()
+		self.trackerProxy.unregisterAllTargets()
+	
+	def unsubscribe(self):
+		self.speechProxy.unsubscribe("attention")
+		print "Speech recognition engine stopped"
+		
+		self.soundLocalProxy.unsubscribe("soundLocal")
+		print "Sound localisation stopped"
 
 
 if __name__ == '__main__':
