@@ -60,29 +60,24 @@ class ApiQuerier():
             print "GET URL: " + url
 
             # Fetch URL json data from server:
-            print "Fuck1"
-            
+            ## This solved the problem for ROS Kinetic
+            #http://blog.pengyifan.com/how-to-fix-python-ssl-certificate_verify_failed/
             if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
                 getattr(ssl, '_create_unverified_context', None)):
                 ssl._create_default_https_context = ssl._create_unverified_context
 
             request = urllib2.Request(url)
-            print "Fuck2"
             base64string = base64.b64encode('%s:%s' % (self.teamkey, ''))
-            print "Fuck3"
             request.add_header("Authorization", "Basic %s" % base64string)
-            print "Fuck4"
 
             try:
                 result = urllib2.urlopen(request)
             except urllib2.URLError as e:
                     print e.reason
-            print "Fuck5"
             j = json.load(result)
-            print "Fuck6"
             # Print it out:
-            print "dataset found, format as follows:"
-            print j
+            # print "dataset found, format as follows:"
+            # print j
             return j
 
         # Check for URL failures:
