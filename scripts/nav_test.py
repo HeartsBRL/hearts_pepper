@@ -8,7 +8,7 @@ import thread
 import time
 import json
 
-robotIP = "10.2.0.112" #Stevey
+robotIP = "10.2.0.111" #Stevey
 PORT = 9559
 
 class NavTest(PepperController):
@@ -21,14 +21,14 @@ class NavTest(PepperController):
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
         self.motionProxy.setOrthogonalSecurityDistance(0.1)
-    
+
 
         # *args allows any number of arguments
     def stopMove(self,*args):
         #wait for pepper to get part way through the previous movement command,
         #stop the movement, then resume it
         time.sleep(8)
-        self.say("Stopping!")        
+        self.say("Stopping!")
         self.navigationProxy.stopExploration() #Stops pepper navigating
         time.sleep(8)
         self.goHere(*self.going)
@@ -36,14 +36,13 @@ class NavTest(PepperController):
     def load_dict(self):
         #loads a dictionary from the locations json file
         json_name = 'locations.json'
-	
+
         with open(json_name) as json_data:
             self.locations = json.load(json_data)
-	
-        print("using locations file: " + json_name)
 
+        print("using locations file: " + json_name)
     def run_through(self):
-        
+
 
         self.goHere(*self.locations["start"])
         self.goHere(*self.locations["outside door"])
@@ -52,14 +51,14 @@ class NavTest(PepperController):
         self.goHere(*self.locations["inside door"])
         self.goHere(*self.locations["outside door"])
         self.goHere(*self.locations["finish"])
-    
+
 
 if __name__ == '__main__':
     navTest = NavTest(robotIP, PORT)
     navTest.setup2()
     navTest.load_dict()
     navTest.run_through()
-    
+
     #while loop keeps script alive for the threads to run. Super bad but
     #can change for the real thing.
     #x = 1
