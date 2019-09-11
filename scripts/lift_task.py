@@ -162,9 +162,9 @@ class LiftTask(PepperController):
         #
 
 
-                self.goHere(*self.locations['lift entrance'])
-                self.goHere(*self.locations['lift inside'])
-                self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
+            # self.goHere(*self.locations['lift entrance'])
+            # self.goHere(*self.locations['lift inside'])
+            # self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
 
     def InsideLift(self):
         # self.setVocabulary()

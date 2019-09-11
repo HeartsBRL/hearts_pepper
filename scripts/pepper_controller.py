@@ -99,7 +99,7 @@ class PepperController(object):
             print("PORT : " + str(self._PORT))
             print(e)
 
-        self.navigationProxy.startLocalization()
+        # self.navigationProxy.startLocalization()
 
     def say(self, words):
 

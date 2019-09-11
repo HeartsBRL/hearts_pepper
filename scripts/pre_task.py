@@ -10,7 +10,7 @@ try:
 except ImportError:
     import Image
 
-robotIP = "10.2.0.118" #Westey
+robotIP = "10.2.0.111" #Stevey
 PORT = 9559
 
 class PreTask(PepperController):
