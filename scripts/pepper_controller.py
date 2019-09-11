@@ -30,6 +30,8 @@ class PepperController(object):
         self.session = qi.Session()
         self.setup()
 
+        self.old_recog = ""
+
     def ping(self):
         # Ping the robot
         response = os.system("ping -c 1 " + self._robotIP)
@@ -96,7 +98,7 @@ class PepperController(object):
             print(e)
 
         ## Turn of auto-interaction features
-        self.lifeProxy.setState("solitary")
+        self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
         self.motionProxy.setOrthogonalSecurityDistance(0.01)
@@ -160,7 +162,11 @@ class PepperController(object):
         heard = False
         while heard == False:
             wordRecognized = self.memoryProxy.getData("WordRecognized")
-            print (wordRecognized)
+
+            if(wordRecognized != self.old_recog):
+                self.old_recog = wordRecognized
+
+                print (wordRecognized)
             if wordRecognized[0] == "pepper":
 
                 heard = True

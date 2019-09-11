@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+	#!/usr/bin/env python
 
 from pepper_controller import PepperController
 # from pre_task import PreTask
@@ -15,17 +15,14 @@ except ImportError:
 
 robotIP = "10.2.0.111" #Stevey
 
-# map 11.09.2019 /home/nao/.local/share/Explorer/2014-04-04T023445.314Z.explo
-
 
 PORT = 9559
 
 class LiftTask(PepperController):
 
-    def prep(self):
+    def prepClasses(self):
         #set up instances of classes from other files that we're going to need
         self.apiQuery = ApiQuerier()
-        self.navigationProxy.startLocalization()
 
     def getGoal(self):
         #Gets the goal floor from the data hub and returns it using alex's API
@@ -102,34 +99,28 @@ class LiftTask(PepperController):
                 return -1
 
     def startTask(self):
-        #TODO A Request floor destination from DataHub (Alex Sleat)
-        # self.goal = self.getGoal()
-        # print self.goal
-        # print "Goal is " + self.goal["description"] + " on floor " + str(self.goal["floor"])
-        # liftTask.say("I'm visiting: ")
-        #
-        # for key in self.goalFloor:
-        # 	s = str(key + " on floor "+ str(self.goalFloor[key]))
-        # 	liftTask.say(s)
-        #
-        # if self.goalFloor==-1:
-        # 	print "Alex deserves more dessert today"
 
         #TODO B Decide where to go according to floor (Same floor or different floor)
 
         #TODO C If same floor go to goal and finish
         if self.goalFloor == 0:
-            self.goHere(*self.locations['finish'])
+            self.say("Enrouting to the final destination")
+            # self.goHere(*self.locations['finish'])
+            print "Going to the final destination" #UNCOMMENT
         else:
         #TODO D If different floor continue to next to TODOE
         #TODO E Approach to lift (Currently tested at the moment through threading**)
-            self.goHere(*self.locations['lift back'])
+            self.say("Enrouting to the entrance of the lift")
+            # self.goHere(*self.locations['outside door']) #UNCOMMENT
+            print "Going to the back of the lift"
 
         #		 #TODO F Communicate that it has arrived at the waiting position
             self.say("I am waiting for the elevator to arrive!")
-            self.sendInfo("RobotStatus",0,0,0, "Waiting for elevator")
-            #self.sendInfo("RobotStatus",*self.locations['lift'], "Waiting for elevator")
-            self.sendInfo("RobotLocation",0,0,0)
+            # self.sendInfo("RobotStatus",0,0,0, "Waiting for elevator")
+            self.sendInfo("RobotStatus",self.locations['lift back'][0],self.locations['lift back'][1],self.locations['lift back'][2], "Waiting for elevator")
+            # self.sendInfo("RobotLocation",0,0,0)
+            self.sendInfo("RobotLocation",self.locations['lift back'][0],self.locations['lift back'][1],self.locations['lift back'][2])
+
         #
         #		 '''
         #			 #Not sure it's necessary to post our location at this point, or, indeed, ever. (see API diagram for task)
@@ -166,6 +157,7 @@ class LiftTask(PepperController):
 
 
             # self.goHere(*self.locations['lift entrance'])
+            self.say("Enrouting to the inside of the lift")
             # self.goHere(*self.locations['lift inside'])
             # self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
 
@@ -177,15 +169,15 @@ class LiftTask(PepperController):
     			# self.speechRecognition()
     #			 #TODO 21 Check people around
     #	 #TODO 2 Declare which floor the robot needs to go to
-        self.say("Hello human, Could you help me by letting me know when we have reached floor number " + str(self.goal['floor']) + "?")
+        self.say("Hello human, Could you help me by letting me know when we have reached floor number " + str(self.goalFloor) + "?")
     #			 # person_intention = self.listen("Yes") # If YES thank if !YES repeat from TODO 2
     	#
     #	 #TODO 3 Ask confirmation of action
-        self.say("Thank you, human. You can call me Pepper")
+        self.say("Thank you human. You can call me Pepper")
     #	 #TODO 4 Detect door opening
     #			 # TODO listen2door TOPIC????? Not a topic, we have to detect it on our own.
     #	 #TODO 5 Ask someone which is the current floor to STAY or EXIT
-        self.say("Excuse me. May I ask you if we are on floor number " + str(self.goal['floor']) +"?")
+        self.say("Excuse me. May I ask you if we are on floor number " + str(self.goalFloor) +"?")
     #			 #person_answer = self.listen ("FloorNumber", "Yes")
     #			 #If True go to TODO_7 if False go to TODO_6
     #		 #TODO 6 If STAY check if blocking entrance
@@ -226,7 +218,7 @@ class LiftTask(PepperController):
 if __name__ == '__main__':
 
     liftTask = LiftTask(robotIP, PORT)
-    liftTask.prep()
+    liftTask.prepClasses()
     liftTask.load_dict()
     #TODO A Request floor destination from DataHub (Alex Sleat)
     liftTask.g = liftTask.getGoal() # Name of the shop plus number as dictionary entry
@@ -242,6 +234,6 @@ if __name__ == '__main__':
 
     liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
-    liftTask.startTask()
-    # liftTask.InsideLift()
+    # liftTask.startTask()
+    liftTask.InsideLift()
     # liftTask.toEnd()

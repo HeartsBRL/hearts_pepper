@@ -19,7 +19,7 @@ class PreTask(PepperController):
         ## Verbal confirmation it's starting
         self.say("boop")
         ## Turn of auto-interaction features
-        self.lifeProxy.setState("solitary")
+        # self.lifeProxy.setState("solitary")
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
