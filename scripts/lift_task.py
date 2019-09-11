@@ -101,17 +101,17 @@ class LiftTask(PepperController):
     def startTask(self):
 
         #TODO B Decide where to go according to floor (Same floor or different floor)
-
+        self.goHere(*self.locations['start'])
         #TODO C If same floor go to goal and finish
         if self.goalFloor == 0:
             self.say("Enrouting to the final destination")
-            # self.goHere(*self.locations['finish'])
+            self.goHere(*self.locations['finish'])
             print "Going to the final destination" #UNCOMMENT
         else:
         #TODO D If different floor continue to next to TODOE
         #TODO E Approach to lift (Currently tested at the moment through threading**)
             self.say("Enrouting to the entrance of the lift")
-            # self.goHere(*self.locations['outside door']) #UNCOMMENT
+            self.goHere(*self.locations['outside door']) #UNCOMMENT
             print "Going to the back of the lift"
 
         #		 #TODO F Communicate that it has arrived at the waiting position
@@ -156,10 +156,10 @@ class LiftTask(PepperController):
         #
 
 
-            # self.goHere(*self.locations['lift entrance'])
+            self.goHere(*self.locations['inside door'])
             self.say("Enrouting to the inside of the lift")
             # self.goHere(*self.locations['lift inside'])
-            # self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
+            self.goHere(*self.locations['lift back']) # We assume pepper adapts trajectory to reduce distance
 
     def InsideLift(self):
         # self.setVocabulary()
@@ -198,7 +198,9 @@ class LiftTask(PepperController):
     #
         self.say("I'm getting out now, thank all of you for your help! Have a good day!")
     	#	 #Go to destination location
-    #
+        self.goHere(*self.locations['inside door'])
+        self.goHere(*self.locations['outside door'])
+        self.goHere(*self.locations['finish'])
     #	 #TODO G Engage with people if necessary
     #	 #TODO Check for people around
     #		 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
@@ -234,6 +236,6 @@ if __name__ == '__main__':
 
     liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
-    # liftTask.startTask()
+    liftTask.startTask()
     liftTask.InsideLift()
-    # liftTask.toEnd()
+    liftTask.toEnd()
