@@ -116,55 +116,55 @@ class LiftTask(PepperController):
 
             #TODO C If same floor go to goal and finish
             if self.goal["floor"] == 0:
-            self.goHere(*self.locations['finish'])
+                self.goHere(*self.locations['finish'])
             else:
-            #TODO D If different floor continue to next to TODOE
-            #TODO E Approach to lift (Currently tested at the moment through threading**)
-            self.goHere(*self.locations['lift'])
+                #TODO D If different floor continue to next to TODOE
+                #TODO E Approach to lift (Currently tested at the moment through threading**)
+                self.goHere(*self.locations['lift'])
 
-            #		 #TODO F Communicate that it has arrived at the waiting position
-            self.say("I am waiting for the elevator to arrive!")
-            self.sendInfo("RobotStatus",0,0,0, "Waiting for elevator")
-            #self.sendInfo("RobotStatus",*self.locations['lift'], "Waiting for elevator")
-            self.sendInfo("RobotLocation",0,0,0)
-            #
-            #		 '''
-            #			 #Not sure it's necessary to post our location at this point, or, indeed, ever. (see API diagram for task)
-            #			 # d = qb.load_schema("RobotLocation") #Wait for Alex Sleat to confirm
-            #			 # qb.post("RobotLocation", d)
-            #		 '''
-            #
-            #
-            #
-            #		 '''
-            #			 Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up
-            #			 #TODO G Engage with people if necessary
-            #			 #TODO Check for people around
-            # self.speechRecognition()
-            #				 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
-            #				 #TODO Detects gestures like waving
-            #			 #TODO Look at the closest person or origin of sounds and gestures
-            #			 #TODO Talk to the closest person
-            #			 #TODO Look at face
-            #			 #TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
-            self.say("Hello, my name is pepper and I am going to floor " + self.goalFloor)
-            #				 # OPTIONAL TODO person_comments = self.listen
-            #		 '''
-            #
-            #		 #Wait for all people to enter the lift
-            #		 #TODO how are we going to figure out if everyone's in the lift?
-            #			 #Wait until (Closest person distance (Known from cameras) == Lift distance (Known from map)) ?
-            #
-            #		 #Enter lift
-            #		 # TODO Once pepper coordinates ensure it is inside the lift, Abort navigation.
-            #
-            #
-            #
+                #		 #TODO F Communicate that it has arrived at the waiting position
+                self.say("I am waiting for the elevator to arrive!")
+                self.sendInfo("RobotStatus",0,0,0, "Waiting for elevator")
+                #self.sendInfo("RobotStatus",*self.locations['lift'], "Waiting for elevator")
+                self.sendInfo("RobotLocation",0,0,0)
+                #
+                #		 '''
+                #			 #Not sure it's necessary to post our location at this point, or, indeed, ever. (see API diagram for task)
+                #			 # d = qb.load_schema("RobotLocation") #Wait for Alex Sleat to confirm
+                #			 # qb.post("RobotLocation", d)
+                #		 '''
+                #
+                #
+                #
+                #		 '''
+                #			 Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up
+                #			 #TODO G Engage with people if necessary
+                #			 #TODO Check for people around
+                # self.speechRecognition()
+                #				 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
+                #				 #TODO Detects gestures like waving
+                #			 #TODO Look at the closest person or origin of sounds and gestures
+                #			 #TODO Talk to the closest person
+                #			 #TODO Look at face
+                #			 #TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
+                self.say("Hello, my name is pepper and I am going to floor " + self.goalFloor)
+                #				 # OPTIONAL TODO person_comments = self.listen
+                #		 '''
+                #
+                #		 #Wait for all people to enter the lift
+                #		 #TODO how are we going to figure out if everyone's in the lift?
+                #			 #Wait until (Closest person distance (Known from cameras) == Lift distance (Known from map)) ?
+                #
+                #		 #Enter lift
+                #		 # TODO Once pepper coordinates ensure it is inside the lift, Abort navigation.
+                #
+                #
+                #
 
 
-            self.goHere(*self.locations['lift entrance'])
-            self.goHere(*self.locations['lift inside'])
-            self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
+                self.goHere(*self.locations['lift entrance'])
+                self.goHere(*self.locations['lift inside'])
+                self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
 
 	def InsideLift(self):
         # self.setVocabulary()
