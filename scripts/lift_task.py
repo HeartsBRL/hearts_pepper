@@ -9,9 +9,9 @@ import numpy
 
 # pip install pillow
 try:
-		from PIL import Image
+        from PIL import Image
 except ImportError:
-		import Image
+        import Image
 
 robotIP = "10.2.0.111" #Stevey
 
@@ -20,44 +20,44 @@ PORT = 9559
 
 class LiftTask(PepperController):
 
-	def prepClasses(self):
-		#set up instances of classes from other files that we're going to need
-		self.apiQuery = ApiQuerier()
+    def prepClasses(self):
+        #set up instances of classes from other files that we're going to need
+        self.apiQuery = ApiQuerier()
 
-	def getGoal(self):
-		#Gets the goal floor from the data hub and returns it using alex's API
-		shopList = self.apiQuery.get("Shop")
+    def getGoal(self):
+        #Gets the goal floor from the data hub and returns it using alex's API
+        shopList = self.apiQuery.get("Shop")
 
-		### If there will only be a single goal - this option is better.
-			# It will give you all the details about the object:
+        ### If there will only be a single goal - this option is better.
+            # It will give you all the details about the object:
 
-		# # Check how many shops are listed as a goal:
-		# numGoals = 0
-		# for shop in shopList:
-		#	 if shop["goal"] == True:
-		#		 numGoals = numGoals + 1
-		#
-		# # If there's only one goal, send the shop object:
-		# if numGoals == 1:
-	 	for shop in shopList:
-	 		if shop["goal"]==True:
-	 			return shop
+        # # Check how many shops are listed as a goal:
+        # numGoals = 0
+        # for shop in shopList:
+        #   if shop["goal"] == True:
+        #        numGoals = numGoals + 1
+        #
+        # # If there's only one goal, send the shop object:
+        # if numGoals == 1:
+            # for shop in shopList:
+            # 	if shop["goal"]==True:
+            # 		return shop
 
-		### If there are likely to be multiple goals, this option works:
-			# It will return a dictionary of shop_descript(name) : shop_floor
-		#try:
-		#	goalList = {}
-		#	#iterate through all shops in the returned msg
-		#	for shop in shopList:
-		#			# add any shops where goal is true to the dict
-		#			if shop["goal"]==True:
-		#				goalList[shop["description"]] = shop["floor"]
+        ### If there are likely to be multiple goals, this option works:
+        	# It will return a dictionary of shop_descript(name) : shop_floor
+        try:
+            goalList = {}
+            #iterate through all shops in the returned msg
+            for shop in shopList:
+                # add any shops where goal is true to the dict
+                if shop["goal"]==True:
+                    goalList[shop["description"]] = shop["floor"]
 
-			# return goals:
-		#	return goalList
-		#except:
-			# failed return -1
-		#	return -1
+            # return goals:
+            return goalList
+        except:
+            failed return -1
+            return -1
 
     def load_dict(self):
         #loads a dictionary from the locations json file
@@ -68,119 +68,121 @@ class LiftTask(PepperController):
 
         print("using locations file: " + json_name)
 
-	def sendInfo(self, schema, x, y, z, message=""):
-		if schema!="RobotStatus" and schema!="RobotLocation":
-			print 'The schema format is not correct. Nothing was sent Try: "RobotStatus" or "RobotLocation"'
-			return -1
-		elif schema=="RobotStatus" and message=="":
-			print 'No message received. Nothing was sent. To send a "RobotStatus" schema you NEED to introduce a message'
-			return -1
-		else:
-			try:
-				## Send object to server:
-				print "Sending Robot Status rqst"
-				# load the data schema for the item:
-				# Example "RobotStatus" or "RobotLocation"
-				t = str(datetime.datetime.now()).replace(" ", "T")
-				t = t[:len(t)-3]+"Z"
-				d = qb.load_schema(schema)
-				if schema =="RobotStatus":
-					d["message"] = message
-				d["@id"] = "hearts-pepper-" + t
-				d["episode"] = "EPISODE4"
-				d["team"] = "hearts"
-				d["timestamp"] = t
-				d["x"] = x
-				d["y"] = y
-				d["z"] = z
-				qb.post(schema, d)
-			except:
-				# failed return -1
-				return -1
+    def sendInfo(self, schema, x, y, z, message=""):
+        if schema!="RobotStatus" and schema!="RobotLocation":
+            print 'The schema format is not correct. Nothing was sent Try: "RobotStatus" or "RobotLocation"'
+            return -1
+        elif schema=="RobotStatus" and message=="":
+            print 'No message received. Nothing was sent. To send a "RobotStatus" schema you NEED to introduce a message'
+            return -1
+        else:
+            try:
+                ## Send object to server:
+                print "Sending Robot Status rqst"
+                # load the data schema for the item:
+                # Example "RobotStatus" or "RobotLocation"
+                t = str(datetime.datetime.now()).replace(" ", "T")
+                t = t[:len(t)-3]+"Z"
+                d = qb.load_schema(schema)
+                if schema =="RobotStatus":
+                    d["message"] = message
+                d["@id"] = "hearts-pepper-" + t
+                d["episode"] = "EPISODE4"
+                d["team"] = "hearts"
+                d["timestamp"] = t
+                d["x"] = x
+                d["y"] = y
+                d["z"] = z
+                qb.post(schema, d)
+                except:
+                # failed return -1
+                return -1
 
-	def startTask(self):
-		#TODO A Request floor destination from DataHub (Alex Sleat)
-		self.goal = self.getGoal()
-    	print self.goal
-    	print "Goal is " + self.goal["description"] + " on floor " + str(self.goal["floor"])
-    	# liftTask.say("I'm visiting: ")
-        #
-    	# for key in self.goalFloor:
-    	# 	s = str(key + " on floor "+ str(self.goalFloor[key]))
-    	# 	liftTask.say(s)
-        #
-    	# if self.goalFloor==-1:
-    	# 	print "Alex deserves more dessert today"
+    def startTask(self):
+            #TODO A Request floor destination from DataHub (Alex Sleat)
+            # self.goal = self.getGoal()
+            # print self.goal
+            # print "Goal is " + self.goal["description"] + " on floor " + str(self.goal["floor"])
+            # liftTask.say("I'm visiting: ")
+            #
+            # for key in self.goalFloor:
+            # 	s = str(key + " on floor "+ str(self.goalFloor[key]))
+            # 	liftTask.say(s)
+            #
+            # if self.goalFloor==-1:
+            # 	print "Alex deserves more dessert today"
 
-		#TODO B Decide where to go according to floor (Same floor or different floor)
+            #TODO B Decide where to go according to floor (Same floor or different floor)
 
-		#TODO C If same floor go to goal and finish
-		if self.goal["floor"] == 0:
-			self.goHere(*self.locations['finish'])
-		else:
-			#TODO D If different floor continue to next to TODOE
-			#TODO E Approach to lift (Currently tested at the moment through threading**)
-			self.goHere(*self.locations['lift'])
+            #TODO C If same floor go to goal and finish
+            if self.goal["floor"] == 0:
+            self.goHere(*self.locations['finish'])
+            else:
+            #TODO D If different floor continue to next to TODOE
+            #TODO E Approach to lift (Currently tested at the moment through threading**)
+            self.goHere(*self.locations['lift'])
 
-	#		 #TODO F Communicate that it has arrived at the waiting position
-			self.say("I am waiting for the elevator to arrive!")
-			self.sendInfo("RobotStatus",0,0,0, "Waiting for elevator")
-			self.sendInfo("RobotLocation",0,0,0)
-		#
-	#		 '''
-	#			 #Not sure it's necessary to post our location at this point, or, indeed, ever. (see API diagram for task)
-	#			 # d = qb.load_schema("RobotLocation") #Wait for Alex Sleat to confirm
-	#			 # qb.post("RobotLocation", d)
-	#		 '''
-		#
-		#
-		#
-	#		 '''
-	#			 Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up
-	#			 #TODO G Engage with people if necessary
-	#			 #TODO Check for people around
-			# self.speechRecognition()
-	#				 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
-	#				 #TODO Detects gestures like waving
-	#			 #TODO Look at the closest person or origin of sounds and gestures
-	#			 #TODO Talk to the closest person
-	#			 #TODO Look at face
-	#			 #TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
-			self.say("Hello, my name is pepper and I am going to floor " + self.goalFloor)
-	#				 # OPTIONAL TODO person_comments = self.listen
-	#		 '''
-		#
-	#		 #Wait for all people to enter the lift
-	#		 #TODO how are we going to figure out if everyone's in the lift?
-	#			 #Wait until (Closest person distance (Known from cameras) == Lift distance (Known from map)) ?
-		#
-	#		 #Enter lift
-	#		 # TODO Once pepper coordinates ensure it is inside the lift, Abort navigation.
-		#
-		#
-		#
+            #		 #TODO F Communicate that it has arrived at the waiting position
+            self.say("I am waiting for the elevator to arrive!")
+            self.sendInfo("RobotStatus",0,0,0, "Waiting for elevator")
+            #self.sendInfo("RobotStatus",*self.locations['lift'], "Waiting for elevator")
+            self.sendInfo("RobotLocation",0,0,0)
+            #
+            #		 '''
+            #			 #Not sure it's necessary to post our location at this point, or, indeed, ever. (see API diagram for task)
+            #			 # d = qb.load_schema("RobotLocation") #Wait for Alex Sleat to confirm
+            #			 # qb.post("RobotLocation", d)
+            #		 '''
+            #
+            #
+            #
+            #		 '''
+            #			 Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up
+            #			 #TODO G Engage with people if necessary
+            #			 #TODO Check for people around
+            # self.speechRecognition()
+            #				 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
+            #				 #TODO Detects gestures like waving
+            #			 #TODO Look at the closest person or origin of sounds and gestures
+            #			 #TODO Talk to the closest person
+            #			 #TODO Look at face
+            #			 #TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
+            self.say("Hello, my name is pepper and I am going to floor " + self.goalFloor)
+            #				 # OPTIONAL TODO person_comments = self.listen
+            #		 '''
+            #
+            #		 #Wait for all people to enter the lift
+            #		 #TODO how are we going to figure out if everyone's in the lift?
+            #			 #Wait until (Closest person distance (Known from cameras) == Lift distance (Known from map)) ?
+            #
+            #		 #Enter lift
+            #		 # TODO Once pepper coordinates ensure it is inside the lift, Abort navigation.
+            #
+            #
+            #
 
-			
-			self.goHere(*self.locations['lift entrance'])
+
+            self.goHere(*self.locations['lift entrance'])
             self.goHere(*self.locations['lift inside'])
-			self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
+            self.goHere(*self.locations['lift riding']) # We assume pepper adapts trajectory to reduce distance
+
 	def InsideLift(self):
-        self.setVocabulary()
+        # self.setVocabulary()
         self.speechRecognition()
 	#	 #TODO 1 Locate itself in proper place
 	#	 #TODO 2 Face someone in the lift
  			# self.speechRecognition()
 	#			 #TODO 21 Check people around
 	#	 #TODO 2 Declare which floor the robot needs to go to
-		self.say("Hello human, Could you help me by letting me know when we have reached floor number " + str(self.goal['floor']) + "?")
+        self.say("Hello human, Could you help me by letting me know when we have reached floor number " + str(self.goal['floor']) + "?")
 	#			 # person_intention = self.listen("Yes") # If YES thank if !YES repeat from TODO 2
 		#
 	#	 #TODO 3 Ask confirmation of action
-		self.say("Thank you, human. You can call me Pepper")
+        self.say("Thank you, human. You can call me Pepper")
 	#	 #TODO 4 Detect door opening
 	#			 # TODO listen2door TOPIC????? Not a topic, we have to detect it on our own.
 	#	 #TODO 5 Ask someone which is the current floor to STAY or EXIT
-		self.say("Excuse me. May I ask you if we are on floor number " + str(self.goal['floor']) +"?")
+        self.say("Excuse me. May I ask you if we are on floor number " + str(self.goal['floor']) +"?")
 	#			 #person_answer = self.listen ("FloorNumber", "Yes")
 	#			 #If True go to TODO_7 if False go to TODO_6
 	#		 #TODO 6 If STAY check if blocking entrance
@@ -195,49 +197,47 @@ class LiftTask(PepperController):
 		#
 	#	 #TODO 10 Not needed yet
 #####################################################################################################
-	def toEnd(self):
-		self.say("This is my floor!")
-		#		 #TODO Wait for people to leave the lift
-	#
-		self.say("I'm getting out now, thank all of you for your help! Have a good day!")
-		#	 #Go to destination location
-	#
-	#	 #TODO G Engage with people if necessary
-	#	 #TODO Check for people around
-	#		 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
-	#		 #TODO Detects gestures like waving
-	#	 #TODO Look at the closest person or origin of sounds and gestures
-	#	 #TODO Talk to the closest person
-	#	 #TODO Look at face
-	#	 #TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
-	#		 # TODO self.say("Hello, my name is pepper and I am going to floor" + str(FloorNumber))
-	#		 # OPTIONAL TODO person_comments = self.listen
-		#		 #TODO c Acknowledge that the destination has been reached
+    def toEnd(self):
+        self.say("This is my floor!")
+    	#		 #TODO Wait for people to leave the lift
+    #
+        self.say("I'm getting out now, thank all of you for your help! Have a good day!")
+    	#	 #Go to destination location
+    #
+    #	 #TODO G Engage with people if necessary
+    #	 #TODO Check for people around
+    #		 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
+    #		 #TODO Detects gestures like waving
+    #	 #TODO Look at the closest person or origin of sounds and gestures
+    #	 #TODO Talk to the closest person
+    #	 #TODO Look at face
+    #	 #TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
+    #		 # TODO self.say("Hello, my name is pepper and I am going to floor" + str(FloorNumber))
+    #		 # OPTIONAL TODO person_comments = self.listen
+    	#		 #TODO c Acknowledge that the destination has been reached
 
-	 	self.say("I'm getting out now, thanks for your help!")
-     	#Go to destination location
 
 
 
 
 if __name__ == '__main__':
 
-	liftTask = LiftTask(robotIP, PORT)
-	liftTask.prepClasses()
+    liftTask = LiftTask(robotIP, PORT)
+    liftTask.prepClasses()
+    liftTask.load_dict()
+    #TODO A Request floor destination from DataHub (Alex Sleat)
+    liftTask.g = liftTask.getGoal() # Name of the shop plus number as dictionary entry
+    if liftTask.g==-1:
+        liftTask.say("Please, call my engineers. Something went wrong with the a p i querier")
+    else:
+        liftTask.say("I'm visiting: ")
+        for key in liftTask.g:
+            s = str(key + " on floor "+ str(liftTask.g[key]))
+            liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
+            liftTask.say(s)
 
-	#TODO A Request floor destination from DataHub (Alex Sleat)
-	liftTask.g = liftTask.getGoal() # Name of the shop plus number as dictionary entry
-	if liftTask.g==-1:
-		liftTask.say("Please, call my engineers. Something went wrong with the a p i querier")
-	else:
-		liftTask.say("I'm visiting: ")
-		for key in liftTask.g:
-			s = str(key + " on floor "+ str(liftTask.g[key]))
-			liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
-			liftTask.say(s)
+    # liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
-	# liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
-
-	# liftTask.startTask()
-	# liftTask.InsideLift()
-	# liftTask.toEnd()
+    # liftTask.startTask()
+    # liftTask.InsideLift()
+    # liftTask.toEnd()
