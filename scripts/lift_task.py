@@ -56,7 +56,7 @@ class LiftTask(PepperController):
             # return goals:
             return goalList
         except:
-            failed return -1
+            # failed return -1
             return -1
 
     def load_dict(self):
