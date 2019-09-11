@@ -115,12 +115,12 @@ class LiftTask(PepperController):
         #TODO B Decide where to go according to floor (Same floor or different floor)
 
         #TODO C If same floor go to goal and finish
-        if self.goal["floor"] == 0:
+        if self.goalFloor == 0:
             self.goHere(*self.locations['finish'])
         else:
         #TODO D If different floor continue to next to TODOE
         #TODO E Approach to lift (Currently tested at the moment through threading**)
-            self.goHere(*self.locations['lift'])
+            self.goHere(*self.locations['lift back'])
 
         #		 #TODO F Communicate that it has arrived at the waiting position
             self.say("I am waiting for the elevator to arrive!")
@@ -237,8 +237,8 @@ if __name__ == '__main__':
             liftTask.shopName = str(key) # Just the number of the floor
             liftTask.say(s)
 
-    # liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
+    liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
-    # liftTask.startTask()
+    liftTask.startTask()
     # liftTask.InsideLift()
     # liftTask.toEnd()

@@ -123,14 +123,14 @@ class PepperController(object):
 
     #### Methods for recognising words and locating sounds ###
     def setVocabulary(self):
-        self.speechProxy.pause(True)
-        self.speechProxy.removeAllContext()
+        self.speechRecogProxy.pause(True)
+        self.speechRecogProxy.removeAllContext()
         try:
-            self.speechProxy.setLanguage("English")
-            self.speechProxy.setVocabulary(["pepper", "yes"],False)
+            self.speechRecogProxy.setLanguage("English")
+            self.speechRecogProxy.setVocabulary(["pepper", "yes"],False)
         except:
             print("Vocabulary already set")
-        self.speechProxy.pause(False)
+        self.speechRecogProxy.pause(False)
 
     def speechRecogThread(self):
         thread.start_new_thread(self.onWordRecognized,("words", 2))
@@ -138,7 +138,7 @@ class PepperController(object):
 
     def speechRecognition(self):
         self.memoryProxy.insertData("WordRecognized", " ")
-        self.speechProxy.subscribe("attention")
+        self.speechRecogProxy.subscribe("attention")
         self.soundLocalProxy.subscribe("soundLocal")
         #self.speechRecogThread()
         print "Speech recognition engine started"
@@ -178,7 +178,7 @@ class PepperController(object):
         self.trackerProxy.unregisterAllTargets()
 
     def unsubscribe(self):
-        self.speechProxy.unsubscribe("attention")
+        self.speechRecogProxy.unsubscribe("attention")
         print "Speech recognition engine stopped"
 
         self.soundLocalProxy.unsubscribe("soundLocal")
