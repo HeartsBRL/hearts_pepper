@@ -2,13 +2,17 @@
 
 from pepper_controller import PepperController
 
-import numpy
+
 import time
 
 robotIP = "10.2.0.111" #Stevey
 PORT = 9559
 
 class ManualLoc(PepperController):
+
+    def startLoc(self):
+        self.navigationProxy.startLocalization()
+
 
     def printLoc(self):
         print(self.navigationProxy.getRobotPositionInMap())
