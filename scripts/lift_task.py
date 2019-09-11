@@ -1,4 +1,4 @@
-	#!/usr/bin/env python
+#!/usr/bin/env python
 
 from pepper_controller import PepperController
 # from pre_task import PreTask
@@ -15,14 +15,17 @@ except ImportError:
 
 robotIP = "10.2.0.111" #Stevey
 
+# map 11.09.2019 /home/nao/.local/share/Explorer/2014-04-04T023445.314Z.explo
+
 
 PORT = 9559
 
 class LiftTask(PepperController):
 
-    def prepClasses(self):
+    def prep(self):
         #set up instances of classes from other files that we're going to need
         self.apiQuery = ApiQuerier()
+        self.navigationProxy.startLocalization()
 
     def getGoal(self):
         #Gets the goal floor from the data hub and returns it using alex's API
@@ -223,7 +226,7 @@ class LiftTask(PepperController):
 if __name__ == '__main__':
 
     liftTask = LiftTask(robotIP, PORT)
-    liftTask.prepClasses()
+    liftTask.prep()
     liftTask.load_dict()
     #TODO A Request floor destination from DataHub (Alex Sleat)
     liftTask.g = liftTask.getGoal() # Name of the shop plus number as dictionary entry

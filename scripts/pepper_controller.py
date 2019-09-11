@@ -87,11 +87,7 @@ class PepperController(object):
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
-            ## Turn of auto-interaction features
-            self.lifeProxy.setState("solitary")
-            ## Set how close Pepper is allowed to get to obstacles
-            self.motionProxy.setTangentialSecurityDistance(0.01)
-            self.motionProxy.setOrthogonalSecurityDistance(0.1)
+
 
         except Exception,e:
             print("Failed to connect to Pepper, is it on, and is the IP address correct?")
@@ -99,6 +95,15 @@ class PepperController(object):
             print("PORT : " + str(self._PORT))
             print(e)
 
+        ## Turn of auto-interaction features
+        self.lifeProxy.setState("solitary")
+        ## Set how close Pepper is allowed to get to obstacles
+        self.motionProxy.setTangentialSecurityDistance(0.01)
+        self.motionProxy.setOrthogonalSecurityDistance(0.01)
+
+        # self.navigationProxy.stopLocalization()
+        # ### Update this with new path when you make a new map """
+        # self.navigationProxy.loadExploration('/home/nao/.local/share/Explorer/2014-04-04T023445.314Z.explo')
         # self.navigationProxy.startLocalization()
 
     def say(self, words):
@@ -113,14 +118,19 @@ class PepperController(object):
         except Exception,e:
             print("Pepper TTS failed due to:")
             print(e)
-
         return
 
     def goHere(self,x,y,t):
         #simple function to call navigation. Can run this as a thread.
         #store intended coords as a tuple in case we need to resume this navigation command later
+
         self.going = (x,y,t)
-        ret = self.navigationProxy.navigateToInMap((x,y,t))
+        print("Going to " + str(self.going))
+        ret = 1
+        tries = 0
+        while ret != 0 and tries < 5:
+            ret = self.navigationProxy.navigateToInMap((x,y,t))
+            tries += 1
         return ret
 
     #### Methods for recognising words and locating sounds ###

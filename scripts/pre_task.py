@@ -65,3 +65,4 @@ if __name__ == '__main__':
     task = PreTask(robotIP, PORT)
     task.explore(2)
     #task.goHere(1,-1,0)
+    task.say('Remember to update the map path in reload_map.py so you don\'t load an old map!')

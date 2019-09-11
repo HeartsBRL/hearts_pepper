@@ -13,14 +13,14 @@ PORT = 9559
 
 class NavTest(PepperController):
 
-    def setup2(self):
-        #enbles localisation and navigation
-        self.navigationProxy.startLocalization()
-        ## Turn off auto-interaction features
-        self.lifeProxy.setState("solitary")
-        ## Set how close Pepper is allowed to get to obstacles
-        self.motionProxy.setTangentialSecurityDistance(0.01)
-        self.motionProxy.setOrthogonalSecurityDistance(0.1)
+    # def setup2(self):
+    #     #enbles localisation and navigation
+    #     self.navigationProxy.startLocalization()
+    #     ## Turn off auto-interaction features
+    #     self.lifeProxy.setState("solitary")
+    #     ## Set how close Pepper is allowed to get to obstacles
+    #     self.motionProxy.setTangentialSecurityDistance(0.01)
+    #     self.motionProxy.setOrthogonalSecurityDistance(0.1)
 
 
         # *args allows any number of arguments
@@ -41,9 +41,10 @@ class NavTest(PepperController):
             self.locations = json.load(json_data)
 
         print("using locations file: " + json_name)
+
     def run_through(self):
 
-
+        self.navigationProxy.startLocalization()
         self.goHere(*self.locations["start"])
         self.goHere(*self.locations["outside door"])
         self.goHere(*self.locations["inside door"])
@@ -51,11 +52,12 @@ class NavTest(PepperController):
         self.goHere(*self.locations["inside door"])
         self.goHere(*self.locations["outside door"])
         self.goHere(*self.locations["finish"])
+        print('Finished run through')
 
 
 if __name__ == '__main__':
     navTest = NavTest(robotIP, PORT)
-    navTest.setup2()
+    # navTest.setup2()
     navTest.load_dict()
     navTest.run_through()
 
