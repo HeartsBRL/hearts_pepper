@@ -87,6 +87,8 @@ class PepperController(object):
             self.tabletTimeout = time.time()
             self.tabletFlag = False
 
+            self.memoryService = self.session.service("ALMemory")
+
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
 
