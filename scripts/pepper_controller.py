@@ -17,7 +17,7 @@ import numpy
 from naoqi import ALProxy
 
 #robotIP = "pepper.local"
-robotIP = "10.2.0.111" #Stevey
+robotIP = "stevey.local" #Stevey
 PORT = 9559
 
 class PepperController(object):
@@ -31,6 +31,7 @@ class PepperController(object):
         self.setup()
 
         self.old_recog = ""
+        self.moving = False
 
     def ping(self):
         # Ping the robot
@@ -71,6 +72,7 @@ class PepperController(object):
             self.lifeProxy = ALProxy("ALAutonomousLife", self._robotIP, self._PORT)
             self.dialogProxy = ALProxy("ALDialog", self._robotIP, self._PORT)
             self.system = ALProxy("ALSystem", self._robotIP, self._PORT)
+            self.postureProxy = ALProxy("ALRobotPosture", self._robotIP, self._PORT)
 
             self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
             self.engageProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
@@ -104,11 +106,12 @@ class PepperController(object):
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
         self.motionProxy.setOrthogonalSecurityDistance(0.01)
+        self.postureProxy.goToPosture("Stand",0.8)
 
         # self.navigationProxy.stopLocalization()
         # ### Update this with new path when you make a new map """
         # self.navigationProxy.loadExploration('/home/nao/.local/share/Explorer/2014-04-04T023445.314Z.explo')
-        # self.navigationProxy.startLocalization()
+        #self.navigationProxy.startLocalization()
 
     def say(self, words):
 

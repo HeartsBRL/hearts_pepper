@@ -10,10 +10,10 @@ try:
 except ImportError:
     import Image
 
-robotIP = "10.2.0.111" #Stevey
+robotIP = "stevey.local" #Stevey
 PORT = 9559
 
-class PreTask(PepperController):
+class MakeMap(PepperController):
 
     def startingVariables(self):
         ## Verbal confirmation it's starting
@@ -62,7 +62,7 @@ class PreTask(PepperController):
 
 
 if __name__ == '__main__':
-    task = PreTask(robotIP, PORT)
+    task = MakeMap(robotIP, PORT)
     task.explore(2)
     #task.goHere(1,-1,0)
     task.say('Remember to update the map path in reload_map.py so you don\'t load an old map!')

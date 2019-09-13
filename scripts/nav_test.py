@@ -8,7 +8,7 @@ import thread
 import time
 import json
 
-robotIP = "10.2.0.111" #Stevey
+robotIP = "stevey.local" #Stevey
 PORT = 9559
 
 class NavTest(PepperController):
@@ -45,13 +45,14 @@ class NavTest(PepperController):
     def run_through(self):
 
         self.navigationProxy.startLocalization()
+        self.goHere(*self.locations["inside door"])
         self.goHere(*self.locations["start"])
-        self.goHere(*self.locations["outside door"])
-        self.goHere(*self.locations["inside door"])
-        self.goHere(*self.locations["lift back"])
-        self.goHere(*self.locations["inside door"])
-        self.goHere(*self.locations["outside door"])
-        self.goHere(*self.locations["finish"])
+        #self.goHere(*self.locations["outside door"])
+        #self.goHere(*self.locations["inside door"])
+        #self.goHere(*self.locations["lift back"])
+        #self.goHere(*self.locations["inside door"])
+        #self.goHere(*self.locations["outside door"])
+        #self.goHere(*self.locations["finish"])
         print('Finished run through')
 
 
