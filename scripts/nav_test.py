@@ -45,14 +45,13 @@ class NavTest(PepperController):
     def run_through(self):
 
         self.navigationProxy.startLocalization()
-        self.goHere(*self.locations["inside door"])
-        self.goHere(*self.locations["start"])
-        #self.goHere(*self.locations["outside door"])
-        #self.goHere(*self.locations["inside door"])
-        #self.goHere(*self.locations["lift back"])
-        #self.goHere(*self.locations["inside door"])
-        #self.goHere(*self.locations["outside door"])
-        #self.goHere(*self.locations["finish"])
+        self.goHere(*self.locations["start"][1])
+        #self.goHere(*self.locations["outside door"][1])
+        #self.goHere(*self.locations["inside door"][1])
+        #self.goHere(*self.locations["lift back"][1])
+        #self.goHere(*self.locations["inside door"][1])
+        #self.goHere(*self.locations["outside door"][1])
+        #self.goHere(*self.locations["finish"][1])
         print('Finished run through')
 
 

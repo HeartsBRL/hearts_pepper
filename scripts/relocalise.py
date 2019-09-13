@@ -8,17 +8,14 @@ import time
 robotIP = "stevey.local" #Stevey
 PORT = 9559
 
-class MapLoc(PepperController):
+class Relocalise(PepperController):
 
     def printLoc(self):
-        print("Map, World")
-        print(self.navigationProxy.getRobotPositionInMap()[0],self.motionProxy.getRobotPosition(True))
-        #print("World:")
-        #print(self.motionProxy.getRobotPosition(True)[0:2])
+        self.navigationProxy.relocalizeInMap([0,0,0])
 
 
 if __name__ == '__main__':
-    task = MapLoc(robotIP, PORT)
+    task = Relocalise(robotIP, PORT)
     task.navigationProxy.startLocalization()
     while True:
         time.sleep(5)

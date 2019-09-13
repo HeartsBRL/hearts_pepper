@@ -17,7 +17,7 @@ import numpy
 from naoqi import ALProxy
 
 #robotIP = "pepper.local"
-robotIP = "stevey.local" #Stevey
+robotIP = "westey.local" #Stevey
 PORT = 9559
 
 class PepperController(object):
@@ -139,6 +139,23 @@ class PepperController(object):
             ret = self.navigationProxy.navigateToInMap((x,y,t))
             tries += 1
         return ret
+
+    def moveHere(self,x,y,t):
+        #simple function to call navigation. Can run this as a thread.
+        #store intended coords as a tuple in case we need to resume this navigation command later
+
+        self.going = [x,y,t]
+        print("Going to " + str(self.going))
+        ret = False
+        tries = 0
+        self.current = self.motionProxy.getRobotPosition(True)
+        #self.diff = self.current - self.going
+        self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],self.going[2]-self.current[2]]
+        print("Moving by: " + str(self.diff))
+        #while ret != True and tries < 5:
+        ret = self.motionProxy.moveTo(*self.diff)
+        #tries += 1
+        #return ret
 
     #### Methods for recognising words and locating sounds ###
     def setVocabulary(self):
