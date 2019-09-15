@@ -91,6 +91,7 @@ class PepperController(object):
 
             self.memoryService = self.session.service("ALMemory")
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
+            self.touchService = self.session.service("ALTouch")
 
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
@@ -208,6 +209,23 @@ class PepperController(object):
                 self.unsubscribe()
                 self.say("Thank you, if anyone needs to get out of the lift please go before me")
                 time.sleep(2)
+                
+    def senseTouch(self):
+        self.frontTouchSubscriber = self.touchService.subscriber("Touch/FrontTactilTouched")
+        self.midTouchSubscriber = self.touchService.subscriber("Touch/MiddleTactilTouched")
+        self.backTouchSubscriber = self.touchService.subscriber("Touch/RearTactilTouched")
+        self.frontTouchSubscriber.signal.connect(self.reactToTouch)
+        self.midTouchSubscriber.signal.connect(self.reactToTouch)
+        self.backTouchSubscriber.signal.connect(self.reactToTouch)
+        print "Connected"
+        self.touchService.subscribe("Touch")
+    
+    def reactToTouch(self, val):
+        if self.expectingTouch == True and val == 1:
+            self.say("You touched my head")
+            time.sleep(1)
+            self.expectingTouch = False
+            self.touchService.unsubscribe("Touch")
 
     # def	trackSound(self):
         # targetName = "Sound"

@@ -162,7 +162,11 @@ class LiftTask(PepperController):
     def InsideLift(self):
         self.say("Hi, could you please help me by letting me know when we have reached floor number " + str(self.goalFloor) + "?")
         self.say("Just say we are here")
-        self.speechRecognition()
+        #self.speechRecognition()
+        self.expectingTouch = True
+        self.senseTouch()
+        while self.expectingTouch == True:
+            pass
 
 
 
