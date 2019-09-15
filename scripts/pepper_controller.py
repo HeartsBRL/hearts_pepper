@@ -162,7 +162,7 @@ class PepperController(object):
         self.speechRecogProxy.removeAllContext()
         try:
             self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper", "yes"],False)
+            self.speechRecogProxy.setVocabulary(["pepper", "yes", "we're here"],False)
         except:
             print("Vocabulary already set")
         self.speechRecogProxy.pause(False)
@@ -187,16 +187,23 @@ class PepperController(object):
             if(wordRecognized != self.old_recog):
                 self.old_recog = wordRecognized
 
-                print (wordRecognized)
+                print (wordRecognized)    
+                
             if wordRecognized[0] == "pepper":
-
                 heard = True
                 self.trackSound()
-
-            #if "pepper" in wordRecognized:
-
-            #self.ttsProxy.say("I heard you")
                 self.unsubscribe()
+                
+            if wordRecognized[0] == "yes":              
+                self.trackSound()
+                self.say("Thank you human")
+                
+            if wordRecognized[0] == "we're here":
+                heard = True
+                self.trackSound()
+                self.unsubscribe()
+                self.say("Thank you, if anyone needs to get out of the lift please go before me")
+                time.sleep(2)
 
     def	trackSound(self):
         targetName = "Sound"
