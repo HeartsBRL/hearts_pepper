@@ -195,37 +195,37 @@ class PepperController(object):
 
             if wordRecognized[0] == "pepper":
                 heard = True
-                self.trackSound()
+                #self.trackSound()
                 self.unsubscribe()
 
             if wordRecognized[0] == "yes":
-                self.trackSound()
+                #self.trackSound()
                 self.say("Thank you human")
 
             if wordRecognized[0] == "we're here":
                 heard = True
-                self.trackSound()
+                #self.trackSound()
                 self.unsubscribe()
                 self.say("Thank you, if anyone needs to get out of the lift please go before me")
                 time.sleep(2)
 
-    def	trackSound(self):
-        targetName = "Sound"
-        param = [1, 0.1]
-        mode = "Move"
+    # def	trackSound(self):
+        # targetName = "Sound"
+        # param = [1, 0.1]
+        # mode = "Move"
 
-        self.trackerProxy.registerTarget(targetName, param)
-        time.sleep(2)
-        activeTarget = self.trackerProxy.getActiveTarget()
-        print("target is: ", activeTarget)
-        self.trackerProxy.setMode(mode)
-        time.sleep(2)
-        activeMode = self.trackerProxy.getMode()
-        print("Mode is: ", activeMode)
-        self.trackerProxy.track(targetName)
-        time.sleep(0.5)
-        self.trackerProxy.stopTracker()
-        self.trackerProxy.unregisterAllTargets()
+        # self.trackerProxy.registerTarget(targetName, param)
+        # time.sleep(2)
+        # activeTarget = self.trackerProxy.getActiveTarget()
+        # print("target is: ", activeTarget)
+        # self.trackerProxy.setMode(mode)
+        # time.sleep(2)
+        # activeMode = self.trackerProxy.getMode()
+        # print("Mode is: ", activeMode)
+        # self.trackerProxy.track(targetName)
+        # time.sleep(0.5)
+        # self.trackerProxy.stopTracker()
+        # self.trackerProxy.unregisterAllTargets()
 
     def unsubscribe(self):
         self.speechRecogProxy.unsubscribe("attention")

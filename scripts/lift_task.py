@@ -113,6 +113,7 @@ class LiftTask(PepperController):
             #TODO Approach to lift, define new location/people perception
             intruders = self.peopleInFront()
             while len(self.peopleInFront()) > 0:
+                self.say("Get in theh lift!")
                 pass
             self.say("I'm going to the lift now.")
             self.goHere(*self.locations['outside door'])
