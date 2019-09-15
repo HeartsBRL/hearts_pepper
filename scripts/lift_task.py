@@ -114,6 +114,7 @@ class LiftTask(PepperController):
             intruders = self.peopleInFront()
             while len(self.peopleInFront()) > 0:
                 pass
+            self.say("I'm going to the lift now.")
             self.goHere(*self.locations['outside door'])
             self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")

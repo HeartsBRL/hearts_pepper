@@ -16,7 +16,7 @@ class MapLoad(PepperController):
         ### Update this with new path when you make a new map """
         self.navigationProxy.loadExploration(self.mapLoc)
         print("Loaded map from " + self.mapLoc)
-        self.navigationProxy.stopLocalization()
+        self.navigationProxy.startLocalization()
 
 
 if __name__ == '__main__':

@@ -104,7 +104,7 @@ class PepperController(object):
             print(e)
 
         ## Turn of auto-interaction features
-        self.lifeProxy.setState("safeguard")
+        self.lifeProxy.setState("solitary")
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
         self.motionProxy.setOrthogonalSecurityDistance(0.05)
