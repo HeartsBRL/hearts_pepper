@@ -5,6 +5,7 @@ from pepper_controller import PepperController
 from api_querier import ApiQuerier
 import numpy
 import json
+import time
 
 
 # pip install pillow
@@ -113,6 +114,7 @@ class LiftTask(PepperController):
             #self.findPeople()
             #while numPeople > 0:
                 #pass
+            self.say("I'm going to the lift now")
             self.goHere(*self.locations['outside door'])
             self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
