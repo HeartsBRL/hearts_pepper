@@ -128,8 +128,8 @@ class PepperController(object):
 
     def goHere(self,x,y,t):
         #simple function to call navigation. Can run this as a thread.
-        #store intended coords as a tuple in case we need to resume this navigation command later
 
+        #store intended coords as a tuple in case we need to resume this navigation command later
         self.going = (x,y,t)
         print("Going to " + str(self.going))
         ret = 1
@@ -155,6 +155,10 @@ class PepperController(object):
         ret = self.navgationProxy.navigateTo(*self.diff)
         #tries += 1
         #return ret
+
+    def peopleInFront(self, zone):
+        zone1 = self.memoryProxy.getData.("EngagementZones/PeopleInZone1")
+        return zone1
 
     #### Methods for recognising words and locating sounds ###
     def setVocabulary(self):
