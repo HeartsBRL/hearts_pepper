@@ -202,7 +202,7 @@ class PepperController(object):
                 #self.trackSound()
                 self.say("Thank you human")
 
-            if wordRecognized[0] == "we're here":
+            if wordRecognized[0] == "we are here":
                 heard = True
                 #self.trackSound()
                 self.unsubscribe()

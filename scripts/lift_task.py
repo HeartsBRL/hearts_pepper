@@ -113,7 +113,7 @@ class LiftTask(PepperController):
             #TODO Approach to lift, define new location/people perception
 
             freedom = 0
-            while freedom < 10:
+            while freedom < 50:
                 if len(self.peopleInFront()) > 0:
                     self.say("Get in the lift!")
                     freedom = 0
