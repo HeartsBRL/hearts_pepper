@@ -105,13 +105,9 @@ class PepperController(object):
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
-        self.motionProxy.setOrthogonalSecurityDistance(0.01)
-        self.postureProxy.goToPosture("Stand",0.8)
+        self.motionProxy.setOrthogonalSecurityDistance(0.05)
+        self.postureProxy.goToPosture("Stand",0.6)
 
-        # self.navigationProxy.stopLocalization()
-        # ### Update this with new path when you make a new map """
-        # self.navigationProxy.loadExploration('/home/nao/.local/share/Explorer/2014-04-04T023445.314Z.explo')
-        #self.navigationProxy.startLocalization()
 
     def say(self, words):
 
@@ -135,7 +131,7 @@ class PepperController(object):
         print("Going to " + str(self.going))
         ret = 1
         tries = 0
-        while ret != 0 and tries < 5:
+        while ret != 0 and tries < 10:
             ret = self.navigationProxy.navigateToInMap((x,y,t))
             tries += 1
         return ret
@@ -153,7 +149,7 @@ class PepperController(object):
         self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],self.going[2]-self.current[2]]
         print("Moving by: " + str(self.diff))
         #while ret != True and tries < 5:
-        ret = self.motionProxy.moveTo(*self.diff)
+        ret = self.navgationProxy.navigateTo(*self.diff)
         #tries += 1
         #return ret
 
@@ -213,7 +209,7 @@ class PepperController(object):
         activeMode = self.trackerProxy.getMode()
         print("Mode is: ", activeMode)
         self.trackerProxy.track(targetName)
-        time.sleep(30)
+        time.sleep(0.5)
         self.trackerProxy.stopTracker()
         self.trackerProxy.unregisterAllTargets()
 

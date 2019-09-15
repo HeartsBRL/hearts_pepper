@@ -5,7 +5,7 @@ from pepper_controller import PepperController
 
 import time
 
-robotIP = "stevey.local" #Stevey
+robotIP = "westey.local" #Stevey
 PORT = 9559
 
 class MapLoc(PepperController):
