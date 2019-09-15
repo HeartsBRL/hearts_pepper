@@ -102,11 +102,11 @@ class LiftTask(PepperController):
 
         self.goHere(*self.locations['start'])
         if self.goalFloor == 0:
-            self.say("I'm already on this floor, going to the finish")
+            self.say("I'm already on this floor, I'm going to the finish")
             self.goHere(*self.locations['finish'])
             print "Going to the final destination"
         else:
-            self.say("I will need to use the lift to get there")
+            self.say("I will need to use the lift to get where I would like go")
             self.goHere(*self.locations['near lift'])
             self.say("Hi everyone, I am Pepper. Please go ahead of me.")
             #TODO Approach to lift, define new location/people perception
@@ -116,7 +116,13 @@ class LiftTask(PepperController):
             self.goHere(*self.locations['outside door'])
             self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
+            time.sleep(2)
             self.goHere(*self.locations['lift back'])
+                       
+            
+            
+         #OPTIONAL IMPROVEMENTS#
+         
             #TODO find location in lift
             #go to place in lift
             # self.goHere(*self.locations['lift inside'])
@@ -145,22 +151,27 @@ class LiftTask(PepperController):
 
 
     def InsideLift(self):
+        self.say("Hi, could you please help me by letting me know when we have reached floor number " + str(self.goalFloor) + "?")
+        self.say("Just say we're here")
         self.speechRecognition()
+        
+        
+        
     #	 #TODO 2 Face someone in the lift
     			# self.speechRecognition()
     #			 #TODO 21 Check people around
-        self.say("Hello human, Could you help me by letting me know when we have reached floor number " + str(self.goalFloor) + "?")
+        
     #			 # person_intention = self.listen("Yes") # If YES thank if !YES repeat from TODO 2
     	#
     #	 #TODO 3 Ask confirmation of action - if yes say thanks
-        self.say("Thank you human. You can call me Pepper")
+        #self.say("Thank you human.")
     #	 #TODO 4 Detect door opening
     #			 # TODO listen2door TOPIC????? Not a topic, we have to detect it on our own.
 	# Ask humans to say when we're at the floor
 	#When at the floor go toEnd
 
     #	 #TODO 5 are we in the way, if yes, move
-        self.say("Excuse me. May I ask you if we are on floor number " + str(self.goalFloor) +"?")
+        #self.say("Excuse me. May I ask you if we are on floor number " + str(self.goalFloor) +"?")
     #			 #person_answer = self.listen ("FloorNumber", "Yes")
     #			 #If True go to TODO_7 if False go to TODO_6
     #		 #TODO 6 If STAY check if blocking entrance
@@ -175,10 +186,10 @@ class LiftTask(PepperController):
 
 #####################################################################################################
     def toEnd(self):
-        self.say("This is my floor!")
+        #self.say("This is my floor!")
     	#		 #TODO Wait for people to leave the lift
     #
-        self.say("I'm getting out now, thank all of you for your help! Have a good day!")
+        self.say("I'm getting out now, thank you for your help! Have a good day!")
     	#	 #Go to destination location
         self.goHere(*self.locations['inside door'])
         self.goHere(*self.locations['outside door'])
@@ -251,19 +262,10 @@ if __name__ == '__main__':
 
 	#LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
     liftTask.toEnd()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    liftTask.toEnd()
+    
+    
+    
+    
+    
+    
+    
