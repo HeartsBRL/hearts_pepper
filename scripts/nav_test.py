@@ -8,7 +8,7 @@ import thread
 import time
 import json
 
-robotIP = "stevey.local" #Stevey
+robotIP = "westey.local" #Stevey
 PORT = 9559
 
 class NavTest(PepperController):
@@ -43,24 +43,30 @@ class NavTest(PepperController):
         print("using locations file: " + json_name)
 
     def run_through(self):
-
-        self.navigationProxy.startLocalization()
-        self.goHere(*self.locations["inside door"])
-        self.goHere(*self.locations["start"])
-        #self.goHere(*self.locations["outside door"])
-        #self.goHere(*self.locations["inside door"])
-        #self.goHere(*self.locations["lift back"])
-        #self.goHere(*self.locations["inside door"])
-        #self.goHere(*self.locations["outside door"])
-        #self.goHere(*self.locations["finish"])
+        self.goHere(*self.locations["start"][0])
+        #self.goHere(*self.locations["outside door"][0])
+        #self.goHere(*self.locations["inside door"][0])
+        #self.goHere(*self.locations["lift back"][0])
+        #self.goHere(*self.locations["inside door"][0])
+        #self.goHere(*self.locations["outside door"][0])
+        #self.goHere(*self.locations["finish"][0])
         print('Finished run through')
+
+    def axis(self):
+        x,y,t = self.navigationProxy.getRobotPositionInMap()[0]
+        self.goHere(x+0.5,y,t)
+        self.goHere(x,y,t)
+        self.goHere(x,y+0.5,t)
 
 
 if __name__ == '__main__':
     navTest = NavTest(robotIP, PORT)
     # navTest.setup2()
     navTest.load_dict()
+    navTest.navigationProxy.startLocalization()
     navTest.run_through()
+    #navTest.axis()
+
 
     #while loop keeps script alive for the threads to run. Super bad but
     #can change for the real thing.

@@ -5,13 +5,16 @@ from pepper_controller import PepperController
 
 import time
 
-robotIP = "stevey.local" #Stevey
+robotIP = "westey.local" #Stevey
 PORT = 9559
 
 class MapLoc(PepperController):
 
     def printLoc(self):
-        print(self.navigationProxy.getRobotPositionInMap()[0][0:2])
+        print("Map, World")
+        print(self.navigationProxy.getRobotPositionInMap()[0],self.motionProxy.getRobotPosition(True))
+        #print("World:")
+        #print(self.motionProxy.getRobotPosition(True)[0:2])
 
 
 if __name__ == '__main__':
