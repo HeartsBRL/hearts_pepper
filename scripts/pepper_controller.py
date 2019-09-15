@@ -90,6 +90,8 @@ class PepperController(object):
             self.tabletFlag = False
 
             self.memoryService = self.session.service("ALMemory")
+            self.peoplePerceptionService = self.session.service("ALPeoplePerception")
+
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
@@ -105,8 +107,9 @@ class PepperController(object):
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
-        self.motionProxy.setOrthogonalSecurityDistance(0.01)
+        self.motionProxy.setOrthogonalSecurityDistance(0.05)
         self.postureProxy.goToPosture("Stand",0.6)
+        self.peoplePerceptionService.subscribe("PeoplePerception")
 
 
     def say(self, words):
