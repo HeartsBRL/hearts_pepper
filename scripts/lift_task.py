@@ -107,7 +107,7 @@ class LiftTask(PepperController):
             self.goHere(*self.locations['finish'])
             print "Going to the final destination"
         else:
-            self.say("I will need to use the lift to get where I would like to go")
+            self.say("I will need to use the lift to get there.")
             self.goHere(*self.locations['near lift'])
             self.lifeProxy.setState("solitary")
             self.say("Hi everyone, I am Pepper. Please go ahead of me.")
@@ -116,7 +116,7 @@ class LiftTask(PepperController):
             freedom = 0
             while freedom < 50:
                 if len(self.peopleInFront()) > 0:
-                    self.say("Get in the lift!")
+                    self.say("Get in the lift!") #MAKE SURE TO COMMENT
                     freedom = 0
                 else:
                     freedom += 1
@@ -164,9 +164,7 @@ class LiftTask(PepperController):
 
 
     def InsideLift(self):
-        self.say("Hi, could you please help me by letting me know when we have reached floor number " + str(self.goalFloor) + "?")
-        self.say("Just touch my head")
-        #self.speechRecognition()
+        self.say("Could you touch my head when we have reached floor number " + str(self.goalFloor) + "please?")
         self.expectingTouch = True
         self.senseTouch()
         while self.expectingTouch == True:
