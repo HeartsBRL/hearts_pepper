@@ -156,8 +156,8 @@ class PepperController(object):
         #tries += 1
         #return ret
 
-    def peopleInFront(self, zone):
-        zone1 = self.memoryProxy.getData.("EngagementZones/PeopleInZone1")
+    def peopleInFront(self):
+        zone1 = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
         return zone1
 
     #### Methods for recognising words and locating sounds ###
@@ -191,17 +191,17 @@ class PepperController(object):
             if(wordRecognized != self.old_recog):
                 self.old_recog = wordRecognized
 
-                print (wordRecognized)    
-                
+                print (wordRecognized)
+
             if wordRecognized[0] == "pepper":
                 heard = True
                 self.trackSound()
                 self.unsubscribe()
-                
-            if wordRecognized[0] == "yes":              
+
+            if wordRecognized[0] == "yes":
                 self.trackSound()
                 self.say("Thank you human")
-                
+
             if wordRecognized[0] == "we're here":
                 heard = True
                 self.trackSound()

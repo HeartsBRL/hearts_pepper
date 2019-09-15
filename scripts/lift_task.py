@@ -107,24 +107,23 @@ class LiftTask(PepperController):
             self.goHere(*self.locations['finish'])
             print "Going to the final destination"
         else:
-            self.say("I will need to use the lift to get where I would like go")
+            self.say("I will need to use the lift to get where I would like to go")
             self.goHere(*self.locations['near lift'])
             self.say("Hi everyone, I am Pepper. Please go ahead of me.")
             #TODO Approach to lift, define new location/people perception
-            #self.findPeople()
-            #while numPeople > 0:
-                #pass
-            self.say("I'm going to the lift now")
+            intruders = self.peopleInFront()
+            while len(self.peopleInFront()) > 0:
+                pass
             self.goHere(*self.locations['outside door'])
             self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
             time.sleep(2)
             self.goHere(*self.locations['lift back'])
-                       
-            
-            
+
+
+
          #OPTIONAL IMPROVEMENTS#
-         
+
             #TODO find location in lift
             #go to place in lift
             # self.goHere(*self.locations['lift inside'])
@@ -156,13 +155,13 @@ class LiftTask(PepperController):
         self.say("Hi, could you please help me by letting me know when we have reached floor number " + str(self.goalFloor) + "?")
         self.say("Just say we're here")
         self.speechRecognition()
-        
-        
-        
+
+
+
     #	 #TODO 2 Face someone in the lift
     			# self.speechRecognition()
     #			 #TODO 21 Check people around
-        
+
     #			 # person_intention = self.listen("Yes") # If YES thank if !YES repeat from TODO 2
     	#
     #	 #TODO 3 Ask confirmation of action - if yes say thanks
@@ -264,10 +263,3 @@ if __name__ == '__main__':
 
 	#LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
     liftTask.toEnd()
-    
-    
-    
-    
-    
-    
-    

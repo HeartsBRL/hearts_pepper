@@ -43,7 +43,9 @@ class NavTest(PepperController):
         print("using locations file: " + json_name)
 
     def run_through(self):
-        self.goHere(*self.locations["start"][0])
+        ret = self.navigationProxy.post.navigateToInMap(self.locations["start"])
+        self.say("I'm doing two things at once! Go me!")
+        #self.goHere(*self.locations["start"][0])
         #self.goHere(*self.locations["outside door"][0])
         #self.goHere(*self.locations["inside door"][0])
         #self.goHere(*self.locations["lift back"][0])
