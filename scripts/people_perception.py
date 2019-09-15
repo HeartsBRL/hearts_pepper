@@ -7,7 +7,7 @@ from naoqi import ALModule
 import json
 import thread
 
-robotIP = "stevey.local" #Stevey
+robotIP = "westey.local" #Stevey
 PORT = 9559
 
 class PeoplePerception(PepperController):
@@ -24,7 +24,7 @@ class PeoplePerception(PepperController):
 
     def onPeeps(self, value):
         print "hey!"
-        print value
+        #print value
         if len(value) > 0:
             for id in value:
                 peepAt = self.memoryProxy.getData("PeoplePerception/Person/" + str(id) + "/PositionInWorldFrame")[0:2]
@@ -39,13 +39,15 @@ class PeoplePerception(PepperController):
                         self.moving = True
                         #coords = self.locations["inside door"]
                         #thread.start_new_thread(self.goHere,(coords[0],coords[1],coords[2]))
-                        self.goHere(self.locations["lift back"])
+                        self.goHere(*self.locations["outside door"][0])
+                        self.goHere(*self.locations["inside door"][0])
+                        self.goHere(*self.locations["lift back"][0])
                         self.moving = False
 
 
     def testCoords(self,p3):
-        p1 = [-0.040594328194856644, 0.8543727397918701]
-        p2 = [-0.5402392148971558, -1.4770621061325073]
+        p1 = self.locations["corner1"][1][0:2]
+        p2 = self.locations["corner2"][1][0:2]
         # p3 = [-1.5,0.3]
 
         xmin = min(p1[0],p2[0]) - 0.1
