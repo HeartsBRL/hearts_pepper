@@ -104,23 +104,23 @@ class LiftTask(PepperController):
         if self.goalFloor == 0:
             self.say("I'm already on this floor, going to the finish")
             self.goHere(*self.locations['finish'])
-            print "Going to the final destination" 
+            print "Going to the final destination"
         else:
             self.say("I will need to use the lift to get there")
-			self.goHere(*self.locations['near lift'])
-			self.say("Hi everyone, I am Pepper. Please go ahead of me.")
-			#TODO Approach to lift, define new location/people perception
-			#self.findPeople()
-			#while numPeople > 0:
-				#pass
-			self.goHere(*self.locations['outside door']) 
+            self.goHere(*self.locations['near lift'])
+            self.say("Hi everyone, I am Pepper. Please go ahead of me.")
+            #TODO Approach to lift, define new location/people perception
+            #self.findPeople()
+            #while numPeople > 0:
+                #pass
+            self.goHere(*self.locations['outside door'])
             self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
-			self.goHere(*self.locations['lift back'])
-			#TODO find location in lift
-			#go to place in lift
-				# self.goHere(*self.locations['lift inside'])
-				#self.goHere(*self.locations['lift back']) # We assume pepper adapts trajectory to reduce distance
+            self.goHere(*self.locations['lift back'])
+            #TODO find location in lift
+            #go to place in lift
+            # self.goHere(*self.locations['lift inside'])
+            #self.goHere(*self.locations['lift back']) # We assume pepper adapts trajectory to reduce distance
 
 
          #TODO F Communicate that it has arrived at the waiting position - probably dont need
@@ -158,7 +158,7 @@ class LiftTask(PepperController):
     #			 # TODO listen2door TOPIC????? Not a topic, we have to detect it on our own.
 	# Ask humans to say when we're at the floor
 	#When at the floor go toEnd
-	
+
     #	 #TODO 5 are we in the way, if yes, move
         self.say("Excuse me. May I ask you if we are on floor number " + str(self.goalFloor) +"?")
     #			 #person_answer = self.listen ("FloorNumber", "Yes")
@@ -172,7 +172,7 @@ class LiftTask(PepperController):
     #			 #TODO 9 If NO go back to TODO4
     #		 #TODO 7 If EXIT go out go to TODO10
     				# self.goHere("Lift entrance coordinates")
- 
+
 #####################################################################################################
     def toEnd(self):
         self.say("This is my floor!")
@@ -184,12 +184,12 @@ class LiftTask(PepperController):
         self.goHere(*self.locations['outside door'])
 		#TODO extraInteraction
         self.goHere(*self.locations['finish'])
-		
-		
 
 
 
-	def extraInteraction(self):
+
+
+    def extraInteraction(self):
 	        #		 '''
         #			 Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up
         #			 #TODO G Engage with people if necessary
@@ -203,7 +203,7 @@ class LiftTask(PepperController):
         #			 #TODO GA Detect if the person wants to engage or not and act accordingly (If YES say name and communicate intention if NO just avoit/dodge)
         #    self.say("Hello, my name is pepper and I am going to floor " + self.goalFloor)
         #				 # OPTIONAL TODO person_comments = self.listen
-		
+
 		    #	 #TODO G Engage with people if necessary
     #	 #TODO Check for people around
     #		 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
@@ -217,10 +217,10 @@ class LiftTask(PepperController):
     	#		 #TODO c Acknowledge that the destination has been reached
 
         #		 '''
-		
-		pass
-		
-		
+
+        pass
+
+
 
 if __name__ == '__main__':
 
@@ -245,25 +245,25 @@ if __name__ == '__main__':
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
     liftTask.startTask()
-	
+
 	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
     liftTask.InsideLift()
-	
+
 	#LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
-	liftTask.toEnd()
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+    liftTask.toEnd()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     liftTask.toEnd()
