@@ -1,5 +1,5 @@
 ## Running both the TeraRanger Evo Thermal 33 and 90 Plus the SLAMTEC RPLidar
 
-run pre_task.py
+run make_map.py
 
 run lift_task.py
