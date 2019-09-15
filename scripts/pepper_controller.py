@@ -75,7 +75,7 @@ class PepperController(object):
             self.postureProxy = ALProxy("ALRobotPosture", self._robotIP, self._PORT)
 
             self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
-            self.engageProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
+            self.engagementProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
             self.peoplePerceptionProxy = ALProxy("ALPeoplePerception", self._robotIP, self._PORT)
             #self.waveDetectProxy = ALProxy("ALWavingDetection", self._robotIP, self._PORT)
             self.gazeProxy = ALProxy("ALGazeAnalysis", self._robotIP, self._PORT)
@@ -105,10 +105,12 @@ class PepperController(object):
             print(e)
 
         ## Turn of auto-interaction features
-        self.lifeProxy.setState("solitary")
+        self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
         self.motionProxy.setOrthogonalSecurityDistance(0.05)
+        self.engagementProxy.setFirstLimitDistance(2.0)
+        self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
         self.peoplePerceptionService.subscribe("PeoplePerception")
 
@@ -209,23 +211,24 @@ class PepperController(object):
                 self.unsubscribe()
                 self.say("Thank you, if anyone needs to get out of the lift please go before me")
                 time.sleep(2)
-                
+
     def senseTouch(self):
-        self.frontTouchSubscriber = self.touchService.subscriber("Touch/FrontTactilTouched")
-        self.midTouchSubscriber = self.touchService.subscriber("Touch/MiddleTactilTouched")
-        self.backTouchSubscriber = self.touchService.subscriber("Touch/RearTactilTouched")
+        self.frontTouchSubscriber = self.memoryService.subscriber("FrontTactilTouched")
+        self.midTouchSubscriber = self.memoryService.subscriber("MiddleTactilTouched")
+        self.backTouchSubscriber = self.memoryService.subscriber("RearTactilTouched")
         self.frontTouchSubscriber.signal.connect(self.reactToTouch)
         self.midTouchSubscriber.signal.connect(self.reactToTouch)
         self.backTouchSubscriber.signal.connect(self.reactToTouch)
         print "Connected"
-        self.touchService.subscribe("Touch")
-    
+        #self.touchService.subscribe("Touch")
+
     def reactToTouch(self, val):
+        print val
         if self.expectingTouch == True and val == 1:
-            self.say("You touched my head")
-            time.sleep(1)
             self.expectingTouch = False
-            self.touchService.unsubscribe("Touch")
+            time.sleep(1)
+
+
 
     # def	trackSound(self):
         # targetName = "Sound"

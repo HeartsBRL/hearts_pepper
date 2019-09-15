@@ -109,6 +109,7 @@ class LiftTask(PepperController):
         else:
             self.say("I will need to use the lift to get where I would like to go")
             self.goHere(*self.locations['near lift'])
+            self.lifeProxy.setState("solitary")
             self.say("Hi everyone, I am Pepper. Please go ahead of me.")
             #TODO Approach to lift, define new location/people perception
 
@@ -121,12 +122,15 @@ class LiftTask(PepperController):
                     freedom += 1
 
             self.say("I'm going to the lift now.")
+            self.lifeProxy.setState("safeguard")
+            self.postureProxy.goToPosture("Stand",0.6)
             self.goHere(*self.locations['outside door'])
             self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
-            self.lifeProxy.setState("safeguard")
+
             time.sleep(2)
             self.goHere(*self.locations['lift back'])
+            self.motionProxy.moveTo(0,0,3.14159)
 
 
 
@@ -161,7 +165,7 @@ class LiftTask(PepperController):
 
     def InsideLift(self):
         self.say("Hi, could you please help me by letting me know when we have reached floor number " + str(self.goalFloor) + "?")
-        self.say("Just say we are here")
+        self.say("Just touch my head")
         #self.speechRecognition()
         self.expectingTouch = True
         self.senseTouch()
@@ -266,7 +270,7 @@ if __name__ == '__main__':
             liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
             liftTask.shopName = str(key) # Just the number of the floor
             liftTask.say(s)
-    liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
+    #liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
     liftTask.startTask()
