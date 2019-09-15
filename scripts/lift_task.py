@@ -219,10 +219,13 @@ class LiftTask(PepperController):
 
 if __name__ == '__main__':
 
+	#DEFINE CLASS#
     liftTask = LiftTask(robotIP, PORT)
+
+	#SETUP- PREPARE LIST OF LOCATIONS FROM DATAHUB AND SET VOCABULARY#
     liftTask.prepClasses()
     liftTask.load_dict()
-    #TODO A Request floor destination from DataHub (Alex Sleat)
+    #Request floor destination from DataHub (Alex Sleat)
     liftTask.g = liftTask.getGoal() # Name of the shop plus number as dictionary entry
     if liftTask.g==-1:
         liftTask.say("Please, call my engineers. Something went wrong with the a p i querier")
@@ -233,9 +236,29 @@ if __name__ == '__main__':
             liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
             liftTask.shopName = str(key) # Just the number of the floor
             liftTask.say(s)
-
     liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
+	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
     liftTask.startTask()
+	
+	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
     liftTask.InsideLift()
+	
+	#LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
+	liftTask.toEnd()
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
     liftTask.toEnd()
