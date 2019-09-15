@@ -166,7 +166,7 @@ class PepperController(object):
         self.speechRecogProxy.removeAllContext()
         try:
             self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper", "yes", "we're here"],False)
+            self.speechRecogProxy.setVocabulary(["pepper", "yes", "we are here"],False)
         except:
             print("Vocabulary already set")
         self.speechRecogProxy.pause(False)

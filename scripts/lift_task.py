@@ -111,14 +111,20 @@ class LiftTask(PepperController):
             self.goHere(*self.locations['near lift'])
             self.say("Hi everyone, I am Pepper. Please go ahead of me.")
             #TODO Approach to lift, define new location/people perception
-            intruders = self.peopleInFront()
-            while len(self.peopleInFront()) > 0:
-                self.say("Get in theh lift!")
-                pass
+
+            freedom = 0
+            while freedom < 10:
+                if len(self.peopleInFront()) > 0:
+                    self.say("Get in the lift!")
+                    freedom = 0
+                else:
+                    freedom += 1
+
             self.say("I'm going to the lift now.")
             self.goHere(*self.locations['outside door'])
             self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
+            self.lifeProxy.setState("safeguard")
             time.sleep(2)
             self.goHere(*self.locations['lift back'])
 
@@ -155,7 +161,7 @@ class LiftTask(PepperController):
 
     def InsideLift(self):
         self.say("Hi, could you please help me by letting me know when we have reached floor number " + str(self.goalFloor) + "?")
-        self.say("Just say we're here")
+        self.say("Just say we are here")
         self.speechRecognition()
 
 
@@ -192,6 +198,7 @@ class LiftTask(PepperController):
         #self.say("This is my floor!")
     	#		 #TODO Wait for people to leave the lift
     #
+        #self.lifeProxy.setState("solitary")
         self.say("I'm getting out now, thank you for your help! Have a good day!")
     	#	 #Go to destination location
         self.goHere(*self.locations['inside door'])
