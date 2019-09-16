@@ -10,7 +10,7 @@ try:
 except ImportError:
     import Image
 
-robotIP = "westey.local" #Stevey
+robotIP = "stevey.local" #Stevey
 PORT = 9559
 
 class MakeMap(PepperController):

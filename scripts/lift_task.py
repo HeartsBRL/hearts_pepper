@@ -14,7 +14,7 @@ try:
 except ImportError:
         import Image
 
-robotIP = "10.2.0.111" #Stevey
+robotIP = "stevey.local" #Stevey
 
 
 PORT = 9559
@@ -101,22 +101,22 @@ class LiftTask(PepperController):
 
     def startTask(self):
 
-        self.goHere(*self.locations['start'])
+        #self.goHere(*self.locations['start'])
         if self.goalFloor == 0:
             self.say("I'm already on this floor, I'm going to the finish")
             self.goHere(*self.locations['finish'])
             print "Going to the final destination"
         else:
             self.say("I will need to use the lift to get there.")
-            self.goHere(*self.locations['near lift'])
+            #self.goHere(*self.locations['near lift'])
             self.lifeProxy.setState("solitary")
-            self.say("Hi everyone, I am Pepper. Please go ahead of me.")
+            self.say("Hi everyone, I am Pepper. I'll wait, please go ahead of me.")
             #TODO Approach to lift, define new location/people perception
 
             freedom = 0
             while freedom < 50:
-                if len(self.peopleInFront()) > 0:
-                    self.say("Get in the lift!") #MAKE SURE TO COMMENT
+                if len(self.peopleAround()) > 0:
+                    #self.say("Get in the lift!") #MAKE SURE TO COMMENT
                     freedom = 0
                 else:
                     freedom += 1
@@ -124,13 +124,13 @@ class LiftTask(PepperController):
             self.say("I'm going to the lift now.")
             self.lifeProxy.setState("safeguard")
             self.postureProxy.goToPosture("Stand",0.6)
-            self.goHere(*self.locations['outside door'])
-            self.goHere(*self.locations['inside door'])
+            #self.goHere(*self.locations['outside door'])
+            #self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
 
             time.sleep(2)
-            self.goHere(*self.locations['lift back'])
-            self.motionProxy.moveTo(0,0,3.14159)
+            #self.goHere(*self.locations['lift back'])
+            #self.motionProxy.moveTo(0,0,3.14159)
 
 
 
@@ -209,7 +209,7 @@ class LiftTask(PepperController):
     	#	 #Go to destination location
         self.goHere(*self.locations['inside door'])
         self.goHere(*self.locations['outside door'])
-		#TODO extraInteraction
+		self.extraInteraction()
         self.goHere(*self.locations['finish'])
 
 
@@ -217,6 +217,27 @@ class LiftTask(PepperController):
 
 
     def extraInteraction(self):
+
+        self.goHere(*self.locations['finish'],True)
+        self.SpeechRecognition()
+        self.navigationProxy.stopExploration()
+        self.lifeProxy.setState("solitary")
+        peeps = self.peopleAround(3)
+
+        for person in peeps:
+            if self.memoryProxy.getData("PeoplePerception/Person/" + person + "/IsLookingAtRobot") == True:
+                self.lookingAtMe = person
+                self.trackerProxy.registerTarget("Person", person)
+                self.trackerProxy.track("Person")
+
+        self.say("Hi human, I'm sorry but I already have a task that I need to complete. I hope you can find someone else to help you!")
+
+        self.trackerProxy.stopTracker()
+        self.trackerProxy.unregisterAllTargets()
+
+        self.lifeProxy.setState("safeguard")
+        self.postureProxy.goToPosture("Stand",0.6)
+
 	        #		 '''
         #			 Not planning to have interaction before we get to the lift, though it may be easy points if the lift sections messes up
         #			 #TODO G Engage with people if necessary

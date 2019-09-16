@@ -113,6 +113,7 @@ class PepperController(object):
         self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
         self.peoplePerceptionService.subscribe("PeoplePerception")
+        self.setVocabulary()
 
 
     def say(self, words):
@@ -129,7 +130,7 @@ class PepperController(object):
             print(e)
         return
 
-    def goHere(self,x,y,t):
+    def goHere(self,x,y,t, interrupt=False):
         #simple function to call navigation. Can run this as a thread.
 
         #store intended coords as a tuple in case we need to resume this navigation command later
@@ -137,9 +138,12 @@ class PepperController(object):
         print("Going to " + str(self.going))
         ret = 1
         tries = 0
-        while ret != 0 and tries < 10:
-            ret = self.navigationProxy.navigateToInMap((x,y,t))
-            tries += 1
+        if interrupt == False:
+            while ret != 0 and tries < 10:
+                ret = self.navigationProxy.navigateToInMap((x,y,t))
+                tries += 1
+        else:
+            ret = self.navigationProxy.post.navigateToInMap((x,y,t))
         return ret
 
     def moveHere(self,x,y,t):
@@ -159,9 +163,18 @@ class PepperController(object):
         #tries += 1
         #return ret
 
-    def peopleInFront(self):
-        zone1 = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
-        return zone1
+    def peopleAround(self, range=1):
+        peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
+        if range > 1:
+            zone2 = self.memoryProxy.getData("EngagementZones/PeopleInZone2")
+            for person in zone2:
+                zone1.append(person)
+        if range > 2:
+            zone3 = self.memoryProxy.getData("EngagementZones/PeopleInZone3")
+            for person in zone2:
+                zone1.append(person)
+
+        return peeps
 
     #### Methods for recognising words and locating sounds ###
     def setVocabulary(self):
@@ -169,7 +182,7 @@ class PepperController(object):
         self.speechRecogProxy.removeAllContext()
         try:
             self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper", "yes", "we are here"],False)
+            self.speechRecogProxy.setVocabulary(["pepper","Pepper"],False)
         except:
             print("Vocabulary already set")
         self.speechRecogProxy.pause(False)
@@ -202,6 +215,7 @@ class PepperController(object):
                 self.unsubscribe()
 
             if wordRecognized[0] == "yes":
+                heard = True
                 #self.trackSound()
                 self.say("Thank you human")
 
