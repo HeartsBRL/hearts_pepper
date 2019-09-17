@@ -92,10 +92,15 @@ class PepperController(object):
             self.tabletTimeout = time.time()
             self.tabletFlag = False
 
+<<<<<<< HEAD
             self.memoryService = self.session.service("ALMemory")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.backLightingService = self.session.service("ALBacklightingDetection")
+=======
+            self.memoryService = self.session.service("ALMemory")            
+>>>>>>> 68b3e58b00f406f53f4b896dc2fa6ae0b89f6684
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
+            self.darknessService = self.session.service("ALDarknessDetection")
             self.touchService = self.session.service("ALTouch")
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
@@ -117,8 +122,12 @@ class PepperController(object):
         self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
         self.peoplePerceptionService.subscribe("PeoplePerception")
+<<<<<<< HEAD
         self.darknessService.subscribe("DarknessDetection")
         self.backLightingService.subscribe("BacklightningDetection")
+=======
+        self.darknessService.subscribe("Darkness")
+>>>>>>> 68b3e58b00f406f53f4b896dc2fa6ae0b89f6684
 
 
     def say(self, words):
