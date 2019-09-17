@@ -13,7 +13,7 @@ try:
 except ImportError:
         import Image
 
-robotIP = "10.2.0.111" #Stevey
+robotIP = "westey.local" #Stevey
 
 
 PORT = 9559
@@ -103,32 +103,51 @@ class LiftTask(PepperController):
 
 
 
-    # def startRecogPeople(self):
-    #     # self.peoplePerceptionProxy.setFastModeEnabled(True)
-    #     # print self.peoplePerceptionProxy.isMovementDetectionEnabled()
-    #     # self.say("I am seeing you!")
-    #     # self.memoryProxy.declareEvent("PeoplePerception/JustArrived")
-    #     # self.memoryProxy.subscribeToEvent("PeoplePerception/JustArrived", const std::string& callbackModule, self.NewPerson_Callback)
-    #
-    #     # Add target to track.
-    #     targetName = "Face"
-    #     faceWidth = 0.1
-    #     self.trackerProxy.registerTarget(targetName, faceWidth)
-    #
-    #     # Then, start tracker.
-    #     self.trackerProxy.track(targetName)
-    #     # self.memoryProxy.getEventHistory("PeoplePerception/JustArrived")
-    #     print "ALTracker successfully started, now show your face to robot!"
-    #
-    #
-    # def stopRecogPeople(self):
-    #
-    #     # Stop tracker.
-    #     self.trackerProxy.stopTracker()
-    #     self.trackerProxy.unregisterAllTargets()
-    #     # self.motionProxy.rest()
-    #
-    #     print "ALTracker stopped."
+    def startRecogPeople(self):
+        # self.peoplePerceptionProxy.setFastModeEnabled(True)
+        # print self.peoplePerceptionProxy.isMovementDetectionEnabled()
+        # self.say("I am seeing you!")
+        # self.memoryProxy.declareEvent("PeoplePerception/JustArrived")
+        # self.memoryProxy.subscribeToEvent("PeoplePerception/JustArrived", const std::string& callbackModule, self.NewPerson_Callback)
+
+        # Add target to track.
+        targetName = "Face"
+        faceWidth = 0.1
+        self.trackerProxy.registerTarget(targetName, faceWidth)
+
+        # Then, start tracker.
+        self.trackerProxy.track(targetName)
+        # self.memoryProxy.getEventHistory("PeoplePerception/JustArrived")
+        print "ALTracker successfully started, now show your face to robot!"
+
+
+    def stopRecogPeople(self):
+
+        # Stop tracker.
+        self.trackerProxy.stopTracker()
+        self.trackerProxy.unregisterAllTargets()
+        # self.motionProxy.rest()
+
+        print "ALTracker stopped."
+
+    def stuff(self):
+        print "Use Ctrl+c to stop this script."
+        try:
+            while True:
+                time.sleep(0.5)
+                dark = self.memoryProxy.getData("DarknessDetection/DarknessValue")
+                backlight = self.memoryProxy.getData("BacklightingDetection/BacklightingValue")
+
+                # Exposition = self.cameraProxy.getParam("kCameraAutoExpositionID")
+                # Gain = self.cameraProxy.getParam("kCameraAutoExpositionID")
+                print dark
+                print backlight
+                # print Exposition
+                # print Gain
+        except KeyboardInterrupt:
+            print "Interrupted by user"
+            print "Stopping..."
+
 if __name__ == '__main__':
 
     liftTask = LiftTask(robotIP, PORT)
@@ -145,18 +164,36 @@ if __name__ == '__main__':
     #         liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
     #         liftTask.shopName = str(key) # Just the number of the floor
     #         liftTask.say(s)
+####People face tracking#####
+    # liftTask.lifeProxy.setState("solitary")
+    # liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
+    # liftTask.say("\\vol=60\\I am speaking louder")
+    # liftTask.say("\\vol=30\\I am speaking softer")
+    liftTask.say("Good luck, Hearts team. You can do it!")
+    liftTask.stuff()
+    # liftTask.wakePepperUp()
+    # liftTask.startRecogPeople()
+    # liftTask.say("Detecting humans mode activated. Shoot to kill!")
+    #
+    # print "Use Ctrl+c to stop this script."
+    # try:
+    #     while True:
+    #         time.sleep(1)
+    #         print liftTask.memoryProxy.getData("DarknessDetection/DarknessValue")
+    #         print liftTask.memoryProxy.getData("BacklightingDetection/BacklightingValue")
+    # except KeyboardInterrupt:
+    #     print "Interrupted by user"
+    #     print "Stopping..."
+    # liftTask.stopRecogPeople()
+    # liftTask.goToSleep()
 
-    liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
-    liftTask.wakePepperUp()
-    liftTask.startRecogPeople()
-    liftTask.say("Detecting humans mode activated. Shoot to kill!")
-
-    print "Use Ctrl+c to stop this script."
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print "Interrupted by user"
-        print "Stopping..."
-    liftTask.stopRecogPeople()
-    liftTask.goToSleep()
+    ##### BACKLIGHTING Test#####
+    # print "Use Ctrl+c to stop this script."
+    # try:
+    #     while True:
+    #         time.sleep(0.5)
+            # print liftTask.memoryProxy.getData("DarknessDetection/DarknessValue")
+            # print liftTask.memoryProxy.getData("BacklightingDetection/BacklightingValue")
+    # except KeyboardInterrupt:
+    #     print "Interrupted by user"
+    #     print "Stopping..."

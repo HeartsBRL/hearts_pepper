@@ -83,7 +83,9 @@ class PepperController(object):
             self.soundLocalProxy = ALProxy("ALSoundLocalization", self._robotIP, self._PORT)
             self.soundDetectProxy = ALProxy("ALSoundDetection", self._robotIP, self._PORT)
             self.trackerProxy = ALProxy("ALTracker", self._robotIP, self._PORT)
-
+            # self.cameraProxy = ALProxy("ALVideoDevice", self._robotIP, self._PORT)
+            self.darknessProxy = ALProxy("ALDarknessDetection", self._robotIP, self._PORT)
+            self.backLightningProxy = ALProxy("ALBacklightingDetection", self._robotIP, self._PORT)
             self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
             self.tabletTimeoutLength = 60 #seconds
             self.tabletTimeout = time.time()
