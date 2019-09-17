@@ -164,31 +164,22 @@ class LiftTask(PepperController):
 
 
     def InsideLift(self):
-        self.say("Thank you. Could you please press floor " + str(self.goalFloor) + " please?")
+        self.say("Thank you. Could you please press floor " + str(self.goalFloor) + "?")
         self.doorOpen = False
         self.rightFloor = False
-        self.getOut = False
+        self.senseTouch()
         
-        while getOut == False:
+        while self.rightFloor = False:
+            
+            self.expectingTouch = False
+            
             while self.doorOpen == False:
                 self.findBlobs()
             
-            while self.rightFloor == False:
-                if doorOpen == True:
-                    self.say("Is this floor " + str(self.goalFloor) + "? If so, please touch my head.")
-                    #self.say("Could you touch my head when we have reached floor number " + str(self.goalFloor) + " please?")
-                    self.expectingTouch = True
-                    self.senseTouch()
-            
-            
-        # while self.expectingTouch == True and rightFloor < 5:
-            # time.sleep(1)
-            # rightFloor += 1
-            # pass
-        # if self.expectingTouch == False:
-            # pass
-        # else:
-            # self.expectingTouch = False
+            self.say("Is this floor " + str(self.goalFloor) + "? If so, please touch the top of my head.")
+            self.expectingTouch = True
+            time.sleep(5)
+       
         
         
 
