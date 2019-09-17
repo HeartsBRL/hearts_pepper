@@ -4,7 +4,7 @@
 import os
 import json
 import time
-
+import thread
 import qi
 
 # pip install pillow
@@ -75,7 +75,7 @@ class PepperController(object):
             self.postureProxy = ALProxy("ALRobotPosture", self._robotIP, self._PORT)
 
             self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
-            self.engagementProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
+            self.engageProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
             self.peoplePerceptionProxy = ALProxy("ALPeoplePerception", self._robotIP, self._PORT)
             #self.waveDetectProxy = ALProxy("ALWavingDetection", self._robotIP, self._PORT)
             self.gazeProxy = ALProxy("ALGazeAnalysis", self._robotIP, self._PORT)
@@ -90,9 +90,6 @@ class PepperController(object):
             self.tabletFlag = False
 
             self.memoryService = self.session.service("ALMemory")
-            self.peoplePerceptionService = self.session.service("ALPeoplePerception")
-            self.touchService = self.session.service("ALTouch")
-
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
@@ -109,11 +106,7 @@ class PepperController(object):
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
         self.motionProxy.setOrthogonalSecurityDistance(0.05)
-        self.engagementProxy.setFirstLimitDistance(2.0)
-        self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
-        self.peoplePerceptionService.subscribe("PeoplePerception")
-        self.setVocabulary()
 
 
     def say(self, words):
@@ -132,8 +125,8 @@ class PepperController(object):
 
     def goHere(self,x,y,t, parallel=False):
         #simple function to call navigation. Can run this as a thread.
-
         #store intended coords as a tuple in case we need to resume this navigation command later
+
         self.going = (x,y,t)
         print("Going to " + str(self.going))
         ret = 1
@@ -163,26 +156,16 @@ class PepperController(object):
         #tries += 1
         #return ret
 
-    def peopleAround(self, range=1):
-        peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
-        if range > 1:
-            zone2 = self.memoryProxy.getData("EngagementZones/PeopleInZone2")
-            for person in zone2:
-                zone1.append(person)
-        if range > 2:
-            zone3 = self.memoryProxy.getData("EngagementZones/PeopleInZone3")
-            for person in zone2:
-                zone1.append(person)
+        ###STOP robot movement
+        # self.navigationProxy.stopExploration() #Stops pepper navigating
 
-        return peeps
-
-    #### Methods for recognising words and locating sounds ###
+#### Methods for recognising words and locating sounds ###
     def setVocabulary(self):
         self.speechRecogProxy.pause(True)
         self.speechRecogProxy.removeAllContext()
         try:
             self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper","Pepper"],False)
+            self.speechRecogProxy.setVocabulary(["pepper", "yes"],False)
         except:
             print("Vocabulary already set")
         self.speechRecogProxy.pause(False)
@@ -208,59 +191,52 @@ class PepperController(object):
                 self.old_recog = wordRecognized
 
                 print (wordRecognized)
-
             if wordRecognized[0] == "pepper":
+
                 heard = True
-                #self.trackSound()
+                self.trackSound()
+
+            #if "pepper" in wordRecognized:
+
+            #self.ttsProxy.say("I heard you")
                 self.unsubscribe()
 
-            if wordRecognized[0] == "yes":
-                heard = True
-                #self.trackSound()
-                self.say("Thank you human")
+    def	trackSound(self):
+        targetName = "Sound"
+        param = [1, 0.1]
+        mode = "Move"
 
-            if wordRecognized[0] == "we are here":
-                heard = True
-                #self.trackSound()
-                self.unsubscribe()
-                self.say("Thank you, if anyone needs to get out of the lift please go before me")
-                time.sleep(2)
+        self.trackerProxy.registerTarget(targetName, param)
+        time.sleep(2)
+        activeTarget = self.trackerProxy.getActiveTarget()
+        print("target is: ", activeTarget)
+        self.trackerProxy.setMode(mode)
+        time.sleep(2)
+        activeMode = self.trackerProxy.getMode()
+        print("Mode is: ", activeMode)
+        self.trackerProxy.track(targetName)
+        time.sleep(0.5)
+        self.trackerProxy.stopTracker()
+        self.trackerProxy.unregisterAllTargets()
+## Face/People Tracking
 
-    def senseTouch(self):
-        self.frontTouchSubscriber = self.memoryService.subscriber("FrontTactilTouched")
-        self.midTouchSubscriber = self.memoryService.subscriber("MiddleTactilTouched")
-        self.backTouchSubscriber = self.memoryService.subscriber("RearTactilTouched")
-        self.frontTouchSubscriber.signal.connect(self.reactToTouch)
-        self.midTouchSubscriber.signal.connect(self.reactToTouch)
-        self.backTouchSubscriber.signal.connect(self.reactToTouch)
-        print "Connected"
-        #self.touchService.subscribe("Touch")
+    def startRecogPeople(self):
 
-    def reactToTouch(self, val):
-        print val
-        if self.expectingTouch == True and val == 1:
-            self.expectingTouch = False
-            time.sleep(1)
+        # Add target to track.
+        targetName = "Face"
+        faceWidth = 0.1
+        self.trackerProxy.registerTarget(targetName, faceWidth)
+        # Then, start tracker.
+        self.trackerProxy.track(targetName)
+        print "ALTracker successfully started, now show your face to robot!"
 
 
+    def stopRecogPeople(self):
 
-    # def	trackSound(self):
-        # targetName = "Sound"
-        # param = [1, 0.1]
-        # mode = "Move"
-
-        # self.trackerProxy.registerTarget(targetName, param)
-        # time.sleep(2)
-        # activeTarget = self.trackerProxy.getActiveTarget()
-        # print("target is: ", activeTarget)
-        # self.trackerProxy.setMode(mode)
-        # time.sleep(2)
-        # activeMode = self.trackerProxy.getMode()
-        # print("Mode is: ", activeMode)
-        # self.trackerProxy.track(targetName)
-        # time.sleep(0.5)
-        # self.trackerProxy.stopTracker()
-        # self.trackerProxy.unregisterAllTargets()
+        # Stop tracker.
+        self.trackerProxy.stopTracker()
+        self.trackerProxy.unregisterAllTargets()
+        print "ALTracker stopped."
 
     def unsubscribe(self):
         self.speechRecogProxy.unsubscribe("attention")
