@@ -124,13 +124,13 @@ class LiftTask(PepperController):
             self.say("I'm going to the lift now.")
             self.lifeProxy.setState("safeguard")
             self.postureProxy.goToPosture("Stand",0.6)
-            #self.goHere(*self.locations['outside door'])
-            #self.goHere(*self.locations['inside door'])
+            self.goHere(*self.locations['outside door'])
+            self.goHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
 
             time.sleep(2)
-            #self.goHere(*self.locations['lift back'])
-            #self.motionProxy.moveTo(0,0,3.14159)
+            self.goHere(*self.locations['lift back'])
+            self.motionProxy.moveTo(0,0,3.14159)
 
 
 
@@ -164,7 +164,8 @@ class LiftTask(PepperController):
 
 
     def InsideLift(self):
-        self.say("Could you touch my head when we have reached floor number " + str(self.goalFloor) + "please?")
+        self.say("Thank you. Could you please press floor " + str(self.goalFloor) + " please?")
+        self.say("Could you touch my head when we have reached floor number " + str(self.goalFloor) + " please?")
         self.expectingTouch = True
         self.senseTouch()
         while self.expectingTouch == True:
@@ -201,7 +202,7 @@ class LiftTask(PepperController):
 
 #####################################################################################################
     def toEnd(self):
-        #self.say("This is my floor!")
+        self.say("This is my floor!")
     	#		 #TODO Wait for people to leave the lift
     #
         #self.lifeProxy.setState("solitary")
@@ -222,13 +223,21 @@ class LiftTask(PepperController):
         self.SpeechRecognition()
         self.navigationProxy.stopExploration()
         self.lifeProxy.setState("solitary")
-        peeps = self.peopleAround(3)
+        peeps = []
+        breakCondition = 0
+        while len(peeps) == 0 and breakCondition < 50:
+            peeps = self.peopleAround(3)
+            breakCondition += 1
 
         for person in peeps:
             if self.memoryProxy.getData("PeoplePerception/Person/" + person + "/IsLookingAtRobot") == True:
                 self.lookingAtMe = person
                 self.trackerProxy.registerTarget("Person", person)
                 self.trackerProxy.track("Person")
+
+        while len(peeps) == 0 and breakCondition < 50:
+            peeps = self.peopleAround(1)
+            breakCondition += 1
 
         self.say("Hi human, I'm sorry but I already have a task that I need to complete. I hope you can find someone else to help you!")
 
