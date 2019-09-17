@@ -14,8 +14,6 @@ except ImportError:
         import Image
 
 robotIP = "westey.local" #Stevey
-
-
 PORT = 9559
 
 class LiftTask(PepperController):

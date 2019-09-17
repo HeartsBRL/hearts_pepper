@@ -166,7 +166,7 @@ class LiftTask(PepperController):
     def InsideLift(self):
         self.say("Thank you. Could you please press floor " + str(self.goalFloor) + " please?")
         self.doorOpen = False
-        
+
         while self.doorOpen == False:
             self.findBlobs()
 
@@ -183,8 +183,8 @@ class LiftTask(PepperController):
             pass
         else:
             self.expectingTouch = False
-        
-        
+
+
 
     #	 #TODO 2 Face someone in the lift
     			# self.speechRecognition()
