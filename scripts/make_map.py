@@ -10,7 +10,7 @@ try:
 except ImportError:
     import Image
 
-robotIP = "stevey.local" #Stevey
+robotIP = "westey.local" #Stevey
 PORT = 9559
 
 class MakeMap(PepperController):
@@ -63,6 +63,6 @@ class MakeMap(PepperController):
 
 if __name__ == '__main__':
     task = MakeMap(robotIP, PORT)
-    task.explore(2)
+    task.explore(4)
     #task.goHere(1,-1,0)
     task.say('Remember to update the map path in reload_map.py so you don\'t load an old map!')
