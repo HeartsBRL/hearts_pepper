@@ -147,7 +147,7 @@ if __name__ == '__main__':
     #         liftTask.say(s)
 
     liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
-
+    liftTask.wakePepperUp()
     liftTask.startRecogPeople()
     liftTask.say("Detecting humans mode activated. Shoot to kill!")
 
@@ -159,3 +159,4 @@ if __name__ == '__main__':
         print "Interrupted by user"
         print "Stopping..."
     liftTask.stopRecogPeople()
+    liftTask.goToSleep()

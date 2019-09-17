@@ -216,7 +216,7 @@ class PepperController(object):
         time.sleep(0.5)
         self.trackerProxy.stopTracker()
         self.trackerProxy.unregisterAllTargets()
-## Face/People Tracking
+## Face/People Tracking#####
 
     def startRecogPeople(self):
 
@@ -236,12 +236,19 @@ class PepperController(object):
         self.trackerProxy.unregisterAllTargets()
         print "ALTracker stopped."
 
+###Miscellaneous###
+
     def unsubscribe(self):
         self.speechRecogProxy.unsubscribe("attention")
         print "Speech recognition engine stopped"
 
         self.soundLocalProxy.unsubscribe("soundLocal")
         print "Sound localisation stopped"
+
+    def goToSleep(self):
+        self.motionProxy.rest()
+    def wakePepperUp(self):
+        self.motionProxy.wakeUp()
 
 
 if __name__ == '__main__':
