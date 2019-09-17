@@ -86,7 +86,7 @@ class PepperController(object):
             # self.cameraProxy = ALProxy("ALVideoDevice", self._robotIP, self._PORT)
             # self.darknessProxy = ALProxy("ALDarknessDetection", self._robotIP, self._PORT)
             # self.backLightningProxy = ALProxy("ALBacklightingDetection", self._robotIP, self._PORT)
-            self.colourProxy = ALProxy("ALColorBlobDetection", self._robotIP, self.PORT)
+            self.colourProxy = ALProxy("ALColorBlobDetection", self._robotIP, self._PORT)
             self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
             self.tabletTimeoutLength = 60 #seconds
             self.tabletTimeout = time.time()
@@ -115,7 +115,7 @@ class PepperController(object):
         self.engagementProxy.setFirstLimitDistance(2.0)
         self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
-        # self.peoplePerceptionService.Subscribe("PeoplePerception")
+        self.peoplePerceptionService.Subscribe("PeoplePerception")
         # self.darknessService.Subscribe("Darkness")
 
 
@@ -268,7 +268,6 @@ class PepperController(object):
         print val
         if self.expectingTouch == True and val == 1:
             self.expectingTouch = False
-            self.rightFloor = True
             time.sleep(1)
 
 ## Face/People Tracking#####
