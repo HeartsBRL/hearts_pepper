@@ -83,9 +83,10 @@ class PepperController(object):
             self.soundLocalProxy = ALProxy("ALSoundLocalization", self._robotIP, self._PORT)
             self.soundDetectProxy = ALProxy("ALSoundDetection", self._robotIP, self._PORT)
             self.trackerProxy = ALProxy("ALTracker", self._robotIP, self._PORT)
-            
+            # self.cameraProxy = ALProxy("ALVideoDevice", self._robotIP, self._PORT)
+            self.darknessProxy = ALProxy("ALDarknessDetection", self._robotIP, self._PORT)
+            self.backLightningProxy = ALProxy("ALBacklightingDetection", self._robotIP, self._PORT)
             self.colourProxy = ALProxy("ALColorBlobDetection", self._robotIP, self.PORT)
-
             self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
             self.tabletTimeoutLength = 60 #seconds
             self.tabletTimeout = time.time()
@@ -94,7 +95,7 @@ class PepperController(object):
             self.memoryService = self.session.service("ALMemory")
             self.peoplePerceptionServuce = self.session.service("ALPeoplePerception")
             self.touchService = self.session.service("ALTouch")
-            
+
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
 
@@ -129,18 +130,18 @@ class PepperController(object):
             print("Pepper TTS failed due to:")
             print(e)
         return
-        
+
     def senseColour(self):
         self.colourProxy.setColor(255,255,255,30)
         self.colourProxy.setObjectProperties(1,1)
-        
+
     def findBlobs(self):
         blobsList = self.memoryProxy.getData("Segmentation3D/BlobsList")[1]
         for blob in blobsList:
             if blob[2] > 2:
                 self.doorOpen = True
-                
-    
+
+
 
     def goHere(self,x,y,t, parallel=False):
         #simple function to call navigation. Can run this as a thread.
@@ -174,7 +175,7 @@ class PepperController(object):
         ret = self.navgationProxy.navigateTo(*self.diff)
         #tries += 1
         #return ret
-    
+
     def peopleAround(self, range=1):
         peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
         if range > 1:
@@ -187,7 +188,7 @@ class PepperController(object):
                 zone1.append(person)
 
         return peeps
-        
+
         ###STOP robot movement
         # self.navigationProxy.stopExploration() #Stops pepper navigating
 
@@ -250,7 +251,7 @@ class PepperController(object):
         time.sleep(0.5)
         self.trackerProxy.stopTracker()
         self.trackerProxy.unregisterAllTargets()
-        
+
     def senseTouch(self):
         self.frontTouchSubscriber = self.memoryService.subscriber("FrontTactilTouched")
         self.midTouchSubscriber = self.memoryService.subscriber("MiddleTactilTouched")
@@ -267,7 +268,7 @@ class PepperController(object):
             self.expectingTouch = False
             self.rightFloor = True
             time.sleep(1)
-            
+
 ## Face/People Tracking#####
 
     def startRecogPeople(self):
