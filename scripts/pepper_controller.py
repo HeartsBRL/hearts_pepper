@@ -84,15 +84,21 @@ class PepperController(object):
             self.soundDetectProxy = ALProxy("ALSoundDetection", self._robotIP, self._PORT)
             self.trackerProxy = ALProxy("ALTracker", self._robotIP, self._PORT)
             # self.cameraProxy = ALProxy("ALVideoDevice", self._robotIP, self._PORT)
-            # self.darknessProxy = ALProxy("ALDarknessDetection", self._robotIP, self._PORT)
-            # self.backLightningProxy = ALProxy("ALBacklightingDetection", self._robotIP, self._PORT)
+            self.darknessProxy = ALProxy("ALDarknessDetection", self._robotIP, self._PORT)
+            self.backLightningProxy = ALProxy("ALBacklightingDetection", self._robotIP, self._PORT)
             self.colourProxy = ALProxy("ALColorBlobDetection", self._robotIP, self._PORT)
             self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
             self.tabletTimeoutLength = 60 #seconds
             self.tabletTimeout = time.time()
             self.tabletFlag = False
 
+<<<<<<< HEAD
+            self.memoryService = self.session.service("ALMemory")
+            self.darknessService = self.session.service("ALDarknessDetection")
+            self.backLightingService = self.session.service("ALBacklightingDetection")
+=======
             self.memoryService = self.session.service("ALMemory")            
+>>>>>>> 68b3e58b00f406f53f4b896dc2fa6ae0b89f6684
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.touchService = self.session.service("ALTouch")
@@ -116,7 +122,12 @@ class PepperController(object):
         self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
         self.peoplePerceptionService.subscribe("PeoplePerception")
+<<<<<<< HEAD
+        self.darknessService.subscribe("DarknessDetection")
+        self.backLightingService.subscribe("BacklightningDetection")
+=======
         self.darknessService.subscribe("Darkness")
+>>>>>>> 68b3e58b00f406f53f4b896dc2fa6ae0b89f6684
 
 
     def say(self, words):
