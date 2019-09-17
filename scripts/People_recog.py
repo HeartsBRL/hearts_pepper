@@ -13,7 +13,7 @@ try:
 except ImportError:
         import Image
 
-robotIP = "10.2.0.110" #Stevey
+robotIP = "10.2.0.111" #Stevey
 
 
 PORT = 9559
@@ -103,36 +103,32 @@ class LiftTask(PepperController):
 
 
 
-    def tryRecogPeople(self):
-        # self.peoplePerceptionProxy.setFastModeEnabled(True)
-        # print self.peoplePerceptionProxy.isMovementDetectionEnabled()
-        # self.say("I am seeing you!")
-        # self.memoryProxy.declareEvent("PeoplePerception/JustArrived")
-        # self.memoryProxy.subscribeToEvent("PeoplePerception/JustArrived", const std::string& callbackModule, self.NewPerson_Callback)
-
-        # Add target to track.
-        targetName = "Face"
-        faceWidth = 0.1
-        self.trackerProxy.registerTarget(targetName, faceWidth)
-
-        # Then, start tracker.
-        self.trackerProxy.track(targetName)
-        # self.memoryProxy.getEventHistory("PeoplePerception/JustArrived")
-        print "ALTracker successfully started, now show your face to robot!"
-        print "Use Ctrl+c to stop this script."
-        try:
-            while True:
-                time.sleep(1)
-        except KeyboardInterrupt:
-            print "Interrupted by user"
-            print "Stopping..."
-
-        # Stop tracker.
-        self.trackerProxy.stopTracker()
-        self.trackerProxy.unregisterAllTargets()
-        # self.motionProxy.rest()
-
-        print "ALTracker stopped."
+    # def startRecogPeople(self):
+    #     # self.peoplePerceptionProxy.setFastModeEnabled(True)
+    #     # print self.peoplePerceptionProxy.isMovementDetectionEnabled()
+    #     # self.say("I am seeing you!")
+    #     # self.memoryProxy.declareEvent("PeoplePerception/JustArrived")
+    #     # self.memoryProxy.subscribeToEvent("PeoplePerception/JustArrived", const std::string& callbackModule, self.NewPerson_Callback)
+    #
+    #     # Add target to track.
+    #     targetName = "Face"
+    #     faceWidth = 0.1
+    #     self.trackerProxy.registerTarget(targetName, faceWidth)
+    #
+    #     # Then, start tracker.
+    #     self.trackerProxy.track(targetName)
+    #     # self.memoryProxy.getEventHistory("PeoplePerception/JustArrived")
+    #     print "ALTracker successfully started, now show your face to robot!"
+    #
+    #
+    # def stopRecogPeople(self):
+    #
+    #     # Stop tracker.
+    #     self.trackerProxy.stopTracker()
+    #     self.trackerProxy.unregisterAllTargets()
+    #     # self.motionProxy.rest()
+    #
+    #     print "ALTracker stopped."
 if __name__ == '__main__':
 
     liftTask = LiftTask(robotIP, PORT)
@@ -152,4 +148,14 @@ if __name__ == '__main__':
 
     liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
-    liftTask.tryRecogPeople()
+    liftTask.startRecogPeople()
+    liftTask.say("Detecting humans mode activated. Shoot to kill!")
+
+    print "Use Ctrl+c to stop this script."
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print "Interrupted by user"
+        print "Stopping..."
+    liftTask.stopRecogPeople()
