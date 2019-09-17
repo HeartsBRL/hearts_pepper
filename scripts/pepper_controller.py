@@ -140,9 +140,7 @@ class PepperController(object):
             if blob[2] > 2:
                 self.doorOpen = True
                 
-    def senseTouch(self):
-        self.frontTouchSubscriber = self.touchService.subsciber
-        
+    
 
     def goHere(self,x,y,t, parallel=False):
         #simple function to call navigation. Can run this as a thread.
