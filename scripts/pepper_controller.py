@@ -268,6 +268,7 @@ class PepperController(object):
         print val
         if self.expectingTouch == True and val == 1:
             self.expectingTouch = False
+            self.rightFloor = True
             time.sleep(1)
 
 ## Face/People Tracking#####
