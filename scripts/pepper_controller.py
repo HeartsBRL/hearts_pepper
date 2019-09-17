@@ -130,7 +130,7 @@ class PepperController(object):
             print(e)
         return
 
-    def goHere(self,x,y,t, interrupt=False):
+    def goHere(self,x,y,t, parallel=False):
         #simple function to call navigation. Can run this as a thread.
 
         #store intended coords as a tuple in case we need to resume this navigation command later
@@ -138,7 +138,7 @@ class PepperController(object):
         print("Going to " + str(self.going))
         ret = 1
         tries = 0
-        if interrupt == False:
+        if parallel == False:
             while ret != 0 and tries < 10:
                 ret = self.navigationProxy.navigateToInMap((x,y,t))
                 tries += 1
