@@ -166,6 +166,7 @@ class LiftTask(PepperController):
     def InsideLift(self):
         self.say("Thank you. Could you please press floor " + str(self.goalFloor) + " please?")
         self.doorOpen = False
+        self.findBlobs()
         while self.doorOpen == False:
             pass
         self.say("Is this floor " + str(self.goalFloor) + "? If so, please touch my head.")
