@@ -167,7 +167,7 @@ if __name__ == '__main__':
     # liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
     # liftTask.say("\\vol=60\\I am speaking louder")
     # liftTask.say("\\vol=30\\I am speaking softer")
-    liftTask.say("Good luck, Hearts team. You can do it!")
+    # liftTask.say("Good luck, Hearts team. You can do it!")
     liftTask.stuff()
     # liftTask.wakePepperUp()
     # liftTask.startRecogPeople()

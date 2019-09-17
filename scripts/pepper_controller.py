@@ -84,8 +84,8 @@ class PepperController(object):
             self.soundDetectProxy = ALProxy("ALSoundDetection", self._robotIP, self._PORT)
             self.trackerProxy = ALProxy("ALTracker", self._robotIP, self._PORT)
             # self.cameraProxy = ALProxy("ALVideoDevice", self._robotIP, self._PORT)
-            # self.darknessProxy = ALProxy("ALDarknessDetection", self._robotIP, self._PORT)
-            # self.backLightningProxy = ALProxy("ALBacklightingDetection", self._robotIP, self._PORT)
+            self.darknessProxy = ALProxy("ALDarknessDetection", self._robotIP, self._PORT)
+            self.backLightningProxy = ALProxy("ALBacklightingDetection", self._robotIP, self._PORT)
             self.colourProxy = ALProxy("ALColorBlobDetection", self._robotIP, self._PORT)
             self.tabletProxy = ALProxy("ALTabletService", self._robotIP, self._PORT)
             self.tabletTimeoutLength = 60 #seconds
@@ -93,7 +93,8 @@ class PepperController(object):
             self.tabletFlag = False
 
             self.memoryService = self.session.service("ALMemory")
-            # self.darknessService = self.session.service("ALDarknessDetection")
+            self.darknessService = self.session.service("ALDarknessDetection")
+            self.backLightingService = self.session.service("ALBacklightingDetection")
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
             self.touchService = self.session.service("ALTouch")
 
@@ -115,8 +116,9 @@ class PepperController(object):
         self.engagementProxy.setFirstLimitDistance(2.0)
         self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
-        # self.peoplePerceptionService.Subscribe("PeoplePerception")
-        # self.darknessService.Subscribe("Darkness")
+        self.peoplePerceptionService.subscribe("PeoplePerception")
+        self.darknessService.subscribe("DarknessDetection")
+        self.backLightingService.subscribe("BacklightningDetection")
 
 
     def say(self, words):
