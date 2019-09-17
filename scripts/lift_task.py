@@ -14,7 +14,7 @@ try:
 except ImportError:
         import Image
 
-robotIP = "stevey.local" #Stevey
+robotIP = "westey.local" #Westey
 
 
 PORT = 9559
@@ -252,7 +252,8 @@ class LiftTask(PepperController):
         #    self.say("Hello, my name is pepper and I am going to floor " + self.goalFloor)
         #				 # OPTIONAL TODO person_comments = self.listen
 
-		    #	 #TODO G Engage with people if necessary
+		    #	 #TODO G Engag
+            e with people if necessary
     #	 #TODO Check for people around
     #		 #TODO Also check for sounds that indicate willingness of interaction ("Hello", "Hey", "Excuse me" or voice very close to pepper)
     #		 #TODO Detects gestures like waving
