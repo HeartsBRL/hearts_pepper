@@ -195,15 +195,19 @@ class LiftTask(PepperController):
 
     def extraInteraction(self):
 
-        dests = ['zone1','zone2','zone3']
+        dests = ['zone1a', 'zone1b','zone2','zone3a', 'zone3b', 'zone3c']
+        self.speechRecognition()
         for dest in dests:            
             x,y,t = self.locationsTest[dest]
             self.moveHere(x,y,t,True)
-            self.speechRecognition()
-            while self.navigationProxy.isRunning(self.threadID) and self.heard == False:
-                pass
-            if self.heard == True: 
+            self.onWordRecognized()
+            if self.heard == True:
                 break
+                
+            # while self.navigationProxy.isRunning(self.threadID) and self.heard == False:
+                # pass
+            # if self.heard == True: 
+                # break
 
         self.navigationProxy.stopExploration()
         self.lifeProxy.setState("solitary")
@@ -221,13 +225,13 @@ class LiftTask(PepperController):
 
                 break
         #self.navigationProxy.wait(self.threadID,0)
-
+        self.say("Sorry human, I have a task I need to complete. I hope you find someone who can help")
         self.trackerProxy.stopTracker()
         self.trackerProxy.unregisterAllTargets()
 
         self.lifeProxy.setState("safeguard")
         self.postureProxy.goToPosture("Stand",0.6)
-        self.moveHere(*self.locations['zone3'])
+        self.moveHere(*self.locations['zone3c'])
         #TODO Improvements
             # Look for person that's walking towards pepper	    
 
