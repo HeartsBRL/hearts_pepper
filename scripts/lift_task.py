@@ -14,10 +14,10 @@ try:
 except ImportError:
         import Image
 
-robotIP = "localhost" #Westey
+robotIP = "westey.local" #Westey
 
-PORT = 33579
-#PORT = 9559
+#PORT = 33579
+PORT = 9559
 
 class LiftTask(PepperController):
 
@@ -95,11 +95,11 @@ class LiftTask(PepperController):
         else:
             
             self.say("I will need to use the lift to get there.")
-            self.extraInteraction()
+            #self.extraInteraction()
            # self.moveHere(*self.locations['near lift'])
-            #self.moveHere(*self.locations['zone1'])
-            #self.moveHere(*self.locations['zone2'])
-            #self.moveHere(*self.locations['zone3'])
+            self.moveHere(*self.locations['zone1'])
+            self.moveHere(*self.locations['zone2'])
+            self.moveHere(*self.locations['zone3'])
             #self.extraInteraction()?
             self.moveHere(*self.locations['near lift 2'])
             self.lifeProxy.setState("solitary")
@@ -137,7 +137,9 @@ class LiftTask(PepperController):
             #self.sendInfo("RobotLocation",self.locations['lift back'][0],self.locations['lift back'][1],self.locations['lift back'][2])
 
 
-
+    def postLocation():
+        
+    
 
 
 
@@ -188,8 +190,8 @@ class LiftTask(PepperController):
         for dest in dests:            
             x,y,t = self.locations[dest]
             self.moveHere(x,y,t,True)
-            self.SpeechRecognition()
-            while self.threadID.isRunning() and self.heard == False:
+            self.speechRecognition()
+            while self.navigationProxy.isRunning(self.threadID) and self.heard == False:
                 pass
             if self.heard == True: 
                 break

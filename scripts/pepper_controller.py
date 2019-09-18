@@ -116,7 +116,7 @@ class PepperController(object):
         ## Turn of auto-interaction features
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
-        self.motionProxy.setTangentialSecurityDistance(0.01)
+        self.motionProxy.setTangentialSecurityDistance(0.05)
         self.motionProxy.setOrthogonalSecurityDistance(0.05)
         self.engagementProxy.setFirstLimitDistance(2.0)
         self.engagementProxy.setLimitAngle(180.0)
@@ -173,7 +173,7 @@ class PepperController(object):
             self.threadID = self.navigationProxy.post.navigateToInMap((x,y,t))
         return ret
 
-    def moveHere(self,x,y,t):
+    def moveHere(self,x,y,t, parallel=False):
         #simple function to call navigation. Can run this as a thread.
         #store intended coords as a tuple in case we need to resume this navigation command later
 
@@ -185,10 +185,13 @@ class PepperController(object):
         #self.diff = self.current - self.going
         self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],self.going[2]-self.current[2]]
         print("Moving by: " + str(self.diff))
-        #while ret != True and tries < 5:
-        ret = self.navgationProxy.navigateTo(*self.diff)
-        #tries += 1
-        #return ret
+        if parallel == False:
+            while ret != True and tries < 5:
+                ret = self.navigationProxy.navigateTo(*self.diff)
+                tries += 1
+            return ret
+        else:
+            self.navigationProxy.post.navigateTo(*self.diff)
 
     def peopleAround(self, range=1):
         peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")

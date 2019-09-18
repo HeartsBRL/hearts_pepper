@@ -16,7 +16,7 @@ class MapLoc(PepperController):
 
 if __name__ == '__main__':
     task = MapLoc(robotIP, PORT)
-    task.navigationProxy.startLocalization()
+    #task.navigationProxy.startLocalization()
     while True:
         time.sleep(5)
         task.printLoc()
