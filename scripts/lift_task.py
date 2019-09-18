@@ -120,8 +120,8 @@ class LiftTask(PepperController):
             self.say("I'm going to the lift now.")
             self.lifeProxy.setState("safeguard")
             self.postureProxy.goToPosture("Stand",0.6)
-            self.moveHere(*self.locations['outside door'])
-            self.moveHere(*self.locations['inside door'])
+            self.moveHere(*self.locations['outside door 1'])
+            self.moveHere(*self.locations['inside door 1'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
 
             time.sleep(2)
@@ -175,8 +175,8 @@ class LiftTask(PepperController):
         self.say("This is my floor!")
         #self.lifeProxy.setState("solitary")
         self.say("I'm getting out now, thank you for your help! Have a good day!")
-        self.moveHere(*self.locations['inside door'])
-        self.moveHere(*self.locations['outside door'])
+        self.moveHere(*self.locations['inside door 2'])
+        self.moveHere(*self.locations['outside door 2'])
         #self.extraInteraction()?
         self.moveHere(*self.locations['pre pre finish'])
         self.moveHere(*self.locations['pre finish'])

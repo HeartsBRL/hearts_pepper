@@ -185,6 +185,7 @@ class PepperController(object):
         px,py,pz = self.current
         bsx = px - 2
         bsy = py - 7.75
+        self.sendInfo("RobotLocation",px,py,0)
         #self.diff = self.current - self.going
         self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],self.going[2]-self.current[2]]
         print("Moving by: " + str(self.diff))
