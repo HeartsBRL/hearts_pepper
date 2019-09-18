@@ -89,21 +89,20 @@ class LiftTask(PepperController):
         #self.moveHere(*self.locations['start'])
         if self.goalFloor == 0:
             self.say("I'm already on this floor, I'm going to the finish")
-            #self.extraInteraction()
+            self.extraInteraction()
             self.moveHere(*self.locations['finish'])
             print "Going to the final destination"
         else:
             
             self.say("I will need to use the lift to get there.")
-            #self.extraInteraction()
+            self.extraInteraction()
            # self.moveHere(*self.locations['near lift'])
-            self.moveHere(*self.locations['zone1a'])
-            self.moveHere(*self.locations['zone1b'])
-            self.moveHere(*self.locations['zone2'])
-            self.moveHere(*self.locations['zone3a'])
-            self.moveHere(*self.locations['zone3b'])
-            self.moveHere(*self.locations['zone3c'])
-            #self.extraInteraction()?
+            #self.moveHere(*self.locations['zone1a'])
+            #self.moveHere(*self.locations['zone1b'])
+            #self.moveHere(*self.locations['zone2'])
+            #self.moveHere(*self.locations['zone3a'])
+            #self.moveHere(*self.locations['zone3b'])
+            #self.moveHere(*self.locations['zone3c'])
             self.moveHere(*self.locations['near lift 2'])
             self.lifeProxy.setState("solitary")
             self.say("Hi everyone, I am Pepper. I'll wait, please go ahead of me.")
@@ -198,10 +197,11 @@ class LiftTask(PepperController):
         dests = ['zone1a', 'zone1b','zone2','zone3a', 'zone3b', 'zone3c']
         self.speechRecognition()
         for dest in dests:            
-            x,y,t = self.locationsTest[dest]
+            x,y,t = self.locations[dest]
             self.moveHere(x,y,t,True)
             self.onWordRecognized()
             if self.heard == True:
+                print "heard = True"
                 break
                 
             # while self.navigationProxy.isRunning(self.threadID) and self.heard == False:
@@ -216,7 +216,7 @@ class LiftTask(PepperController):
         while len(peeps) == 0 and breakCondition < 50:
             peeps = self.peopleAround(3)
             breakCondition += 1
-
+        
         for person in peeps:
             if self.memoryProxy.getData("PeoplePerception/Person/" + person + "/IsLookingAtRobot") == True:
                 self.lookingAtMe = person
@@ -261,7 +261,7 @@ if __name__ == '__main__':
     #liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
-    #liftTask.startTask()
+    liftTask.startTask()
     #liftTask.extraInteraction()
 	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
     liftTask.InsideLift()

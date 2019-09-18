@@ -196,6 +196,7 @@ class PepperController(object):
             return ret
         else:
             self.navigationProxy.post.navigateTo(*self.diff)
+        self.postureProxy.goToPosture("Stand",0.6)
 
     def peopleAround(self, range=1):
         peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
@@ -240,6 +241,7 @@ class PepperController(object):
         self.heard = False
         #while self.heard == False:
         counter = 0
+        startloop = time.time()
         while counter < 50:
             wordRecognized = self.memoryProxy.getData("WordRecognized")
 
@@ -251,6 +253,9 @@ class PepperController(object):
                 self.heard = True
                 self.unsubscribe()
             counter += 1
+            print ("Counter = " + counter)
+        endLoop = time.time() - startLoop
+        print ("Loop stopped after " + endLoop + " seconds")
 
     def	trackSound(self):
         targetName = "Sound"
