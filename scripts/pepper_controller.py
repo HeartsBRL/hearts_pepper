@@ -176,12 +176,13 @@ class PepperController(object):
     def moveHere(self,x,y,t, parallel=False):
         #simple function to call navigation. Can run this as a thread.
         #store intended coords as a tuple in case we need to resume this navigation command later
-
+        
         self.going = [x,y,t]
         print("Going to " + str(self.going))
         ret = False
         tries = 0
         self.current = self.motionProxy.getRobotPosition(True)
+        px,py,pz = self.current
         #self.diff = self.current - self.going
         self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1]]
         print("Moving by: " + str(self.diff))

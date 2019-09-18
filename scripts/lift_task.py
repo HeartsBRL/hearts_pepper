@@ -89,7 +89,7 @@ class LiftTask(PepperController):
 
     def startTask(self):
 
-        self.moveHere(*self.locations['start'])
+        #self.moveHere(*self.locations['start'])
         if self.goalFloor == 0:
             self.say("I'm already on this floor, I'm going to the finish")
             #self.extraInteraction()
@@ -221,7 +221,7 @@ class LiftTask(PepperController):
                 self.trackerProxy.stopTracker()
                 self.trackerProxy.unregisterAllTargets()
                 break
-            navigationProxy.wait(self.threadID,0)
+            self.navigationProxy.wait(self.threadID,0)
 
         
 
@@ -257,10 +257,10 @@ if __name__ == '__main__':
     liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
-    #liftTask.startTask()
-    liftTask.extraInteraction()
+    liftTask.startTask()
+    #liftTask.extraInteraction()
 	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
-    #liftTask.InsideLift()
+    liftTask.InsideLift()
 
 	#LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
-    #liftTask.toEnd()
+    liftTask.toEnd()
