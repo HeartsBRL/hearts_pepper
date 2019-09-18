@@ -86,7 +86,7 @@ class LiftTask(PepperController):
 
     def startTask(self):
 
-        self.moveHere(*self.locations['start'])
+        #self.moveHere(*self.locations['start'])
         if self.goalFloor == 0:
             self.say("I'm already on this floor, I'm going to the finish")
             #self.extraInteraction()
@@ -141,7 +141,7 @@ class LiftTask(PepperController):
 
 
     def postLocation():
-        
+        pass
     
 
 
@@ -214,11 +214,8 @@ class LiftTask(PepperController):
                 self.trackerProxy.registerTarget("Person", person)
                 self.trackerProxy.track("Person")
 
-        while len(peeps) == 0 and breakCondition < 50:
-            peeps = self.peopleAround(1)
-            breakCondition += 1
-
-        self.say("Hi human, I'm sorry but I already have a task that I need to complete. I hope you can find someone else to help you!")
+                break
+        #self.navigationProxy.wait(self.threadID,0)
 
         self.trackerProxy.stopTracker()
         self.trackerProxy.unregisterAllTargets()
@@ -256,7 +253,7 @@ if __name__ == '__main__':
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
     liftTask.startTask()
-
+    #liftTask.extraInteraction()
 	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
     liftTask.InsideLift()
 
