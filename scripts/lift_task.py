@@ -86,7 +86,7 @@ class LiftTask(PepperController):
 
     def startTask(self):
 
-        #self.moveHere(*self.locations['start'])
+        self.moveHere(*self.locations['start'])
         if self.goalFloor == 0:
             self.say("I'm already on this floor, I'm going to the finish")
             #self.extraInteraction()
@@ -95,8 +95,13 @@ class LiftTask(PepperController):
         else:
             
             self.say("I will need to use the lift to get there.")
-            #self.extraInteraction()
-            self.moveHere(*self.locations['near lift'])
+            self.extraInteraction()
+           # self.moveHere(*self.locations['near lift'])
+            #self.moveHere(*self.locations['zone1'])
+            #self.moveHere(*self.locations['zone2'])
+            #self.moveHere(*self.locations['zone3'])
+            #self.extraInteraction()?
+            self.moveHere(*self.locations['near lift 2'])
             self.lifeProxy.setState("solitary")
             self.say("Hi everyone, I am Pepper. I'll wait, please go ahead of me.")
             #TODO Approach to lift, define new location/people perception
@@ -167,8 +172,10 @@ class LiftTask(PepperController):
         self.say("I'm getting out now, thank you for your help! Have a good day!")
         self.moveHere(*self.locations['inside door'])
         self.moveHere(*self.locations['outside door'])
-        self.extraInteraction()
+        #self.extraInteraction()?
+        self.moveHere(*self.locations['pre finish'])
         self.moveHere(*self.locations['finish'])
+        self.moveHere(*self.locations['extra finish'])
 
         #TODO Improvements
             # Wait for people to leave before we move
@@ -212,7 +219,7 @@ class LiftTask(PepperController):
 
         self.lifeProxy.setState("safeguard")
         self.postureProxy.goToPosture("Stand",0.6)
-
+        self.moveHere(*self.locations['zone3'])
         #TODO Improvements
             # Look for person that's walking towards pepper	    
 
@@ -239,13 +246,13 @@ if __name__ == '__main__':
             liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
             liftTask.shopName = str(key) # Just the number of the floor
             liftTask.say(s)
-    #liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
+    liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
-    #liftTask.startTask()
+    liftTask.startTask()
 
 	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
     liftTask.InsideLift()
 
 	#LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
-    #liftTask.toEnd()
+    liftTask.toEnd()
