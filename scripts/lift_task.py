@@ -188,7 +188,7 @@ class LiftTask(PepperController):
 
         dests = ['zone1','zone2','zone3']
         for dest in dests:            
-            x,y,t = self.locations[dest]
+            x,y,t = self.locationsTest[dest]
             self.moveHere(x,y,t,True)
             self.speechRecognition()
             while self.navigationProxy.isRunning(self.threadID) and self.heard == False:
@@ -248,7 +248,7 @@ if __name__ == '__main__':
             liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
             liftTask.shopName = str(key) # Just the number of the floor
             liftTask.say(s)
-    liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
+    #liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
     liftTask.startTask()

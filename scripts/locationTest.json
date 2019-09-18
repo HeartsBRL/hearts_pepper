@@ -1,0 +1,25 @@
+{
+    "outside door": [0, 0, 0],
+
+    "inside door": [0, 0, 0],
+
+    "lift back": [0, 0, 0],
+
+    "start": [0, 0, 0],
+
+    "pre finish": [0, 0, 0],
+
+    "finish": [0, 0, 0],
+    
+    "extra finish": [0, 0, 0],
+
+    "near lift": [0, 0, 0],
+    
+    "near lift 2": [0, 0, 0],
+
+    "zone1": [0, 0, 0],
+
+    "zone2": [0.1, 0, 0],
+
+    "zone3": [0.2, 0, 0]
+}
