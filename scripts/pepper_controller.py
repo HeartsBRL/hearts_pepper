@@ -237,22 +237,19 @@ class PepperController(object):
 
     def onWordRecognized(self):#, string, threadName):
         self.heard = False
-        while self.heard == False:
+        #while self.heard == False:
+        counter = 0
+        while counter < 50:
             wordRecognized = self.memoryProxy.getData("WordRecognized")
 
             if(wordRecognized != self.old_recog):
                 self.old_recog = wordRecognized
 
-                print (wordRecognized)
+            print (wordRecognized)
             if wordRecognized[0] == "pepper":
-
                 self.heard = True
-                #self.trackSound()
-
-            #if "pepper" in wordRecognized:
-
-            #self.ttsProxy.say("I heard you")
                 self.unsubscribe()
+            counter += 1
 
     def	trackSound(self):
         targetName = "Sound"
