@@ -43,15 +43,19 @@ class NavTest(PepperController):
         print("using locations file: " + json_name)
 
     def run_through(self):
-        ret = self.navigationProxy.post.navigateToInMap(self.locations["start"])
-        self.say("I'm doing two things at once! Go me!")
+        #ret = self.navigationProxy.post.navigateToInMap(self.locations["start"])
+        #self.say("I'm doing two things at once! Go me!")
         #self.goHere(*self.locations["start"][0])
+        #self.goHere(*self.locations["near lift 2"])
         #self.goHere(*self.locations["outside door"][0])
         #self.goHere(*self.locations["inside door"][0])
         #self.goHere(*self.locations["lift back"][0])
         #self.goHere(*self.locations["inside door"][0])
         #self.goHere(*self.locations["outside door"][0])
-        #self.goHere(*self.locations["finish"][0])
+        #self.goHere(*self.locations["pre finish"])
+        #self.goHere(*self.locations["finish"])
+        ret = self.goHere(0,0,0)
+        print ret
         print('Finished run through')
 
     def axis(self):
@@ -67,6 +71,7 @@ if __name__ == '__main__':
     navTest.load_dict()
     navTest.navigationProxy.startLocalization()
     navTest.run_through()
+    
     #navTest.axis()
 
 

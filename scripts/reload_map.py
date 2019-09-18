@@ -18,6 +18,7 @@ class MapLoad(PepperController):
         self.navigationProxy.loadExploration(self.mapLoc)
         print("Loaded map from " + self.mapLoc)
         self.navigationProxy.startLocalization()
+        
 
 
 if __name__ == '__main__':
