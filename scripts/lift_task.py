@@ -86,17 +86,17 @@ class LiftTask(PepperController):
 
     def startTask(self):
 
-        #self.goHere(*self.locations['start'])
+        #self.moveHere(*self.locations['start'])
         if self.goalFloor == 0:
             self.say("I'm already on this floor, I'm going to the finish")
             #self.extraInteraction()
-            self.goHere(*self.locations['finish'])
+            self.moveHere(*self.locations['finish'])
             print "Going to the final destination"
         else:
             
             self.say("I will need to use the lift to get there.")
             #self.extraInteraction()
-            self.goHere(*self.locations['near lift'])
+            self.moveHere(*self.locations['near lift'])
             self.lifeProxy.setState("solitary")
             self.say("Hi everyone, I am Pepper. I'll wait, please go ahead of me.")
             #TODO Approach to lift, define new location/people perception
@@ -112,12 +112,12 @@ class LiftTask(PepperController):
             self.say("I'm going to the lift now.")
             self.lifeProxy.setState("safeguard")
             self.postureProxy.goToPosture("Stand",0.6)
-            self.goHere(*self.locations['outside door'])
-            self.goHere(*self.locations['inside door'])
+            self.moveHere(*self.locations['outside door'])
+            self.moveHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
 
             time.sleep(2)
-            self.goHere(*self.locations['lift back'])
+            self.moveHere(*self.locations['lift back'])
             self.motionProxy.moveTo(0,0,3.14159)
 
 
@@ -165,10 +165,10 @@ class LiftTask(PepperController):
         self.say("This is my floor!")
         #self.lifeProxy.setState("solitary")
         self.say("I'm getting out now, thank you for your help! Have a good day!")
-        self.goHere(*self.locations['inside door'])
-        self.goHere(*self.locations['outside door'])
+        self.moveHere(*self.locations['inside door'])
+        self.moveHere(*self.locations['outside door'])
         self.extraInteraction()
-        self.goHere(*self.locations['finish'])
+        self.moveHere(*self.locations['finish'])
 
         #TODO Improvements
             # Wait for people to leave before we move
@@ -180,7 +180,7 @@ class LiftTask(PepperController):
         dests = ['zone1','zone2','zone3']
         for dest in dests:            
             x,y,t = self.locations[dest]
-            self.goHere(x,y,t,True)
+            self.moveHere(x,y,t,True)
             self.SpeechRecognition()
             while self.threadID.isRunning() and self.heard == False:
                 pass
