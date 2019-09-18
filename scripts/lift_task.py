@@ -51,6 +51,9 @@ class LiftTask(PepperController):
 
         with open(json_name) as json_data:
             self.locations = json.load(json_data)
+           
+        with open('locationTest.json') as json_data:
+            self.locationsTest = json.load(json_data)
 
         print("using locations file: " + json_name)
 
@@ -100,6 +103,7 @@ class LiftTask(PepperController):
             self.moveHere(*self.locations['zone1'])
             self.moveHere(*self.locations['zone2'])
             self.moveHere(*self.locations['zone3'])
+            self.say("Hi human, I'm sorry but I already have a task that I need to complete. I hope you can find someone else to help you!")
             #self.extraInteraction()?
             self.moveHere(*self.locations['near lift 2'])
             self.lifeProxy.setState("solitary")
@@ -121,7 +125,7 @@ class LiftTask(PepperController):
             self.moveHere(*self.locations['inside door'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
 
-            time.sleep(2)
+            time.sleep(3)
             self.moveHere(*self.locations['lift back'])
             self.motionProxy.moveTo(0,0,3.14159)
 
@@ -138,7 +142,7 @@ class LiftTask(PepperController):
 
 
     def postLocation():
-        
+        pass
     
 
 
@@ -194,30 +198,32 @@ class LiftTask(PepperController):
             while self.navigationProxy.isRunning(self.threadID) and self.heard == False:
                 pass
             if self.heard == True: 
+                self.navigationProxy.stopExploration()
+                self.lifeProxy.setState("solitary")
+                peeps = []
+                breakCondition = 0
+                while len(peeps) == 0 and breakCondition < 50:
+                    peeps = self.peopleAround(3)
+                    breakCondition += 1
+
+                for person in peeps:
+                    if self.memoryProxy.getData("PeoplePerception/Person/" + person + "/IsLookingAtRobot") == True:
+                        self.lookingAtMe = person
+                        self.trackerProxy.registerTarget("Person", person)
+                        self.trackerProxy.track("Person")
+
+                while len(peeps) == 0 and breakCondition < 50:
+                    peeps = self.peopleAround(1)
+                    breakCondition += 1
+
+                self.say("Hi human, I'm sorry but I already have a task that I need to complete. I hope you can find someone else to help you!")
+
+                self.trackerProxy.stopTracker()
+                self.trackerProxy.unregisterAllTargets()
                 break
+            navigationProxy.wait(self.threadID,0)
 
-        self.navigationProxy.stopExploration()
-        self.lifeProxy.setState("solitary")
-        peeps = []
-        breakCondition = 0
-        while len(peeps) == 0 and breakCondition < 50:
-            peeps = self.peopleAround(3)
-            breakCondition += 1
-
-        for person in peeps:
-            if self.memoryProxy.getData("PeoplePerception/Person/" + person + "/IsLookingAtRobot") == True:
-                self.lookingAtMe = person
-                self.trackerProxy.registerTarget("Person", person)
-                self.trackerProxy.track("Person")
-
-        while len(peeps) == 0 and breakCondition < 50:
-            peeps = self.peopleAround(1)
-            breakCondition += 1
-
-        self.say("Hi human, I'm sorry but I already have a task that I need to complete. I hope you can find someone else to help you!")
-
-        self.trackerProxy.stopTracker()
-        self.trackerProxy.unregisterAllTargets()
+        
 
         self.lifeProxy.setState("safeguard")
         self.postureProxy.goToPosture("Stand",0.6)
@@ -248,13 +254,13 @@ if __name__ == '__main__':
             liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
             liftTask.shopName = str(key) # Just the number of the floor
             liftTask.say(s)
-    #liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
+    liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
-    liftTask.startTask()
-
+    #liftTask.startTask()
+    liftTask.extraInteraction()
 	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
-    liftTask.InsideLift()
+    #liftTask.InsideLift()
 
 	#LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
-    liftTask.toEnd()
+    #liftTask.toEnd()
