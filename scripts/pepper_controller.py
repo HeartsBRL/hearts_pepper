@@ -184,7 +184,7 @@ class PepperController(object):
         self.current = self.motionProxy.getRobotPosition(True)
         px,py,pz = self.current
         #self.diff = self.current - self.going
-        self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1]]
+        self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],self.going[2]-self.current[2]]
         print("Moving by: " + str(self.diff))
         if parallel == False:
             while ret != True and tries < 5:
@@ -192,8 +192,7 @@ class PepperController(object):
                 tries += 1
             return ret
         else:
-            self.threadID = self.navigationProxy.post.navigateTo(*self.diff)
-            print "Thread ID: " + str(self.threadID)
+            self.navigationProxy.post.navigateTo(*self.diff)
 
     def peopleAround(self, range=1):
         peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
@@ -236,8 +235,7 @@ class PepperController(object):
 
     def onWordRecognized(self):#, string, threadName):
         self.heard = False
-        print self.navigationProxy.isRunning(self.threadID)
-        while self.heard == False and self.navigationProxy.isRunning(self.threadID):
+        while self.heard == False:
             wordRecognized = self.memoryProxy.getData("WordRecognized")
 
             if(wordRecognized != self.old_recog):
@@ -252,7 +250,7 @@ class PepperController(object):
             #if "pepper" in wordRecognized:
 
             #self.ttsProxy.say("I heard you")
-        self.unsubscribe()
+                self.unsubscribe()
 
     def	trackSound(self):
         targetName = "Sound"
