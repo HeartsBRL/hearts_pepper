@@ -97,9 +97,12 @@ class LiftTask(PepperController):
             self.say("I will need to use the lift to get there.")
             #self.extraInteraction()
            # self.moveHere(*self.locations['near lift'])
-            self.moveHere(*self.locations['zone1'])
+            self.moveHere(*self.locations['zone1a'])
+            self.moveHere(*self.locations['zone1b'])
             self.moveHere(*self.locations['zone2'])
-            self.moveHere(*self.locations['zone3'])
+            self.moveHere(*self.locations['zone3a'])
+            self.moveHere(*self.locations['zone3b'])
+            self.moveHere(*self.locations['zone3c'])
             #self.extraInteraction()?
             self.moveHere(*self.locations['near lift 2'])
             self.lifeProxy.setState("solitary")
@@ -175,6 +178,7 @@ class LiftTask(PepperController):
         self.moveHere(*self.locations['inside door'])
         self.moveHere(*self.locations['outside door'])
         #self.extraInteraction()?
+        self.moveHere(*self.locations['pre pre finish'])
         self.moveHere(*self.locations['pre finish'])
         self.moveHere(*self.locations['finish'])
         self.moveHere(*self.locations['extra finish'])
