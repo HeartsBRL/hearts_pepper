@@ -197,6 +197,15 @@ class PepperController(object):
         else:
             self.navigationProxy.post.navigateTo(*self.diff)
 
+    def headinit(self):
+        self.motionProxy.setStiffness("Head", 1.0)
+        names = ["HeadYaw", "HeadPitch"]
+        angles = [0, 0]
+        fractionMaxSpeed = 0.2
+        self.motionProxy.setAngles(names, angles, fractionMaxSpeed)
+        time.sleep(0.5)
+        self.motionProxy.setStiffness("Head", 0.0)    
+     
     def peopleAround(self, range=1):
         peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
         if range > 1:
