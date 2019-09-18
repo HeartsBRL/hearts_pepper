@@ -183,6 +183,8 @@ class PepperController(object):
         tries = 0
         self.current = self.motionProxy.getRobotPosition(True)
         px,py,pz = self.current
+        bsx = px - 2
+        bsy = py - 7.75
         #self.diff = self.current - self.going
         self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],self.going[2]-self.current[2]]
         print("Moving by: " + str(self.diff))

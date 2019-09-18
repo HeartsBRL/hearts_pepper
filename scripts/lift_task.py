@@ -141,7 +141,7 @@ class LiftTask(PepperController):
 
 
     def postLocation():
-        
+        pass
     
 
 
@@ -214,14 +214,8 @@ class LiftTask(PepperController):
                 self.trackerProxy.registerTarget("Person", person)
                 self.trackerProxy.track("Person")
 
-        while len(peeps) == 0 and breakCondition < 50:
-            peeps = self.peopleAround(1)
-            breakCondition += 1
-
-                self.trackerProxy.stopTracker()
-                self.trackerProxy.unregisterAllTargets()
                 break
-            self.navigationProxy.wait(self.threadID,0)
+        #self.navigationProxy.wait(self.threadID,0)
 
         self.trackerProxy.stopTracker()
         self.trackerProxy.unregisterAllTargets()
