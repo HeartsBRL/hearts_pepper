@@ -126,7 +126,7 @@ class LiftTask(PepperController):
 
             time.sleep(2)
             self.moveHere(*self.locations['lift back'])
-            self.motionProxy.moveTo(0,0,3.14159)
+            #self.motionProxy.moveTo(0,0,3.14159)
 
 
 
@@ -162,7 +162,12 @@ class LiftTask(PepperController):
             self.doorOpen = False
             self.say("Is this floor " + str(self.goalFloor) + "? If so, please touch the top of my head.")
             self.expectingTouch = True
-            time.sleep(10)
+            waiting = 0
+            while waiting < 10:
+                if self.rightFloor == True:
+                    break
+                time.sleep(1)
+                waiting += 1
             
         #TODO Improvements:
             # Recognise that people say no when it's not the right floor
@@ -252,7 +257,7 @@ if __name__ == '__main__':
     #liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
 
 	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
-    liftTask.startTask()
+    #liftTask.startTask()
     #liftTask.extraInteraction()
 	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
     liftTask.InsideLift()
