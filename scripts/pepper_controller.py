@@ -76,7 +76,7 @@ class PepperController(object):
             self.system = ALProxy("ALSystem", self._robotIP, self._PORT)
             self.postureProxy = ALProxy("ALRobotPosture", self._robotIP, self._PORT)
 
-            #self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
+            #self.speechRecogService = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
             self.engagementProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
             self.peoplePerceptionProxy = ALProxy("ALPeoplePerception", self._robotIP, self._PORT)
             #self.waveDetectProxy = ALProxy("ALWavingDetection", self._robotIP, self._PORT)
@@ -233,14 +233,14 @@ class PepperController(object):
 
 #### Methods for recognising words and locating sounds ###
     def setVocabulary(self):
-        self.speechRecogProxy.pause(True)
-        self.speechRecogProxy.removeAllContext()
+        self.speechRecogService.pause(True)
+        self.speechRecogService.removeAllContext()
         try:
-            self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper", "hello", "hi"],False)
+            self.speechRecogService.setLanguage("English")
+            self.speechRecogService.setVocabulary(["pepper", "hello", "hi"],False)
         except:
             print("Vocabulary already set")
-        self.speechRecogProxy.pause(False)
+        self.speechRecogService.pause(False)
 
     def speechRecogThread(self):
         thread.start_new_thread(self.onWordRecognized,("words", 2))
@@ -248,7 +248,7 @@ class PepperController(object):
 
     def speechRecognition(self):
         self.memoryProxy.insertData("WordRecognized", " ")
-        self.speechRecogService.subscribe("attention")
+        self.speechRecogService.subscribe("attention", _async = True)
         self.soundLocalProxy.subscribe("soundLocal")
         #self.speechRecogThread()
         print "Speech recognition engine started"
@@ -261,7 +261,7 @@ class PepperController(object):
         startLoop = time.time()
         loopTime = 0
         while loopTime < 15:
-            wordRecognized = self.memoryProxy.getData("WordRecognized", _async)
+            wordRecognized = self.memoryProxy.getData("WordRecognized")
 
             print (wordRecognized)
             if wordRecognized[0] == "Pepper" or wordRecognized[0] == "hi": # or wordRecognized[0] == "hello":

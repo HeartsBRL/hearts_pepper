@@ -11,7 +11,7 @@ PORT = 9559
 class SpeechRecog(PepperController):
     
     def startStuff(self):
-        self.setVocabulary()
+        #self.setVocabulary()
         self.speechRecognition()
 
     def fudge(self):        
