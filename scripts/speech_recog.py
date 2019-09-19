@@ -15,8 +15,16 @@ class SpeechRecog(PepperController):
         self.speechRecognition()
 
     def fudge(self):        
-        self.lifeProxy.setState("solitary")
+        #running = self.baProxy.isRunning()
+        #print ("running: " + running)
+        self.lifeProxy.setState("safeguard")
+        self.baProxy.setEnabled(True)
+        pause = self.baProxy.isAwarenessPaused()
+        print ("pause: " + str(pause))
+        enable = self.baProxy.isEnabled()
+        print("enable: " + str(enable))
         self.navigationProxy.navigateTo(-0.5,0,0,True)
+        time.sleep(2)
         self.onWordRecognized()
         #wordRecognized = self.memoryProxy.getData("WordRecognized")
         #if wordRecognized[0] == "Pepper" or wordRecognized[0] == "hi":

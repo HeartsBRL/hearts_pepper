@@ -204,7 +204,9 @@ class LiftTask(PepperController):
         self.speechRecognition()
         for dest in dests:            
             x,y,t = self.locations[dest]
+            self.spechRecogService.pause(True)
             self.moveHere(x,y,t,True)
+            self.spechRecogService.pause(False)
             self.onWordRecognized()
             if self.heard == True:
                 print "heard = True"
@@ -249,6 +251,7 @@ class LiftTask(PepperController):
 
 
 
+            
 if __name__ == '__main__':
 
 	#DEFINE CLASS#
