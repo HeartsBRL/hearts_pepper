@@ -32,6 +32,7 @@ class PepperController(object):
 
         self.old_recog = ""
         self.moving = False
+        self.threadID = 0
 
     def ping(self):
         # Ping the robot
@@ -100,6 +101,8 @@ class PepperController(object):
             self.memoryService = self.session.service("ALMemory")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.backLightingService = self.session.service("ALBacklightingDetection")
+            self.Segmentation3DService = self.session.service("ALSegmentation3D")
+
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.touchService = self.session.service("ALTouch")
@@ -123,8 +126,10 @@ class PepperController(object):
         self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
         self.peoplePerceptionService.subscribe("PeoplePerception")
+        self.Segmentation3DService.subscribe("3DSegmentation")
         self.darknessService.subscribe("DarknessDetection")
         self.backLightingService.subscribe("BacklightningDetection")
+
 
 
     def say(self, words):
@@ -146,10 +151,13 @@ class PepperController(object):
         self.colourProxy.setObjectProperties(1,1)
 
     def findBlobs(self):
-        blobsList = self.memoryProxy.getData("Segmentation3D/BlobsList")[1]
-        for blob in blobsList:
+        blobsList = self.memoryProxy.getData("Segmentation3D/BlobsList")
+
+        for blob in blobsList[1]:
             if blob[2] > 2:
                 self.doorOpen = True
+        #self.memoryProxy.insertData("Segmentation3D/BlobsList","")
+        #self.memoryProxy.removeData("Segmentation3D/BlobsList")
 
 
 
@@ -166,7 +174,7 @@ class PepperController(object):
                 ret = self.navigationProxy.navigateToInMap((x,y,t))
                 tries += 1
         else:
-            ret = self.navigationProxy.post.navigateToInMap((x,y,t))
+            self.threadID = self.navigationProxy.post.navigateToInMap((x,y,t))
         return ret
 
     def moveHere(self,x,y,t):
@@ -226,8 +234,8 @@ class PepperController(object):
         self.onWordRecognized()
 
     def onWordRecognized(self):#, string, threadName):
-        heard = False
-        while heard == False:
+        self.heard = False
+        while self.heard == False:
             wordRecognized = self.memoryProxy.getData("WordRecognized")
 
             if(wordRecognized != self.old_recog):
@@ -236,8 +244,8 @@ class PepperController(object):
                 print (wordRecognized)
             if wordRecognized[0] == "pepper":
 
-                heard = True
-                self.trackSound()
+                self.heard = True
+                #self.trackSound()
 
             #if "pepper" in wordRecognized:
 
