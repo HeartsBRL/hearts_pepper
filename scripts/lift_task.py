@@ -85,7 +85,8 @@ class LiftTask(PepperController):
                 return -1
 
     def startTask(self):
-
+        #self.speechRecogProxy.subscribe("Test_ASR")
+        #self.speechRecogProxy.unsubscribe("Test_ASR")
         #self.moveHere(*self.locations['start'])
         if self.goalFloor == 0:
             self.say("I'm already on this floor, I'm going to the finish")
@@ -131,6 +132,7 @@ class LiftTask(PepperController):
 
             time.sleep(5)
             self.moveHere(*self.locations['lift back'])
+            self.postureProxy.goToPosture("Stand",0.6)
             #self.motionProxy.moveTo(0,0,3.14159)
 
 
@@ -185,7 +187,7 @@ class LiftTask(PepperController):
     def toEnd(self):
         self.say("This is my floor!")
         #self.lifeProxy.setState("solitary")
-        self.say("I'm getting out now, thank you for your help! Have a good day!")
+        self.say("I'm getting out now, thank you for your help! Have a good. Day.")
         self.moveHere(*self.locations['inside door 2'])
         self.moveHere(*self.locations['outside door 2'])
         #self.extraInteraction()?
@@ -202,21 +204,28 @@ class LiftTask(PepperController):
     def extraInteraction(self):
         self.lifeProxy.setState("safeguard")
         dests = ['zone1a', 'zone1b', 'zone2a', 'zone2b', 'zone3a', 'zone3b', 'zone3c']
+        self.interacted = False
         self.subscribe2Speech()
-        for dest in dests:            
+
+        for dest in dests: 
+            self.heard = False          
             x,y,t = self.locations[dest]
             self.moveHere(x,y,t,True)
             #self.onWordRecognized()
             loopStart = time.time()
             loopLength = 0
-            while loopLength < 15:
-                if self.heard == True:
+            while loopLength < 20:
+                #print loopLength
+                if self.heard == True and self.interacted == False:
                     print "heard = True"
+                    self.interacted = True
 
-                    self.navigationProxy.stopExploration()
-                    self.lifeProxy.setState("solitary")
+                    #self.navigationProxy.stopExploration()
+                    self.navigationProxy.navigateTo(0,0,0)
                     #self.lifeProxy.setState("solitary")
-                    #self.startRecogPeople()
+                    #self.lifeProxy.setState("solitary")
+                    self.postureProxy.goToPosture("Stand",0.6)
+                    self.startRecogPeople()
                     #peeps = []
                     #breakCondition = 0
                     #while len(peeps) == 0 and breakCondition < 50:
@@ -231,12 +240,16 @@ class LiftTask(PepperController):
 
                     #break
             
-                    self.say("Sorry, I have a task I need to complete. I hope you find someone who can help")
-                    self.trackerProxy.stopTracker()
-                    self.trackerProxy.unregisterAllTargets()
+                    self.say("Sorry, I'm on my way to " + str(self.shopName) + " to meet someone. I hope you can find someone to help you.")
+                    #self.trackerProxy.stopTracker()
+                    #self.trackerProxy.unregisterAllTargets()
+                    self.stopRecogPeople()
+                    current = self.motionProxy.getRobotPosition(True)
+                    self.motionProxy.moveTo(0,0,-current[2])
+                    self.moveHere(x,y,t)
+                    break
                 loopLength = time.time() - loopStart        
-
-            self.navigationProxy.wait(self.threadID,0)
+                time.sleep(0.1)
                 
             # while self.navigationProxy.isRunning(self.threadID) and self.heard == False:
                 # pass
@@ -245,8 +258,8 @@ class LiftTask(PepperController):
 
         self.lifeProxy.setState("safeguard")
         #self.stopRecogPeople()
-        self.postureProxy.goToPosture("Stand",0.6)
-        self.moveHere(*self.locations['zone3c'])
+        #self.postureProxy.goToPosture("Stand",0.6)
+        #self.moveHere(*self.locations['zone3c'])
         #TODO Improvements
             # Look for person that's walking towards pepper	    
 
@@ -273,13 +286,17 @@ if __name__ == '__main__':
             liftTask.goalFloor = str(liftTask.g[key]) # Just the number of the floor
             liftTask.shopName = str(key) # Just the number of the floor
             liftTask.say(s)
-    #liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
+    liftTask.setVocabulary() # Set vocabulary now for subsequent speechRecognition activations
+    try:
+	    #GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
+        liftTask.startTask()
+        #liftTask.extraInteraction()
+	    #ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
+        liftTask.InsideLift()
 
-	#GO TO LIFT AND WAIT FOR PEOPLE TO ENTER THE LIFT BEFORE WE DO#
-    liftTask.startTask()
-    #liftTask.extraInteraction()
-	#ONCE INSIDE LIFT ASK FOR ASSISTANCE GETTING TO CORRECT FLOOR AND LISTEN FOR RESPONSE#
-    liftTask.InsideLift()
-
-	#LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
-    liftTask.toEnd()
+	    #LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
+        liftTask.toEnd()
+    except KeyboardInterrupt:
+        liftTask.speechRecogProxy.unsubscribe("Test_ASR")
+    except:
+        liftTask.speechRecogProxy.unsubscribe("Test_ASR")
