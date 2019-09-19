@@ -9,11 +9,11 @@ import qi
 from math import sin,cos
 
 # pip install pillow
-try:
-    from PIL import Image
-except ImportError:
-    import Image
-import numpy
+# try:
+    # from PIL import Image
+# except ImportError:
+    # import Image
+# import numpy
 
 from naoqi import ALProxy
 
@@ -266,8 +266,9 @@ class PepperController(object):
                 self.old_recog = wordRecognized
 
             #print ("Word recognised: " +  str(wordRecognized))
-            if wordRecognized[0] == "pepper" or  wordRecognized[0] == "Pepper" or wordRecognized[0] == "hello":
+            if wordRecognized[0] == "pepper": #or  wordRecognized[0] == "Pepper" or wordRecognized[0] == "hello":
                 self.heard = True
+                #self.say("I heard you")
                 self.unsubscribe()
                 break
             loopTime = time.time() - startLoop

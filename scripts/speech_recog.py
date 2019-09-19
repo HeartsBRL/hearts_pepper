@@ -10,7 +10,9 @@ PORT = 9559
 
 class SpeechRecog(PepperController):
     
-    def fudge():
+    def fudge(self):
+        self.setVocabulary()
+        self.lifeProxy.setState("solitary")
         self.speechRecognition()
         time.sleep(2)
         self.onWordRecognized()

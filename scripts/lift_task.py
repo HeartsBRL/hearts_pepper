@@ -197,7 +197,7 @@ class LiftTask(PepperController):
 
 
     def extraInteraction(self):
-
+        self.lifeProxy.setState("solitary")
         dests = ['zone1a', 'zone1b', 'zone2a', 'zone2b', 'zone3a', 'zone3b', 'zone3c']
         self.speechRecognition()
         for dest in dests:            
