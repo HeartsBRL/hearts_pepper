@@ -6,6 +6,7 @@ import json
 import time
 import thread
 import qi
+from math import sin,cos
 
 # pip install pillow
 try:
@@ -116,7 +117,7 @@ class PepperController(object):
         ## Turn of auto-interaction features
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
-        self.motionProxy.setTangentialSecurityDistance(0.05)
+        self.motionProxy.setTangentialSecurityDistance(0.03)
         self.motionProxy.setOrthogonalSecurityDistance(0.05)
         self.engagementProxy.setFirstLimitDistance(2.0)
         self.engagementProxy.setLimitAngle(180.0)
@@ -186,17 +187,22 @@ class PepperController(object):
         bsx = px - 2
         bsy = py - 7.75
         self.sendInfo("RobotLocation",px,py,0)
-        #self.diff = self.current - self.going
-        self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],0]
-        rot = self.current[2]
+        self.diff = [x-self.current[0],y-self.current[1],0]
+        rot = -self.current[2]
+        self.rotDiff = [self.diff[0]*cos(rot)-self.diff[1]*sin(rot),self.diff[1]*cos(rot)+self.diff[0]*sin(rot)]
         print("Moving by: " + str(self.diff))
+        print("rotDiff: " + str(self.rotDiff))
         if parallel == False:
             while ret != True and tries < 5:
                 ret = self.navigationProxy.navigateTo(*self.diff)
+                #ret = self.navigationProxy.navigateTo(x-self.current[0],y-self.current[1],0)
                 tries += 1
             return ret
+            current = self.motionProxy.getRobotPosition(True)
+            self.motionProxy.moveTo(0,0,-rot)
         else:
-            self.navigationProxy.post.navigateTo(*self.diff)
+            self.navigationProxy.post.navigateTo(*self.rotDiff)
+            #self.navigationProxy.post.navigateTo(self.diff[0]*cos(rot)-self.diff[1]*sin(rot),self.diff[1]*cos(rot)+self.diff[0]*sin(rot))
         
 
     def headInit(self):
