@@ -121,14 +121,19 @@ class LiftTask(PepperController):
 
             self.say("I'm going to the lift now.")
             self.motionProxy.moveTo(0,0,-2.36)
+            
+            self.navigationProxy.relocalizeInMap(*self.locations['near lift map'])
             #self.lifeProxy.setState("safeguard")
             self.postureProxy.goToPosture("Stand",0.6)
-            self.moveHere(*self.locations['outside door 1'])
-            self.moveHere(*self.locations['inside door 1'])
+            #self.moveHere(*self.locations['outside door 1'])
+            #self.moveHere(*self.locations['inside door 1'])
+            self.goHere(*self.locations['outside door map'])
+            self.goHere(*self.locations['inside door map'])
             self.say("Excuse me please. I would like to stand at the back of the lift")
 
             time.sleep(2)
-            self.moveHere(*self.locations['lift back'])
+            self.goHere(*self.locations['lift back map'])
+            #self.moveHere(*self.locations['lift back'])
             #self.motionProxy.moveTo(0,0,3.14159)
 
 

@@ -35,5 +35,11 @@
     
     "zone3b": [4.65, -7.25, 0],
     
-    "zone3c": [2.70, -7.5, 0]
+    "zone3c": [2.70, -7.5, 0],
+
+    "near lift map": [0,0,0],
+
+    "outside door map": [0,0,0],
+
+    "lift back map": [0,0,0]
 }

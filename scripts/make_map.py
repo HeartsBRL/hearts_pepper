@@ -63,6 +63,6 @@ class MakeMap(PepperController):
 
 if __name__ == '__main__':
     task = MakeMap(robotIP, PORT)
-    task.explore(4)
+    task.explore(1)
     #task.goHere(1,-1,0)
     task.say('Remember to update the map path in reload_map.py so you don\'t load an old map!')
