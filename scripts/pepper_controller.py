@@ -187,7 +187,8 @@ class PepperController(object):
         bsy = py - 7.75
         self.sendInfo("RobotLocation",px,py,0)
         #self.diff = self.current - self.going
-        self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],self.going[2]-self.current[2]]
+        self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],0]
+        rot = self.current[2]
         print("Moving by: " + str(self.diff))
         if parallel == False:
             while ret != True and tries < 5:
@@ -196,16 +197,16 @@ class PepperController(object):
             return ret
         else:
             self.navigationProxy.post.navigateTo(*self.diff)
-        self.postureProxy.goToPosture("Stand",0.6)
+        
 
-    def headinit(self):
-        self.motionProxy.setStiffness("Head", 1.0)
+    def headInit(self):
+        self.motionProxy.setStiffnesses("Head", 1.0)
         names = ["HeadYaw", "HeadPitch"]
         angles = [0, 0]
         fractionMaxSpeed = 0.2
         self.motionProxy.setAngles(names, angles, fractionMaxSpeed)
         time.sleep(0.5)
-        self.motionProxy.setStiffness("Head", 0.0)    
+        self.motionProxy.setStiffnesses("Head", 0.0)    
      
     def peopleAround(self, range=1):
         peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
@@ -229,7 +230,7 @@ class PepperController(object):
         self.speechRecogProxy.removeAllContext()
         try:
             self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper", "yes"],False)
+            self.speechRecogProxy.setVocabulary(["pepper", "hello"],False)
         except:
             print("Vocabulary already set")
         self.speechRecogProxy.pause(False)
@@ -244,27 +245,28 @@ class PepperController(object):
         self.soundLocalProxy.subscribe("soundLocal")
         #self.speechRecogThread()
         print "Speech recognition engine started"
-        self.onWordRecognized()
+        #self.onWordRecognized()
 
     def onWordRecognized(self):#, string, threadName):
         self.heard = False
         #while self.heard == False:
-        counter = 0
-        startloop = time.time()
-        while counter < 50:
+        
+        startLoop = time.time()
+        loopTime = 0
+        while loopTime < 15:
             wordRecognized = self.memoryProxy.getData("WordRecognized")
 
             if(wordRecognized != self.old_recog):
                 self.old_recog = wordRecognized
 
-            print (wordRecognized)
-            if wordRecognized[0] == "pepper":
+            #print ("Word recognised: " +  str(wordRecognized))
+            if wordRecognized[0] == "pepper" or  wordRecognized[0] == "Pepper" or wordRecognized[0] == "hello":
                 self.heard = True
                 self.unsubscribe()
-            counter += 1
-            print ("Counter = " + counter)
+                break
+            loopTime = time.time() - startLoop
         endLoop = time.time() - startLoop
-        print ("Loop stopped after " + endLoop + " seconds")
+        print ("Loop stopped after " + str(endLoop) + " seconds")
 
     def	trackSound(self):
         targetName = "Sound"
@@ -274,11 +276,11 @@ class PepperController(object):
         self.trackerProxy.registerTarget(targetName, param)
         time.sleep(2)
         activeTarget = self.trackerProxy.getActiveTarget()
-        print("target is: ", activeTarget)
+        print("target is: ", str(activeTarget))
         self.trackerProxy.setMode(mode)
         time.sleep(2)
         activeMode = self.trackerProxy.getMode()
-        print("Mode is: ", activeMode)
+        print("Mode is: ", str(activeMode))
         self.trackerProxy.track(targetName)
         time.sleep(0.5)
         self.trackerProxy.stopTracker()
