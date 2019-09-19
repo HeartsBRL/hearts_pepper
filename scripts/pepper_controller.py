@@ -6,14 +6,13 @@ import json
 import time
 import thread
 import qi
-from math import sin,cos
 
 # pip install pillow
-# try:
-    # from PIL import Image
-# except ImportError:
-    # import Image
-# import numpy
+try:
+    from PIL import Image
+except ImportError:
+    import Image
+import numpy
 
 from naoqi import ALProxy
 
@@ -95,6 +94,10 @@ class PepperController(object):
             self.tabletFlag = False
 
 
+            ##Face detection
+            # self.tts = session.service("ALTextToSpeech")
+            self.face_detection = self.session.service("ALFaceDetection")
+
             self.memoryService = self.session.service("ALMemory")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.backLightingService = self.session.service("ALBacklightingDetection")
@@ -103,7 +106,7 @@ class PepperController(object):
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.touchService = self.session.service("ALTouch")
-
+            self.SpeechRecogWords = self.session.service("ALSpeechRecognition")
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
 
@@ -117,7 +120,7 @@ class PepperController(object):
         ## Turn of auto-interaction features
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
-        self.motionProxy.setTangentialSecurityDistance(0.05)
+        self.motionProxy.setTangentialSecurityDistance(0.01)
         self.motionProxy.setOrthogonalSecurityDistance(0.05)
         self.engagementProxy.setFirstLimitDistance(2.0)
         self.engagementProxy.setLimitAngle(180.0)
@@ -149,7 +152,7 @@ class PepperController(object):
 
     def findBlobs(self):
         blobsList = self.memoryProxy.getData("Segmentation3D/BlobsList")
-        
+
         for blob in blobsList[1]:
             if blob[2] > 2:
                 self.doorOpen = True
@@ -174,46 +177,23 @@ class PepperController(object):
             self.threadID = self.navigationProxy.post.navigateToInMap((x,y,t))
         return ret
 
-    def moveHere(self,x,y,t, parallel=False):
+    def moveHere(self,x,y,t):
         #simple function to call navigation. Can run this as a thread.
         #store intended coords as a tuple in case we need to resume this navigation command later
-        
+
         self.going = [x,y,t]
         print("Going to " + str(self.going))
         ret = False
         tries = 0
         self.current = self.motionProxy.getRobotPosition(True)
-        px,py,pz = self.current
-        bsx = px - 2
-        bsy = py - 7.75
-        #self.sendInfo("RobotLocation",px,py,0)
-        self.diff = [x-self.current[0],y-self.current[1],0]
-        rot = -self.current[2]
-        self.rotDiff = [self.diff[0]*cos(rot)-self.diff[1]*sin(rot),self.diff[1]*cos(rot)+self.diff[0]*sin(rot)]
+        #self.diff = self.current - self.going
+        self.diff = [self.going[0]-self.current[0],self.going[1]-self.current[1],self.going[2]-self.current[2]]
         print("Moving by: " + str(self.diff))
-        print("rotDiff: " + str(self.rotDiff))
-        if parallel == False:
-            while ret != True and tries < 5:
-                ret = self.navigationProxy.navigateTo(*self.diff)
-                #ret = self.navigationProxy.navigateTo(x-self.current[0],y-self.current[1],0)
-                tries += 1
-            return ret
-            current = self.motionProxy.getRobotPosition(True)
-            self.motionProxy.moveTo(0,0,-rot)
-        else:
-            self.navigationProxy.post.navigateTo(*self.diff)
-            #self.navigationProxy.post.navigateTo(self.diff[0]*cos(rot)-self.diff[1]*sin(rot),self.diff[1]*cos(rot)+self.diff[0]*sin(rot))
-        
+        #while ret != True and tries < 5:
+        ret = self.navgationProxy.navigateTo(*self.diff)
+        #tries += 1
+        #return ret
 
-    def headInit(self):
-        self.motionProxy.setStiffnesses("Head", 1.0)
-        names = ["HeadYaw", "HeadPitch"]
-        angles = [0, 0]
-        fractionMaxSpeed = 0.2
-        self.motionProxy.setAngles(names, angles, fractionMaxSpeed)
-        time.sleep(0.5)
-        self.motionProxy.setStiffnesses("Head", 0.0)    
-     
     def peopleAround(self, range=1):
         peeps = self.memoryProxy.getData("EngagementZones/PeopleInZone1")
         if range > 1:
@@ -232,14 +212,14 @@ class PepperController(object):
 
 #### Methods for recognising words and locating sounds ###
     def setVocabulary(self):
-        self.speechRecogProxy.pause(True)
-        self.speechRecogProxy.removeAllContext()
+        # self.speechRecogProxy.pause(True)
+        # self.speechRecogProxy.removeAllContext()
         try:
             self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper", "hello", "hi"],False)
+            self.speechRecogProxy.setVocabulary(["pepper", "yes"],False)
         except:
             print("Vocabulary already set")
-        self.speechRecogProxy.pause(False)
+        # self.speechRecogProxy.pause(False)
 
     def speechRecogThread(self):
         thread.start_new_thread(self.onWordRecognized,("words", 2))
@@ -251,44 +231,63 @@ class PepperController(object):
         self.soundLocalProxy.subscribe("soundLocal")
         #self.speechRecogThread()
         print "Speech recognition engine started"
-        #self.onWordRecognized()
+        self.onWordRecognized()
+
+    def Subscribe2Speech(self):
+        self.speechRecogProxy.subscribe("Test_ASR")
+        self.FaceSubscriber = self.memoryService.subscriber("WordRecognized")
+        self.FaceSubscriber.signal.connect(self.on_word_tracked)
+        self.got_word = False
+        self.word_detected = False
+        print 'Speech recognition engine started'
+        # time.sleep(20)
+        # self.speechRecogProxy.unsubscribe("Test_ASR")
+
+
+
 
     def onWordRecognized(self):#, string, threadName):
         self.heard = False
-        #while self.heard == False:
-        
-        startLoop = time.time()
-        loopTime = 0
-        while loopTime < 15:
+        while self.heard == False:
             wordRecognized = self.memoryProxy.getData("WordRecognized")
 
-            print (wordRecognized)
-            if wordRecognized[0] == "Pepper": #or  wordRecognized[0] == "hi": # or wordRecognized[0] == "hello":
+            if(wordRecognized != self.old_recog):
+                self.old_recog = wordRecognized
+
+                print (wordRecognized)
+            if wordRecognized[0] == "pepper":
+
                 self.heard = True
-                #self.say("I heard you")
+                #self.trackSound()
+
+            #if "pepper" in wordRecognized:
+
+            #self.ttsProxy.say("I heard you")
                 self.unsubscribe()
-                break
-            loopTime = time.time() - startLoop
-        endLoop = time.time() - startLoop
-        print ("Loop stopped after " + str(endLoop) + " seconds")
 
     def	trackSound(self):
         targetName = "Sound"
-        param = [1, 0.1]
-        mode = "Move"
+        param = [0.5, 1]
+        mode = "Move" #DO NOT USE "WholeBody"
 
         self.trackerProxy.registerTarget(targetName, param)
-        time.sleep(2)
+        # time.sleep(2)
         activeTarget = self.trackerProxy.getActiveTarget()
-        print("target is: ", str(activeTarget))
+        print("target is: ", activeTarget)
         self.trackerProxy.setMode(mode)
-        time.sleep(2)
+        # time.sleep(2)
         activeMode = self.trackerProxy.getMode()
-        print("Mode is: ", str(activeMode))
+        print("Mode is: ", activeMode)
         self.trackerProxy.track(targetName)
-        time.sleep(0.5)
-        self.trackerProxy.stopTracker()
-        self.trackerProxy.unregisterAllTargets()
+        print "Sound ALTracker successfully started, now show your face to robot!"
+
+    def	untrack(self, targetName="all"):
+        if targetName == "all":
+            self.trackerProxy.stopTracker()
+            self.trackerProxy.unregisterAllTargets()
+        else:
+            self.trackerProxy.unregisterTarget(targetName)
+        print "ALTracker stopped."
 
     def senseTouch(self):
         self.frontTouchSubscriber = self.memoryService.subscriber("FrontTactilTouched")
@@ -299,12 +298,18 @@ class PepperController(object):
         self.backTouchSubscriber.signal.connect(self.reactToTouch)
         print "Connected"
         #self.touchService.subscribe("Touch")
+    def faceDetect(self):
+        self.face_detection.subscribe("HumanGreeter")
+        self.got_face = False
+        self.face_detected = False
+        # Connect the event callback for detecting face.
+        self.FaceSubscriber = self.memoryService.subscriber("FaceDetected")
+        self.FaceSubscriber.signal.connect(self.on_human_tracked)
 
     def reactToTouch(self, val):
         print val
         if self.expectingTouch == True and val == 1:
             self.expectingTouch = False
-            self.rightFloor = True
             time.sleep(1)
 
 ## Face/People Tracking#####
@@ -317,7 +322,7 @@ class PepperController(object):
         self.trackerProxy.registerTarget(targetName, faceWidth)
         # Then, start tracker.
         self.trackerProxy.track(targetName)
-        print "ALTracker successfully started, now show your face to robot!"
+        print "Face ALTracker successfully started, now show your face to robot!"
 
 
     def stopRecogPeople(self):
