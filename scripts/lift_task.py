@@ -210,7 +210,7 @@ class LiftTask(PepperController):
                 print "heard = True"
                 break
 
-            self.navigationProxy.wait(self.threadID,0)
+            self.navID.wait()
                 
             # while self.navigationProxy.isRunning(self.threadID) and self.heard == False:
                 # pass

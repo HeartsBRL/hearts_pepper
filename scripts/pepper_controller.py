@@ -104,6 +104,8 @@ class PepperController(object):
             self.darknessService = self.session.service("ALDarknessDetection")
             self.touchService = self.session.service("ALTouch")
             self.speechRecogService = self.session.service("ALSpeechRecognition")
+            self.motionService = self.session.service("ALMotion")
+            self.navigationService = self.session.service("ALNavigation")
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
@@ -183,7 +185,7 @@ class PepperController(object):
         print("Going to " + str(self.going))
         ret = False
         tries = 0
-        self.current = self.motionProxy.getRobotPosition(True)
+        self.current = self.motionService.getRobotPosition(True)
         px,py,pz = self.current
         bsx = px - 2
         bsy = py - 7.75
@@ -195,16 +197,15 @@ class PepperController(object):
         print("rotDiff: " + str(self.rotDiff))
         if parallel == False:
             while ret != True and tries < 5:
-                ret = self.navigationProxy.navigateTo(*self.diff)
-                #ret = self.navigationProxy.navigateTo(x-self.current[0],y-self.current[1],0)
+                ret = self.navigationService.navigateTo(*self.diff)
                 tries += 1
             return ret
-            current = self.motionProxy.getRobotPosition(True)
-            self.motionProxy.moveTo(0,0,-rot)
+            current = self.motionService.getRobotPosition(True)
+            self.motionService.moveTo(0,0,-rot)
         else:
-            self.navigationProxy.post.navigateTo(*self.diff)
-            #self.navigationProxy.post.navigateTo(self.diff[0]*cos(rot)-self.diff[1]*sin(rot),self.diff[1]*cos(rot)+self.diff[0]*sin(rot))
-        
+            x1,y1,t1 = self.diff
+            self.navID = self.navigationService.navigateTo(x1,y1,t1,_async=True)
+            
 
     def headInit(self):
         self.motionProxy.setStiffnesses("Head", 1.0)
