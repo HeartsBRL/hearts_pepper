@@ -153,6 +153,7 @@ class LiftTask(PepperController):
 
     def InsideLift(self):
         self.say("Thank you. Could you please press floor " + str(self.goalFloor) + "?")
+        time.sleep(5)
         self.doorOpen = False
         self.rightFloor = False
         self.senseTouch()
