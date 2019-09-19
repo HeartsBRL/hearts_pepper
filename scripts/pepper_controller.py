@@ -76,7 +76,7 @@ class PepperController(object):
             self.system = ALProxy("ALSystem", self._robotIP, self._PORT)
             self.postureProxy = ALProxy("ALRobotPosture", self._robotIP, self._PORT)
 
-            self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
+            #self.speechRecogProxy = ALProxy("ALSpeechRecognition", self._robotIP, self._PORT)
             self.engagementProxy = ALProxy("ALEngagementZones", self._robotIP, self._PORT)
             self.peoplePerceptionProxy = ALProxy("ALPeoplePerception", self._robotIP, self._PORT)
             #self.waveDetectProxy = ALProxy("ALWavingDetection", self._robotIP, self._PORT)
@@ -103,6 +103,7 @@ class PepperController(object):
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.touchService = self.session.service("ALTouch")
+            self.speechRecogService = self.session.service("ALSpeechRecognition")
 
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
@@ -247,7 +248,7 @@ class PepperController(object):
 
     def speechRecognition(self):
         self.memoryProxy.insertData("WordRecognized", " ")
-        self.speechRecogProxy.subscribe("attention")
+        self.speechRecogService.subscribe("attention")
         self.soundLocalProxy.subscribe("soundLocal")
         #self.speechRecogThread()
         print "Speech recognition engine started"
@@ -260,12 +261,12 @@ class PepperController(object):
         startLoop = time.time()
         loopTime = 0
         while loopTime < 15:
-            wordRecognized = self.memoryProxy.getData("WordRecognized")
+            wordRecognized = self.memoryProxy.getData("WordRecognized", _async)
 
             print (wordRecognized)
-            if wordRecognized[0] == "Pepper": #or  wordRecognized[0] == "hi": # or wordRecognized[0] == "hello":
+            if wordRecognized[0] == "Pepper" or wordRecognized[0] == "hi": # or wordRecognized[0] == "hello":
                 self.heard = True
-                #self.say("I heard you")
+                self.say("I heard you")
                 self.unsubscribe()
                 break
             loopTime = time.time() - startLoop
@@ -330,7 +331,7 @@ class PepperController(object):
 ###Miscellaneous###
 
     def unsubscribe(self):
-        self.speechRecogProxy.unsubscribe("attention")
+        self.speechRecogService.unsubscribe("attention")
         print "Speech recognition engine stopped"
 
         self.soundLocalProxy.unsubscribe("soundLocal")
