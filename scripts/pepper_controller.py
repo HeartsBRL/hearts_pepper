@@ -117,7 +117,7 @@ class PepperController(object):
         ## Turn of auto-interaction features
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
-        self.motionProxy.setTangentialSecurityDistance(0.03)
+        self.motionProxy.setTangentialSecurityDistance(0.05)
         self.motionProxy.setOrthogonalSecurityDistance(0.05)
         self.engagementProxy.setFirstLimitDistance(2.0)
         self.engagementProxy.setLimitAngle(180.0)
@@ -186,7 +186,7 @@ class PepperController(object):
         px,py,pz = self.current
         bsx = px - 2
         bsy = py - 7.75
-        self.sendInfo("RobotLocation",px,py,0)
+        #self.sendInfo("RobotLocation",px,py,0)
         self.diff = [x-self.current[0],y-self.current[1],0]
         rot = -self.current[2]
         self.rotDiff = [self.diff[0]*cos(rot)-self.diff[1]*sin(rot),self.diff[1]*cos(rot)+self.diff[0]*sin(rot)]

@@ -14,7 +14,7 @@ class SpeechRecog(PepperController):
         self.setVocabulary()
         self.lifeProxy.setState("solitary")
         self.speechRecognition()
-        time.sleep(2)
+        self.moveHere(0.5,0,0,True)
         self.onWordRecognized()
 
 
