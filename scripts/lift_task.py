@@ -125,7 +125,9 @@ class LiftTask(PepperController):
             self.postureProxy.goToPosture("Stand",0.6)
             self.moveHere(*self.locations['outside door 1'])
             self.moveHere(*self.locations['inside door 1'])
+            self.motionProxy.moveTo(0,0,3.14)
             self.say("Excuse me please. I would like to stand at the back of the lift")
+            self.motionProxy.moveTo(0,0,-3.14)
 
             time.sleep(5)
             self.moveHere(*self.locations['lift back'])

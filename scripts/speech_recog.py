@@ -10,15 +10,18 @@ PORT = 9559
 
 class SpeechRecog(PepperController):
     
-    def fudge(self):
+    def startStuff(self):
         self.setVocabulary()
-        self.lifeProxy.setState("solitary")
         self.speechRecognition()
+
+    def fudge(self):        
+        self.lifeProxy.setState("solitary")
         self.moveHere(0.5,0,0,True)
         self.onWordRecognized()
 
 
 if __name__ == '__main__':
     task = SpeechRecog(robotIP, PORT)
+    task.startStuff()
     task.fudge()
     

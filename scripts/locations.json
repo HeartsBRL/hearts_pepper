@@ -1,13 +1,13 @@
 {
-    "outside door 1": [0.8, -5.10, 0],
+    "outside door 1": [0.8, -5.15, 0],
 
-    "inside door 1": [0.0, -5.10, 0],
+    "inside door 1": [0.0, -5.15, 0],
     
-    "outside door 2": [0.8, -5.10, 0],
+    "outside door 2": [0.8, -5.15, 0],
 
-    "inside door 2": [0.0, -5.10, 0],
+    "inside door 2": [0.0, -5.15, 0],
 
-    "lift back": [-1.5, -5.10, 0],
+    "lift back": [-1.8, -5.10, 0],
 
     "start": [0.6, 0, 0],
 
