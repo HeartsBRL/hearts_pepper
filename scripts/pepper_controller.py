@@ -250,7 +250,8 @@ class PepperController(object):
     def speechRecognition(self):
         self.memoryProxy.insertData("WordRecognized", " ")
         self.speechRecogService.subscribe("attention", _async = True)
-        self.soundLocalProxy.subscribe("soundLocal")
+        self.speechrecogSubscriber = self.memoryService.subscriber("Wordrecognized")
+        #self.soundLocalProxy.subscribe("soundLocal")
         #self.speechRecogThread()
         print "Speech recognition engine started"
         #self.onWordRecognized()
