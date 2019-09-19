@@ -1,0 +1,3 @@
+run make_map.py
+
+run lift_task.py

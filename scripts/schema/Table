@@ -1,0 +1,6 @@
+{
+  "@id": "string",
+  "@type": "Table",
+  "customers": 0,
+  "status": "Needs serving"
+}

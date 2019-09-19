@@ -1,0 +1,10 @@
+{
+  "@id": "string",
+  "@type": "RobotLocation",
+  "episode": "string",
+  "team": "string",
+  "timestamp": "2019-08-14T13:10:43.766Z",
+  "x": 0,
+  "y": 0,
+  "z": 0
+}

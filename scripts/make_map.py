@@ -3,18 +3,23 @@
 from pepper_controller import PepperController
 
 import numpy
-import Image
 
-robotIP = "10.2.0.112" #Stevey
+# pip install pillow
+try:
+    from PIL import Image
+except ImportError:
+    import Image
+
+robotIP = "westey.local" #Stevey
 PORT = 9559
 
-class PreTask(PepperController):
+class MakeMap(PepperController):
 
     def startingVariables(self):
         ## Verbal confirmation it's starting
         self.say("boop")
         ## Turn of auto-interaction features
-        self.lifeProxy.setState("solitary")
+        # self.lifeProxy.setState("solitary")
         self.lifeProxy.setState("safeguard")
         ## Set how close Pepper is allowed to get to obstacles
         self.motionProxy.setTangentialSecurityDistance(0.01)
@@ -27,11 +32,11 @@ class PreTask(PepperController):
         if ret != 0:
             print "Exploration failed :("
             self.say("Oops, something went wrong. Sorry!")
-                            
+
         else:
             print "Exploration success!"
             self.say("I'm done exploring!")
-        
+
         ## Save the map ##
         # TODO write the path to a file for later use?
         path = self.navigationProxy.saveExploration()
@@ -51,20 +56,13 @@ class PreTask(PepperController):
         Image.frombuffer('L',  (map_width, map_height), img, 'raw', 'L', 0, 1).show()
 
         print "Returning to origin"
-        self.say("I'm heading back to the origin.")        
-        self.goHere(0,0,0)
-
-    def goHere(self,x,y,t):
-        ret = self.navigationProxy.navigateToInMap((x,y,t))
+        self.say("I'm heading back to the origin.")
+        ret = self.goHere(0,0,0)
         print ret
-        if ret == 0:
-            self.say("I made it!")
-        else:
-            self.say("Sorry, I couldn't get there.")
-            
+
 
 if __name__ == '__main__':
-    task = PreTask(robotIP, PORT)
-    task.startingVariables()
-    #task.explore(2)
-    task.goHere(0,0,0)
+    task = MakeMap(robotIP, PORT)
+    task.explore(4)
+    #task.goHere(1,-1,0)
+    task.say('Remember to update the map path in reload_map.py so you don\'t load an old map!')
