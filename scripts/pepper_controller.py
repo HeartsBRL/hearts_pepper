@@ -92,13 +92,14 @@ class PepperController(object):
             self.tabletTimeout = time.time()
             self.tabletFlag = False
 
-<<<<<<< HEAD
+
+            ##Face detection
+            # self.tts = session.service("ALTextToSpeech")
+            self.face_detection = self.session.service("ALFaceDetection")
+
             self.memoryService = self.session.service("ALMemory")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.backLightingService = self.session.service("ALBacklightingDetection")
-=======
-            self.memoryService = self.session.service("ALMemory")            
->>>>>>> 68b3e58b00f406f53f4b896dc2fa6ae0b89f6684
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.touchService = self.session.service("ALTouch")
@@ -122,12 +123,8 @@ class PepperController(object):
         self.engagementProxy.setLimitAngle(180.0)
         self.postureProxy.goToPosture("Stand",0.6)
         self.peoplePerceptionService.subscribe("PeoplePerception")
-<<<<<<< HEAD
         self.darknessService.subscribe("DarknessDetection")
         self.backLightingService.subscribe("BacklightningDetection")
-=======
-        self.darknessService.subscribe("Darkness")
->>>>>>> 68b3e58b00f406f53f4b896dc2fa6ae0b89f6684
 
 
     def say(self, words):
@@ -249,21 +246,27 @@ class PepperController(object):
 
     def	trackSound(self):
         targetName = "Sound"
-        param = [1, 0.1]
-        mode = "Move"
+        param = [0.5, 1]
+        mode = "Move" #DO NOT USE "WholeBody"
 
         self.trackerProxy.registerTarget(targetName, param)
-        time.sleep(2)
+        # time.sleep(2)
         activeTarget = self.trackerProxy.getActiveTarget()
         print("target is: ", activeTarget)
         self.trackerProxy.setMode(mode)
-        time.sleep(2)
+        # time.sleep(2)
         activeMode = self.trackerProxy.getMode()
         print("Mode is: ", activeMode)
         self.trackerProxy.track(targetName)
-        time.sleep(0.5)
-        self.trackerProxy.stopTracker()
-        self.trackerProxy.unregisterAllTargets()
+        print "Sound ALTracker successfully started, now show your face to robot!"
+
+    def	untrack(self, targetName="all"):
+        if targetName == "all":
+            self.trackerProxy.stopTracker()
+            self.trackerProxy.unregisterAllTargets()
+        else:
+            self.trackerProxy.unregisterTarget(targetName)
+        print "ALTracker stopped."
 
     def senseTouch(self):
         self.frontTouchSubscriber = self.memoryService.subscriber("FrontTactilTouched")
@@ -274,6 +277,13 @@ class PepperController(object):
         self.backTouchSubscriber.signal.connect(self.reactToTouch)
         print "Connected"
         #self.touchService.subscribe("Touch")
+    def faceDetect(self):
+        self.face_detection.subscribe("HumanGreeter")
+        self.got_face = False
+        self.face_detected = False
+        # Connect the event callback for detecting face.
+        self.FaceSubscriber = self.memoryService.subscriber("FaceDetected")
+        self.FaceSubscriber.signal.connect(self.on_human_tracked)
 
     def reactToTouch(self, val):
         print val
@@ -291,7 +301,7 @@ class PepperController(object):
         self.trackerProxy.registerTarget(targetName, faceWidth)
         # Then, start tracker.
         self.trackerProxy.track(targetName)
-        print "ALTracker successfully started, now show your face to robot!"
+        print "Face ALTracker successfully started, now show your face to robot!"
 
 
     def stopRecogPeople(self):

@@ -109,7 +109,10 @@ class LiftTask(PepperController):
         else:
             self.say("I will need to use the lift to get there.")
             #self.goHere(*self.locations['near lift'])
-            self.lifeProxy.setState("solitary")
+            self.lifeProxy.setState("solitary") ##Comment this if the ALTERNATIVE is uncommented
+            ##Alternative to SOLITARY## UNCOMMENT IF SOLITARY IS COMMENTED
+            # self.startRecogPeople()
+
             self.say("Hi everyone, I am Pepper. I'll wait, please go ahead of me.")
             #TODO Approach to lift, define new location/people perception
 
@@ -122,7 +125,10 @@ class LiftTask(PepperController):
                     freedom += 1
 
             self.say("I'm going to the lift now.")
+            ##Alternative to SOLITARY## UNCOMMENT IF SOLITARY IS COMMENTED
+            # self.stopRecogPeople()
             self.lifeProxy.setState("safeguard")
+
             self.postureProxy.goToPosture("Stand",0.6)
             self.goHere(*self.locations['outside door'])
             self.goHere(*self.locations['inside door'])
