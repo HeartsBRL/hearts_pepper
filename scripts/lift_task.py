@@ -95,15 +95,15 @@ class LiftTask(PepperController):
         else:
             
             self.say("I will need to use the lift to get there.")
-            self.extraInteraction()
+            #self.extraInteraction()
             #self.moveHere(*self.locations['near lift'])
-            # self.moveHere(*self.locations['zone1a'])
-            # self.moveHere(*self.locations['zone1b'])
-            # self.moveHere(*self.locations['zone2a'])
-            # self.moveHere(*self.locations['zone2b'])
-            # self.moveHere(*self.locations['zone3a'])
-            # self.moveHere(*self.locations['zone3b'])
-            # self.moveHere(*self.locations['zone3c'])
+            self.moveHere(*self.locations['zone1a'])
+            self.moveHere(*self.locations['zone1b'])
+            self.moveHere(*self.locations['zone2a'])
+            self.moveHere(*self.locations['zone2b'])
+            self.moveHere(*self.locations['zone3a'])
+            self.moveHere(*self.locations['zone3b'])
+            self.moveHere(*self.locations['zone3c'])
             self.moveHere(*self.locations['near lift 2'])
             self.postureProxy.goToPosture("Stand",0.6)
             self.motionProxy.moveTo(0,0,2.36)
@@ -217,27 +217,27 @@ class LiftTask(PepperController):
 
         self.navigationProxy.stopExploration()
         #self.lifeProxy.setState("solitary")
-        self.startRecogPeople()
-        peeps = []
-        breakCondition = 0
-        while len(peeps) == 0 and breakCondition < 50:
-            peeps = self.peopleAround(3)
-            breakCondition += 1
+        #self.startRecogPeople()
+        #peeps = []
+        #breakCondition = 0
+        #while len(peeps) == 0 and breakCondition < 50:
+            #peeps = self.peopleAround(3)
+            #breakCondition += 1
         
-        for person in peeps:
-            if self.memoryProxy.getData("PeoplePerception/Person/" + str(person) + "/IsLookingAtRobot") == True:
-                self.lookingAtMe = person
-                self.trackerProxy.registerTarget("Person", person)
-                self.trackerProxy.track("Person")
+        #for person in peeps:
+            #if self.memoryProxy.getData("PeoplePerception/Person/" + str(person) + "/IsLookingAtRobot") == True:
+                #self.lookingAtMe = person
+                #self.trackerProxy.registerTarget("Person", person)
+                #self.trackerProxy.track("Person")
 
-                break
+                #break
         
         self.say("Sorry, I have a task I need to complete. I hope you find someone who can help")
         self.trackerProxy.stopTracker()
         self.trackerProxy.unregisterAllTargets()
 
-        #self.lifeProxy.setState("safeguard")
-        self.stopRecogPeople()
+        self.lifeProxy.setState("safeguard")
+        #self.stopRecogPeople()
         self.postureProxy.goToPosture("Stand",0.6)
         self.moveHere(*self.locations['zone3c'])
         #TODO Improvements

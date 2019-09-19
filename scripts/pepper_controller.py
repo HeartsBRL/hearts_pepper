@@ -201,7 +201,7 @@ class PepperController(object):
             current = self.motionProxy.getRobotPosition(True)
             self.motionProxy.moveTo(0,0,-rot)
         else:
-            self.navigationProxy.post.navigateTo(*self.rotDiff)
+            self.navigationProxy.post.navigateTo(*self.diff)
             #self.navigationProxy.post.navigateTo(self.diff[0]*cos(rot)-self.diff[1]*sin(rot),self.diff[1]*cos(rot)+self.diff[0]*sin(rot))
         
 
@@ -263,9 +263,9 @@ class PepperController(object):
             wordRecognized = self.memoryProxy.getData("WordRecognized")
 
             print (wordRecognized)
-            if wordRecognized[0] == "Pepper" or  wordRecognized[0] == "hi": # or wordRecognized[0] == "hello":
+            if wordRecognized[0] == "Pepper": #or  wordRecognized[0] == "hi": # or wordRecognized[0] == "hello":
                 self.heard = True
-                self.say("I heard you")
+                #self.say("I heard you")
                 self.unsubscribe()
                 break
             loopTime = time.time() - startLoop
