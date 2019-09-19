@@ -245,6 +245,30 @@ class PepperController(object):
         thread.start_new_thread(self.onWordRecognized,("words", 2))
         time.sleep(15)
 
+    #Daniel's speech event stuff
+    def subscribe2Speech(self):
+        self.speechRecogProxy.subscribe("Test_ASR")
+        self.wordSubscriber = self.memoryService.subscriber("WordRecognized")
+        self.wordSubscriber.signal.connect(self.onWordDetected)
+        self.gotWord = False
+        self.wordDetected = False
+        print 'Speech recognition engine started'
+
+    def onWordDetected(self, words):
+        if words == []:
+            self.got_word = False
+            self.word_detected = False
+        elif not self.gotWord and words[1] > 0.3:
+            self.gotWord = True
+            print "I heard a word!"
+            self.wordDetected = True
+            
+            if words[0] == "pepper" or words[0] == "Pepper" or words[0] == "hi" or words[0] == "hello":
+                self.heard = True
+            else:
+                self.gotWord = False
+                self.wordDetected = False
+
     def speechRecognition(self):
         self.memoryProxy.insertData("WordRecognized", " ")
         self.speechRecogProxy.subscribe("attention")
