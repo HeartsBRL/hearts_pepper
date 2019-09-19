@@ -236,7 +236,7 @@ class PepperController(object):
         self.speechRecogProxy.removeAllContext()
         try:
             self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper", "hello"],False)
+            self.speechRecogProxy.setVocabulary(["pepper", "hello", "hi"],False)
         except:
             print("Vocabulary already set")
         self.speechRecogProxy.pause(False)
@@ -262,13 +262,10 @@ class PepperController(object):
         while loopTime < 15:
             wordRecognized = self.memoryProxy.getData("WordRecognized")
 
-            if(wordRecognized != self.old_recog):
-                self.old_recog = wordRecognized
-
-            #print ("Word recognised: " +  str(wordRecognized))
-            if wordRecognized[0] == "pepper": #or  wordRecognized[0] == "Pepper" or wordRecognized[0] == "hello":
+            print (wordRecognized)
+            if wordRecognized[0] == "Pepper" or  wordRecognized[0] == "hi": # or wordRecognized[0] == "hello":
                 self.heard = True
-                #self.say("I heard you")
+                self.say("I heard you")
                 self.unsubscribe()
                 break
             loopTime = time.time() - startLoop
