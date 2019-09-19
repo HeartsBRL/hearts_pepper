@@ -233,28 +233,43 @@ class PepperController(object):
         print "Speech recognition engine started"
         self.onWordRecognized()
 
-    def Subscribe2Speech(self):
+    def subscribe2Speech(self):
         self.speechRecogProxy.subscribe("Test_ASR")
-        self.FaceSubscriber = self.memoryService.subscriber("WordRecognized")
-        self.FaceSubscriber.signal.connect(self.on_word_tracked)
+        self.wordSubscriber = self.memoryService.subscriber("WordRecognized")
+        self.wordSubscriber.signal.connect(self.on_word_tracked)
         self.got_word = False
         self.word_detected = False
         print 'Speech recognition engine started'
         # time.sleep(20)
         # self.speechRecogProxy.unsubscribe("Test_ASR")
 
-
-
+    def on_word_tracked(self, value):
+        """
+        Callback for event WordDetected.
+        """
+        
+        print "phrase is: " + str(value[0])
+        print "confidence is: " + str(value[1])
+        if value == []:  # empty value when the face disappears
+            self.got_word = False
+            self.word_detected = False
+        elif not self.got_word and value[1] > 0.3:  # only speak the first time a word appears
+            self.got_word = True
+            print "I heard a word!"
+            self.word_detected = True
+            
+            if value[0] == "pepper" or value[0] == "Pepper" or value[0] == "hi" or value[0] == "hello":
+                self.heard = True
+            else:
+                self.got_word = False
+                self.word_detected = False
+    
 
     def onWordRecognized(self):#, string, threadName):
-        self.heard = False
-        while self.heard == False:
-            wordRecognized = self.memoryProxy.getData("WordRecognized")
+        #self.heard = False
+        while self.word_detected == False:
+            #wordRecognized = self.memoryProxy.getData("WordRecognized")
 
-            if(wordRecognized != self.old_recog):
-                self.old_recog = wordRecognized
-
-                print (wordRecognized)
             if wordRecognized[0] == "pepper":
 
                 self.heard = True
@@ -298,6 +313,7 @@ class PepperController(object):
         self.backTouchSubscriber.signal.connect(self.reactToTouch)
         print "Connected"
         #self.touchService.subscribe("Touch")
+
     def faceDetect(self):
         self.face_detection.subscribe("HumanGreeter")
         self.got_face = False
