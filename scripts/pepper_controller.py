@@ -204,7 +204,7 @@ class PepperController(object):
             self.motionService.moveTo(0,0,-rot)
         else:
             x1,y1,t1 = self.diff
-            self.navID = self.navigationService.navigateTo(x1,y1,t1,_async=True)
+            self.navigationProxy.post.navigateTo(x1,y1,t1)
             
 
     def headInit(self):
