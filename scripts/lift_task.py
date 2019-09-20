@@ -14,7 +14,7 @@ try:
 except ImportError:
         import Image
 
-robotIP = "10.2.0.115" #Westey
+robotIP = "10.2.2.105" #Westey
 
 #PORT = 33579
 PORT = 9559
@@ -210,6 +210,7 @@ class LiftTask(PepperController):
         for dest in dests: 
             self.heard = False          
             x,y,t = self.locations[dest]
+            self.postureProxy.goToPosture("Stand",0.6)
             self.moveHere(x,y,t,True)
             #self.onWordRecognized()
             loopStart = time.time()
