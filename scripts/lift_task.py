@@ -14,7 +14,7 @@ try:
 except ImportError:
         import Image
 
-robotIP = "westey.local" #Westey
+robotIP = "10.2.0.115" #Westey
 
 #PORT = 33579
 PORT = 9559
@@ -257,6 +257,10 @@ class LiftTask(PepperController):
                 # break
 
         self.lifeProxy.setState("safeguard")
+        try:
+            liftTask.speechRecogProxy.unsubscribe("Test_ASR")
+        except:
+            print ("Couldn't unsub from Test_ASR, probably already done it.")
         #self.stopRecogPeople()
         #self.postureProxy.goToPosture("Stand",0.6)
         #self.moveHere(*self.locations['zone3c'])

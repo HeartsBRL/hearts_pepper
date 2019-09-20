@@ -260,7 +260,7 @@ class PepperController(object):
     def onWordDetected(self, words):
         print words[0]
         print words[1]           
-        if words[1] > 0.4:
+        if words[1] > 0.2:
             if words[0] == "pepper" or words[0] == "Pepper":# or words[0] == "hi" or words[0] == "hello":
                 self.heard = True
                 self.speechRecogProxy.unsubscribe("Test_ASR")
