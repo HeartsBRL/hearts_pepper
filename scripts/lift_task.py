@@ -113,13 +113,13 @@ class LiftTask(PepperController):
             #TODO Approach to lift, define new location/people perception
 
             freedom = 0
-            while freedom < 100:
+            while freedom < 50:
                 if len(self.peopleAround()) > 0:
                     #self.say("Get in the lift!") #MAKE SURE TO COMMENT
                     freedom = 0
                 else:
                     freedom += 1
-
+                time.sleep(0.1)
             self.say("I'm going to the lift now.")
             self.motionProxy.moveTo(0,0,-2.36)
             #self.lifeProxy.setState("safeguard")
@@ -130,7 +130,7 @@ class LiftTask(PepperController):
             self.say("Excuse me please. I would like to stand at the back of the lift")
             self.motionProxy.moveTo(0,0,-3.14)
 
-            time.sleep(5)
+            time.sleep(3)
             self.moveHere(*self.locations['lift back'])
             self.postureProxy.goToPosture("Stand",0.6)
             #self.motionProxy.moveTo(0,0,3.14159)
@@ -187,7 +187,7 @@ class LiftTask(PepperController):
     def toEnd(self):
         self.say("This is my floor!")
         #self.lifeProxy.setState("solitary")
-        self.say("I'm getting out now, thank you for your help! Have a good. Day.")
+        self.say("I'm getting out now, thank you for your help! Have a good day.")
         self.moveHere(*self.locations['inside door 2'])
         self.moveHere(*self.locations['outside door 2'])
         #self.extraInteraction()?
@@ -296,7 +296,9 @@ if __name__ == '__main__':
 
 	    #LEAVE LIFT AND GO TO FINISH, INTERACTING WITH PEOPLE ON THE WAY#
         liftTask.toEnd()
+        liftTask.lifeProxy.setState("solitary")
     except KeyboardInterrupt:
+        liftTask.lifeProxy.setState("solitary")
         liftTask.speechRecogProxy.unsubscribe("Test_ASR")
     except:
         liftTask.speechRecogProxy.unsubscribe("Test_ASR")
