@@ -241,7 +241,7 @@ class LiftTask(PepperController):
 
                     #break
             
-                    self.say("Sorry, I'm on my way to " + str(self.shopName) + " to meet someone. I hope you can find someone to help you.")
+                    self.say("Hi there, I'm sorry but I'm on my way to " + str(self.shopName) + " to meet someone. I hope you can find someone to help you.")
                     #self.trackerProxy.stopTracker()
                     #self.trackerProxy.unregisterAllTargets()
                     self.stopRecogPeople()

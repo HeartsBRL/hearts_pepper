@@ -18,7 +18,7 @@ from math import sin,cos
 from naoqi import ALProxy
 
 #robotIP = "pepper.local"
-robotIP = "westey.local" #Stevey
+robotIP = "10.2.2.105" #Stevey
 PORT = 9559
 
 class PepperController(object):
@@ -260,7 +260,7 @@ class PepperController(object):
     def onWordDetected(self, words):
         print words[0]
         print words[1]           
-        if words[1] > 0.3:
+        if words[1] > 0.4:
             if words[0] == "pepper" or words[0] == "Pepper":# or words[0] == "hi" or words[0] == "hello":
                 self.heard = True
                 self.speechRecogProxy.unsubscribe("Test_ASR")
