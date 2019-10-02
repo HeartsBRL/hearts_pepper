@@ -18,7 +18,7 @@ from math import sin,cos
 from naoqi import ALProxy
 
 #robotIP = "pepper.local"
-robotIP = "westey.local" #Stevey
+robotIP = "10.2.2.105" #Stevey
 PORT = 9559
 
 class PepperController(object):
@@ -103,7 +103,7 @@ class PepperController(object):
             self.peoplePerceptionService = self.session.service("ALPeoplePerception")
             self.darknessService = self.session.service("ALDarknessDetection")
             self.touchService = self.session.service("ALTouch")
-
+            self.SpeechRecogWords = self.session.service("ALSpeechRecognition")
             print("Connected to Pepper at " + self._robotIP + ":" + str(self._PORT))
 
 
@@ -197,10 +197,14 @@ class PepperController(object):
                 ret = self.navigationProxy.navigateTo(*self.diff)
                 #ret = self.navigationProxy.navigateTo(x-self.current[0],y-self.current[1],0)
                 tries += 1
+                current = self.motionProxy.getRobotPosition(True)
+                self.motionProxy.moveTo(0,0,-current[2])
             return ret
-            current = self.motionProxy.getRobotPosition(True)
-            self.motionProxy.moveTo(0,0,-rot)
+            #current = self.motionProxy.getRobotPosition(True)
+            #self.motionProxy.moveTo(0,0,-current[2])
         else:
+            current = self.motionProxy.getRobotPosition(True)
+            self.motionProxy.moveTo(0,0,-current[2])
             self.navigationProxy.post.navigateTo(*self.diff)
             #self.navigationProxy.post.navigateTo(self.diff[0]*cos(rot)-self.diff[1]*sin(rot),self.diff[1]*cos(rot)+self.diff[0]*sin(rot))
         
@@ -236,7 +240,7 @@ class PepperController(object):
         self.speechRecogProxy.removeAllContext()
         try:
             self.speechRecogProxy.setLanguage("English")
-            self.speechRecogProxy.setVocabulary(["pepper", "hello", "hi"],False)
+            self.speechRecogProxy.setVocabulary(["pepper", "Pepper"],False)
         except:
             print("Vocabulary already set")
         self.speechRecogProxy.pause(False)
@@ -244,6 +248,22 @@ class PepperController(object):
     def speechRecogThread(self):
         thread.start_new_thread(self.onWordRecognized,("words", 2))
         time.sleep(15)
+
+    #Daniel's speech event stuff
+    def subscribe2Speech(self):
+        self.speechRecogProxy.subscribe("Test_ASR")
+        self.wordSubscriber = self.memoryService.subscriber("WordRecognized")
+        self.wordSubscriber.signal.connect(self.onWordDetected)
+
+        print 'Speech recognition engine started'
+
+    def onWordDetected(self, words):
+        print words[0]
+        print words[1]           
+        if words[1] > 0.4:
+            if words[0] == "pepper" or words[0] == "Pepper":# or words[0] == "hi" or words[0] == "hello":
+                self.heard = True
+                self.speechRecogProxy.unsubscribe("Test_ASR")
 
     def speechRecognition(self):
         self.memoryProxy.insertData("WordRecognized", " ")
@@ -313,8 +333,10 @@ class PepperController(object):
 
         # Add target to track.
         targetName = "Face"
+        mode = "Head"
         faceWidth = 0.1
         self.trackerProxy.registerTarget(targetName, faceWidth)
+        self.trackerProxy.setMode(mode)
         # Then, start tracker.
         self.trackerProxy.track(targetName)
         print "ALTracker successfully started, now show your face to robot!"
